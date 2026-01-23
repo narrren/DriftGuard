@@ -1,0 +1,14 @@
+version: 1.0
+stages:
+  - name: ai_doc_check
+    enabled: true
+    severity: block
+    description: "Ensures documentation is updated with code changes."
+  - name: janitor
+    enabled: true
+    ttl: 24h
+    description: "Cleans up ephemeral resources."
+  - name: cross_repo_safety
+    enabled: false
+    severity: warning
+    dependencies: []
