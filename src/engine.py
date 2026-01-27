@@ -80,7 +80,8 @@ def main():
         'repo_name': os.environ.get('GITHUB_REPOSITORY'),
         'token': os.environ.get('GITHUB_TOKEN'),
         'gemini_key': os.environ.get('GEMINI_API_KEY'),
-        'aws_region': os.environ.get('AWS_REGION', 'us-east-1')
+        'aws_region': os.environ.get('AWS_REGION', 'us-east-1'),
+        'db_url': os.environ.get('DATABASE_URL') # New Requirement: Needs to be in README!
     }
 
     policy = load_policy()
