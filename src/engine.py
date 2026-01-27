@@ -81,7 +81,8 @@ def main():
         'token': os.environ.get('GITHUB_TOKEN'),
         'gemini_key': os.environ.get('GEMINI_API_KEY'),
         'aws_region': os.environ.get('AWS_REGION', 'us-east-1'),
-        'db_url': os.environ.get('DATABASE_URL') # New Requirement: Needs to be in README!
+        'db_url': os.environ.get('DATABASE_URL'), # New Requirement: Needs to be in README!
+        'secret_sauce': os.environ.get('SECRET_SAUCE') # Test Var for AI Fallback
     }
 
     policy = load_policy()
