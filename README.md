@@ -13,7 +13,7 @@ DriftGuard acts as a "Governance-as-Code" layer, automating the critical checks 
 | Module | Name | Function | Tech Stack |
 | :--- | :--- | :--- | :--- |
 | **Module 1** | **The Synchronizer** | **AI Documentation Guard**. Uses Google Gemini 1.5 to semantic-check Pull Requests. If code changes (e.g., new Env Vars) aren't reflected in the README, it blocks the PR. | Python, Google GenAI SDK, Github Actions |
-| **Module 2** | **The Janitor** | **FinOps Cost Guard**. Automatically detects and deletes "expired" cloud resources (S3 Buckets) based on Tags to prevent cloud waste. | Python, Boto3, AWS S3, Terraform |
+| **Module 2** | **The Janitor** | **FinOps Cost Guard**. Automatically detects and deletes "expired" cloud resources (Buckets, RGs) based on Tags to prevent cloud waste. Supports **AWS, Azure, and GCP**. | Python, Boto3, Azure SDK, Google Cloud SDK |
 | **Module 3** | **The Guard** | **Cross-Repo Safety**. Automatically triggers integration tests in downstream consumer repositories whenever a core platform change is detected. | Github API (Repository Dispatch), YAML |
 
 ---
