@@ -4,3 +4,7 @@ google-genai
 pyyaml
 requests
 python-dateutil
+azure-identity
+azure-mgmt-resource
+azure-storage-blob
+google-cloud-storage
