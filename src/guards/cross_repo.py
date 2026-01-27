@@ -5,7 +5,15 @@ import time
 def run(context, config):
     print("🛡️  Starting Cross-Repo Safety Guard...")
     
-    token = context['token']
+    # Security Enhancement: Prefer a dedicated PAT for cross-repo access
+    # GITHUB_TOKEN often has restricted permissions for triggering events in other repos
+    token = os.getenv('DRIFTGUARD_PAT') 
+    if token:
+        print("  🔑 Using DRIFTGUARD_PAT for cross-repo authentication.")
+    else:
+        print("  ⚠️ DRIFTGUARD_PAT not found. Falling back to context token (might lack permissions).")
+        token = context['token']
+
     current_repo = context['repo_name']
     pr_number = context['pr_number']
     targets = config.get('downstream_repos', [])

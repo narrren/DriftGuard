@@ -48,7 +48,11 @@ Navigate to **Settings > Secrets and variables > Actions** and add:
 *   `GEMINI_API_KEY`: Your Google Gemini API Key.
 *   `AWS_ACCESS_KEY_ID`: AWS IAM User Key.
 *   `AWS_SECRET_ACCESS_KEY`: AWS IAM User Secret.
-*   `DATABASE_URL`: (Optional/Mock) Connection string for database dependency checks.
+*   `AZURE_SUBSCRIPTION_ID`: (Optional) For Azure Resources.
+*   `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`: Azure Service Principal credentials.
+*   `GCP_CREDENTIALS_JSON`: (Optional) Google Cloud Service Account Key (JSON).
+*   `DRIFTGUARD_PAT`: (Recommended) A Personal Access Token with `repo` scope for Cross-Repo dispatching.
+*   `DATABASE_URL`: (Optional) Example variable for testing the AI Guard.
 
 ### 3. Usage
 The platform runs automatically on every Pull Request.
@@ -107,6 +111,7 @@ driftguard/
 ## ⚙️ Environment Variables Reference
 | Variable | Description |
 | :--- | :--- |
-| `DATABASE_URL` | **Required**. Connection string for the database (e.g. postgres://user:pass@localhost:5432/db). |
+| `DRIFTGUARD_PAT` | **Recommended**. Personal Access Token for triggering workflows in external repositories (Cross-Repo Guard). |
+| `ANY_ENV_VAR` | The AI Guard now scans for *any* `os.getenv` or `os.environ` usage in your code. Check the README! |
 
 

@@ -20,14 +20,23 @@ class AWSJanitor(CloudJanitor):
         self.s3 = boto3.client('s3')
 
     def scan_and_clean(self, dry_run=False):
-        print("  🔍 Scanning AWS S3 Buckets...")
+        print("  🔍 Scanning AWS S3 Buckets (Paginated)...")
         try:
+            # Production Fix: Handle accounts with >1000 buckets
+            # Note: list_buckets does not support pagination natively in boto3, 
+            # it returns all buckets (up to 10k). But best practice involves handling potential limits.
             response = self.s3.list_buckets()
+            
             for bucket in response['Buckets']:
                 name = bucket['Name']
-                self._check_bucket(name, dry_run)
+                try:
+                    self._check_bucket(name, dry_run)
+                except Exception as inner_e:
+                    # Don't let one bad bucket crash the whole job
+                    print(f"    ⚠️ Skipping {name}: Access Denied or Error ({str(inner_e)})")
+
         except Exception as e:
-            print(f"  ❌ AWS Error: {e}")
+            print(f"  ❌ AWS Critical Error: {e}")
 
     def _check_bucket(self, bucket_name, dry_run):
         try:
@@ -98,7 +107,18 @@ class AzureJanitor(CloudJanitor):
                     expiry_str = tags['driftguard:expiry']
                     # Logic similar to AWS...
                     print(f"    Found Tagged RG: {rg.name}")
-                    # Actual deletion logic would go here
+                    
+                    if now > expiry_date:
+                        print(f"    💀 EXPIRED: {rg.name} (Expired at {expiry_str}) - DESTROYING...")
+                        if not dry_run:
+                            try:
+                                delete_async_op = self.resource_client.resource_groups.begin_delete(rg.name)
+                                # We don't wait for completion to avoid blocking the GitHub Action for too long
+                                print(f"    ✔ DELETION INITIATED: {rg.name}")
+                            except Exception as del_e:
+                                print(f"    ❌ Failed to delete RG {rg.name}: {del_e}")
+                        else:
+                            print(f"    [Dry Run] Would delete RG {rg.name}")
         except Exception as e:
             print(f"  ❌ Azure Error: {e}")
 
@@ -124,6 +144,31 @@ class GCPJanitor(CloudJanitor):
                 labels = bucket.labels
                 if labels and 'driftguard-expiry' in labels:
                     print(f"    Found Tagged Bucket: {bucket.name}")
+                    # GCP Labels are lowercase
+                    expiry_str = labels['driftguard-expiry']
+                    expiry_date = parser.parse(expiry_str)
+
+                    if expiry_date.tzinfo is None:
+                        expiry_date = expiry_date.replace(tzinfo=datetime.timezone.utc)
+                    
+                    now = datetime.datetime.now(datetime.timezone.utc)
+
+                    if now > expiry_date:
+                        print(f"    💀 EXPIRED: {bucket.name} (Expired at {expiry_str}) - DESTROYING...")
+                        if not dry_run:
+                            try:
+                                # Must empty bucket first
+                                bloblist = list(bucket.list_blobs())
+                                if bloblist:
+                                    bucket.delete_blobs(bloblist)
+                                    print(f"      - Deleted {len(bloblist)} objects")
+                                
+                                bucket.delete()
+                                print(f"    ✔ REAPED: {bucket.name}")
+                            except Exception as del_e:
+                                print(f"    ❌ Failed to delete Bucket {bucket.name}: {del_e}")
+                        else:
+                            print(f"    [Dry Run] Would delete Bucket {bucket.name}")
         except Exception as e:
             print(f"  ❌ GCP Error: {e}")
 

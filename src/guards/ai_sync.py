@@ -89,16 +89,32 @@ def run(context, config):
         print(f"⚠️  AI Provider Error ({e}). Switching to Resiliency Fallback Mode.")
         # FALLBACK: Deterministic Check
         # This ensures the pipeline verifies the critical change even if AI is down.
-        if "DATABASE_URL" in diff_text and "DATABASE_URL" not in readme_content:
+        # FALLBACK: Regex Pattern Matching for Env Vars
+        # This ensures the pipeline verifies the critical change even if AI is down.
+        import re
+        
+        # Regex to find: os.getenv('VAR'), os.environ.get('VAR'), os.environ['VAR']
+        # Captures the VAR name in group 2 or 3 depending on quote style
+        env_var_pattern = r"(os\.getenv|os\.environ\.get|os\.environ)\[?\(?['\"]([A-Z_0-9]+)['\"]"
+        
+        matches = re.findall(env_var_pattern, diff_text)
+        found_vars = set([m[1] for m in matches])
+        
+        missing_vars = []
+        for var in found_vars:
+            if var not in readme_content:
+                missing_vars.append(var)
+        
+        if missing_vars:
              result = {
                 "status": "FAIL",
-                "reason": "[Fallback Guard] Detected 'DATABASE_URL' in diff but not in README.",
-                "suggested_doc_edit": "Please add `DATABASE_URL` to the README."
+                "reason": f"[Fallback Guard] Detected new environment variables {missing_vars} in code but not in README.",
+                "suggested_doc_edit": f"Please add {', '.join(missing_vars)} to the README environment configuration section."
             }
         else:
              result = {
                 "status": "PASS",
-                "reason": "[Fallback Guard] No obvious drift detected.",
+                "reason": "[Fallback Guard] No undocumented environment variables found via regex scan.",
                 "suggested_doc_edit": ""
             }
 

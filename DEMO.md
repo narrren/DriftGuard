@@ -47,6 +47,7 @@ This guide provides a step-by-step script to demonstrate the capabilities of the
     - Go to the **Actions** tab.
     - Look for **"Consumer App Integration Test"**.
     - Note that valid Pull Requests automatically trigger this workflow via `repository_dispatch`.
+    - *(Note: Ensure `DRIFTGUARD_PAT` is set in Secrets if dispatching to a different organization or private repo).*
     - This proves DriftGuard is communicating across the repository boundary to enforce safety.
 
 ---
