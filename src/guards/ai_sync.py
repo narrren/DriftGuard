@@ -76,7 +76,7 @@ def run(context, config):
     
     try:
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.0-flash-exp',
             contents=prompt
         )
         # Cleanup response string to ensure JSON parsing
