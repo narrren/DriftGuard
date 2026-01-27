@@ -66,3 +66,9 @@ Push a change!
         - `guards/` (The Modules: AI, Janitor, Guard)
     - `terraform/` (Infrastructure Templates)
     - `policy.yaml` (The Source of Truth)
+
+## ⚙️ Environment Variables
+| Variable | Description |
+| :--- | :--- |
+| `DATABASE_URL` | **Required**. Connection string for the database (e.g. postgres://user:pass@localhost:5432/db). |
+
