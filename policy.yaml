@@ -31,7 +31,7 @@ stages:
     trigger_on: [opened, synchronize]
     config:
       downstream_repos:
-        - "narrren/consumer-app-demo"
+        - "narrren/DriftGuard" # Pointing to self for demonstration
       wait_for_status: false
 
 cleanup:
