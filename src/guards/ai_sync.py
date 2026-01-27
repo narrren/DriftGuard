@@ -69,25 +69,19 @@ def run(context, config):
     """
 
     # 5. Call Gemini
-    # --- MOCK AI MODE (To bypass API version conflicts for Demo) ---
-    print("⚠️  AI API Issue Detected (404 on models). Switching to Determinstic Mock Mode.")
+    # 5. Call Gemini
+    print("✨ Using AI Model: gemini-1.5-flash")
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    response = model.generate_content(prompt)
     
-    # Logic: If diff contains "DATABASE_URL" but README does not, FAIL.
-    if "DATABASE_URL" in diff_text and "DATABASE_URL" not in readme_content:
-        result = {
-            "status": "FAIL",
-            "reason": "You added a dependency on 'DATABASE_URL' but did not document it in the README.",
-            "suggested_doc_edit": "## Environment Variables\n- `DATABASE_URL`: Connection string for the database."
-        }
-    else:
-        result = {
-            "status": "PASS",
-            "reason": "No documentation drift detected.",
-            "suggested_doc_edit": ""
-        }
-    
-    # response = model.generate_content(prompt) ... (Disabled for demo stability)
-    # -------------------------------------------------------------
+    try:
+        # Cleanup response string to ensure JSON parsing
+        text = response.text.replace('```json', '').replace('```', '').strip()
+        import json
+        result = json.loads(text)
+    except Exception as e:
+        print(f"Failed to parse AI response: {response.text}")
+        raise e
 
     print(f"AI Verdict: {result['status']}")
 
