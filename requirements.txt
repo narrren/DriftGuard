@@ -1,6 +1,5 @@
 PyGithub
 boto3
-openai
 google-generativeai
 pyyaml
 requests

@@ -1,90 +1,96 @@
 import os
-import json
+import sys
+import google.generativeai as genai
 from github import Github
 
-def analyze_diff_impact(diff_text, readme_content):
-    """
-    This function sends the diff and readme to the AI Model.
-    For this boilerplate, we'll simulate the AI response or prepare the prompt.
-    """
+def run(context, config):
+    print("🧠 Starting AI Doc-Guard...")
     
-    prompt = f"""
-    You are a Senior Technical Writer. Analyze this code diff.
-    Does it change function signatures, API endpoints, or environment variables?
-    If yes, check if the attached README reflects these changes.
-    
-    Diff:
-    {diff_text[:1000]} # Truncated for token limits in this demo
-    
-    README:
-    {readme_content[:1000]}
-    
-    Return a JSON: {{ 'status': 'PASS/FAIL', 'reason': '...', 'suggested_doc_edit': '...' }}
-    """
-    
-    print("DEBUG: Sending prompt to AI...")
-    # Real implementation would call OpenAI or Gemini here.
-    # returning a mock response for now to ensure flow works without keys.
-    
-    # Simulating a check - if "BREAK_ME" is in diff and not "FIXED_DOC" in readme -> FAIL
-    if "BREAK_ME" in diff_text and "FIXED_DOC" not in readme_content:
-         return {
-            'status': 'FAIL',
-            'reason': 'Detected breaking change in function signatures without README update.',
-            'suggested_doc_edit': 'Update README to include new parameter for XYZ.'
-        }
-    
-    return {'status': 'PASS', 'reason': 'No documented changes needed.', 'suggested_doc_edit': ''}
+    token = context['token']
+    repo_name = context['repo_name']
+    pr_number = int(context['pr_number'])
+    gemini_key = context['gemini_key']
+    readme_path = config.get('readme_path', 'README.md')
 
-def run_ai_guard(pr_number, github_token, repo_name):
-    print(f"Running AI Doc-Guard on PR #{pr_number} in {repo_name}")
-    
-    g = Github(github_token)
+    if not gemini_key:
+        raise Exception("GEMINI_API_KEY not set in environment.")
+
+    # 1. Connect to GitHub
+    g = Github(token)
     repo = g.get_repo(repo_name)
     pr = repo.get_pull(pr_number)
-    
-    # 1. Fetch Diff
-    # requests.get(pr.diff_url) or pr.get_files()
-    # collecting all patch data
+
+    # 2. Get Diff
     diff_text = ""
-    for file in pr.get_files():
+    print(f"Fetching diff for PR #{pr_number}...")
+    files = pr.get_files()
+    for file in files:
         if file.patch:
-            diff_text += f"\nFile: {file.filename}\n{file.patch}"
-            
-    # 2. Fetch README
+            diff_text += f"\nFile: {file.filename}\n{file.patch}\n"
+    
+    if not diff_text:
+        print("No changes found in diff.")
+        return
+
+    # 3. Get README
+    print(f"Fetching {readme_path}...")
     try:
-        readme = repo.get_contents("README.md", ref=pr.head.ref)
-        readme_content = readme.decoded_content.decode("utf-8")
+        readme_file = repo.get_contents(readme_path, ref=pr.head.ref)
+        readme_content = readme_file.decoded_content.decode("utf-8")
     except Exception as e:
-        print(f"Warning: README.md not found. {e}")
-        readme_content = ""
+        print(f"Warning: {readme_path} not found. ({e})")
+        readme_content = "(No README file found)"
 
-    # 3. AI Analysis
-    result = analyze_diff_impact(diff_text, readme_content)
+    # 4. Prepare Prompt for Gemini
+    prompt = f"""
+    You are a generic Senior Technical Writer and Code Reviewer.
+    Your task is to analyze the following Code Diff and ensure that the Documentation (README) is up to date.
     
-    print(f"AI Result: {result}")
+    Pass Criteria:
+    - If the code changes are internal logic, bug fixes, or minor refactors that do NOT affect the API, usage, or environment variables, return PASS.
+    - If the code changes introduce new features, change function signatures, adding/removing environment variables, or change API endpoints, checks if these are reflected in the README.
     
+    Input Data:
+    
+    === CURRENT README ===
+    {readme_content[:2000]} 
+    
+    === CODE DIFF ===
+    {diff_text[:3000]}
+    
+    Instructions:
+    Return your response in pure JSON format (no markdown formatting).
+    JSON Structure:
+    {{
+      "status": "PASS" or "FAIL",
+      "reason": "Short explanation of why.",
+      "suggested_doc_edit": "Markdown text suggesting how to fix the documentation."
+    }}
+    """
+
+    # 5. Call Gemini
+    print("Sending analysis request to Gemini...")
+    genai.configure(api_key=gemini_key)
+    model = genai.GenerativeModel('gemini-pro')
+    response = model.generate_content(prompt)
+    
+    try:
+        # Cleanup response string to ensure JSON parsing
+        text = response.text.replace('```json', '').replace('```', '').strip()
+        import json
+        result = json.loads(text)
+    except Exception as e:
+        print(f"Failed to parse AI response: {response.text}")
+        raise e
+
+    print(f"AI Verdict: {result['status']}")
+
+    # 6. Act on Result
     if result['status'] == 'FAIL':
-        # Action: Post comment
-        comment_body = f"## 🤖 DriftGuard AI Report\n\n**Status:** ❌ FAIL\n\n**Reason:** {result['reason']}\n\n**Suggested Edit:**\n```markdown\n{result['suggested_doc_edit']}\n```"
-        pr.create_issue_comment(comment_body)
-        print("Blocked PR with comment.")
-        sys.exit(1) # Block the build
+        body = f"## 🤖 DriftGuard AI Report\n\n**Status:** ❌ Documentation Drift Detected\n\n**Reason:** {result['reason']}\n\n**Suggested Fix:**\n```markdown\n{result['suggested_doc_edit']}\n```"
+        
+        # Check if we already commented to avoid spam (optional, skipping for MVP)
+        pr.create_issue_comment(body)
+        raise Exception("Documentation is out of sync with code changes.")
     else:
-        print("DriftGuard AI Check Passed.")
-
-import sys
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python ai_sync.py <pr_number> <repo_name>")
-        sys.exit(1)
-        
-    pr_num = int(sys.argv[1])
-    repo = sys.argv[2]
-    token = os.environ.get("GITHUB_TOKEN")
-    
-    if not token:
-        print("Error: GITHUB_TOKEN not set.")
-        sys.exit(1)
-        
-    run_ai_guard(pr_num, token, repo)
+        print("✅ Documentation is in sync.")

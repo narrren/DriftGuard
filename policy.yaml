@@ -1,14 +1,44 @@
-version: 1.0
+version: "1.0"
+description: "DriftGuard Governance Policy"
+
+# The "UniFlow" State Machine
 stages:
+  # Phase 2: The Synchronizer
   - name: ai_doc_check
+    type: documentation
     enabled: true
     severity: block
-    description: "Ensures documentation is updated with code changes."
-  - name: janitor
+    trigger_on: [opened, synchronize, reopened]
+    config:
+      llm_provider: gemini
+      readme_path: "README.md"
+
+  # Phase 3: The Janitor (Infrastructure)
+  - name: infrastructure_preview
+    type: infrastructure
     enabled: true
-    ttl: 24h
-    description: "Cleans up ephemeral resources."
+    severity: block
+    trigger_on: [opened, synchronize, reopened]
+    config:
+      ttl_hours: 24
+      terraform_dir: "./terraform"
+
+  # Phase 4: The Guard (Cross-Repo)
   - name: cross_repo_safety
-    enabled: false
+    type: integration_test
+    enabled: true
     severity: warning
-    dependencies: []
+    trigger_on: [opened, synchronize]
+    config:
+      downstream_repos:
+        - "narrren/consumer-app-demo"
+      wait_for_status: false
+
+cleanup:
+  # Phase 3: Janitor Cleanup Signal
+  - name: janitor_cleanup
+    type: cleanup
+    enabled: true
+    trigger_on: [closed]
+    config:
+      terraform_dir: "./terraform"
