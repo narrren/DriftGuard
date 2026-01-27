@@ -69,9 +69,7 @@ def run(context, config):
     """
 
     # 5. Call Gemini
-    print("Sending analysis request to Gemini...")
-    genai.configure(api_key=gemini_key)
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     response = model.generate_content(prompt)
     
     try:
