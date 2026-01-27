@@ -3,6 +3,15 @@ name: DriftGuard Orchestrator
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
+  # Enable Reusable Workflow capability
+  workflow_call:
+    secrets:
+      GEMINI_API_KEY:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
 
 jobs:
   engine:
