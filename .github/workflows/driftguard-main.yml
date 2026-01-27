@@ -9,7 +9,7 @@ jobs:
     name: DriftGuard Engine
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write # Required for repository_dispatch
       pull-requests: write # For comments
       issues: write
       statuses: write
