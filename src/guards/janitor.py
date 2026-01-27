@@ -107,6 +107,12 @@ class AzureJanitor(CloudJanitor):
                     expiry_str = tags['driftguard:expiry']
                     # Logic similar to AWS...
                     print(f"    Found Tagged RG: {rg.name}")
+
+                    expiry_date = parser.parse(expiry_str)
+                    if expiry_date.tzinfo is None:
+                        expiry_date = expiry_date.replace(tzinfo=datetime.timezone.utc)
+                    
+                    now = datetime.datetime.now(datetime.timezone.utc)
                     
                     if now > expiry_date:
                         print(f"    💀 EXPIRED: {rg.name} (Expired at {expiry_str}) - DESTROYING...")

@@ -41,6 +41,24 @@ def run(context, config):
         print(f"Warning: {readme_path} not found. ({e})")
         readme_content = "(No README file found)"
 
+    # 3b. Check for Override Command
+    context_override = False
+    
+    # Check PR body (safely handle None)
+    if pr.body and "/driftguard override" in pr.body:
+        context_override = True
+    
+    # Check comments (simplified - usually we'd page through them)
+    if not context_override:
+        for comment in pr.get_issue_comments():
+            if comment.body and "/driftguard override" in comment.body:
+                context_override = True
+                break
+    
+    if context_override:
+        print("🛡️  Override detected via '/driftguard override'. Skipping AI Policy.")
+        return
+
     # 4. Prepare Prompt for Gemini
     prompt = f"""
     You are a generic Senior Technical Writer and Code Reviewer.
@@ -132,3 +150,4 @@ def run(context, config):
         raise Exception("DriftGuard blocked this PR: Documentation is out of sync.")
     else:
         print("✅ Documentation is in sync.")
+
