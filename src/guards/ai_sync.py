@@ -1,10 +1,10 @@
 import os
 import sys
-import google.generativeai as genai
+from google import genai
 from github import Github
 
 def run(context, config):
-    print("🧠 Starting AI Doc-Guard...")
+    print("🧠 Starting AI Doc-Guard (Powered by google-genai SDK)...")
     
     token = context['token']
     repo_name = context['repo_name']
@@ -68,19 +68,26 @@ def run(context, config):
     }}
     """
 
-    # 5. Call Gemini
-    # 5. Call Gemini
+    # 5. Call Gemini (New SDK V1)
     print("✨ Using AI Model: gemini-1.5-flash")
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    response = model.generate_content(prompt)
+    client = genai.Client(api_key=gemini_key)
     
     try:
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt
+        )
+        
         # Cleanup response string to ensure JSON parsing
         text = response.text.replace('```json', '').replace('```', '').strip()
         import json
         result = json.loads(text)
+        
     except Exception as e:
-        print(f"Failed to parse AI response: {response.text}")
+        print(f"Failed to parse AI response: {e}")
+        # Fallback dump for debugging
+        if 'response' in locals():
+            print(f"Raw Response: {response.text}")
         raise e
 
     print(f"AI Verdict: {result['status']}")
@@ -89,8 +96,11 @@ def run(context, config):
     if result['status'] == 'FAIL':
         body = f"## 🤖 DriftGuard AI Report\n\n**Status:** ❌ Documentation Drift Detected\n\n**Reason:** {result['reason']}\n\n**Suggested Fix:**\n```markdown\n{result['suggested_doc_edit']}\n```"
         
-        # Check if we already commented to avoid spam (optional, skipping for MVP)
-        pr.create_issue_comment(body)
+        try:
+           pr.create_issue_comment(body)
+        except Exception as e:
+           print(f"Could not post comment: {e}")
+           
         raise Exception("Documentation is out of sync with code changes.")
     else:
         print("✅ Documentation is in sync.")

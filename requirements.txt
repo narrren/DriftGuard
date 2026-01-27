@@ -1,6 +1,6 @@
 PyGithub
 boto3
-google-generativeai>=0.4.0
+google-genai
 pyyaml
 requests
 python-dateutil
