@@ -20,7 +20,12 @@ stages:
     severity: block
     trigger_on: [opened, synchronize, reopened]
     config:
+      target:
+        - "aws"
+        # - "azure" (Requires AZURE_SUBSCRIPTION_ID)
+        # - "gcp"   (Requires GCP_CREDENTIALS_JSON)
       ttl_hours: 24
+      enforce: true
       terraform_dir: "./terraform"
 
   # Phase 4: The Guard (Cross-Repo)
