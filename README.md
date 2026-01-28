@@ -12,8 +12,8 @@ DriftGuard acts as a "Governance-as-Code" layer, automating the critical checks 
 
 | Module | Name | Function | Tech Stack |
 | :--- | :--- | :--- | :--- |
-| **Module 1** | **The Synchronizer** | **AI Documentation Guard**. Uses Google Gemini 1.5 to semantic-check Pull Requests. If code changes (e.g., new Env Vars) aren't reflected in the README, it blocks the PR. | Python, Google GenAI SDK, Github Actions |
-| **Module 2** | **The Janitor** | **FinOps Cost Guard**. Automatically detects and deletes "expired" cloud resources (Buckets, RGs) based on Tags to prevent cloud waste. Supports **AWS, Azure, and GCP**. | Python, Boto3, Azure SDK, Google Cloud SDK |
+| **Module 1** | **The Synchronizer** | **AI Documentation Guard**. Uses Google Gemini 1.5 to semantic-check Pull Requests. If code changes (e.g., new Env Vars) aren't reflected in the README, it blocks the PR. Includes **Manual Override** via comments. | Python, Google GenAI SDK, Github Actions |
+| **Module 2** | **The Janitor** | **FinOps Cost Guard**. Automatically detects and deletes "expired" cloud resources (Buckets, RGs) based on Tags. includes **Safe-Check** (verifies tag presence) and supports **AWS, Azure, GCP**. | Python, Boto3, Azure SDK, Google Cloud SDK |
 | **Module 3** | **The Guard** | **Cross-Repo Safety**. Automatically triggers integration tests in downstream consumer repositories whenever a core platform change is detected. | Github API (Repository Dispatch), YAML |
 
 ---
@@ -46,8 +46,8 @@ graph LR
 ### 2. Configure Secrets
 Navigate to **Settings > Secrets and variables > Actions** and add:
 *   `GEMINI_API_KEY`: Your Google Gemini API Key.
-*   `AWS_ACCESS_KEY_ID`: AWS IAM User Key.
-*   `AWS_SECRET_ACCESS_KEY`: AWS IAM User Secret.
+*   `AWS_ROLE_ARN`: **Attributes of OIDC Role**. The ARN of the IAM Role you created for GitHub Actions OIDC (Trust Relationship).
+*   *(Deleted)* `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`: No longer required (Zero Trust).
 *   `AZURE_SUBSCRIPTION_ID`: (Optional) For Azure Resources.
 *   `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`: Azure Service Principal credentials.
 *   `GCP_CREDENTIALS_JSON`: (Optional) Google Cloud Service Account Key (JSON).

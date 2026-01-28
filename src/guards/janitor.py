@@ -54,6 +54,7 @@ class AWSJanitor(CloudJanitor):
                 now = datetime.datetime.now(datetime.timezone.utc)
                 
                 if now > expiry_date:
+                    print(f"    🛡️ Safety Check Passed: {bucket_name} carries driftguard tag.")
                     print(f"    💀 EXPIRED: {bucket_name} (Expired at {expiry_str}) - DESTROYING...")
                     if not dry_run:
                         self._nuke_bucket(bucket_name)
@@ -115,6 +116,7 @@ class AzureJanitor(CloudJanitor):
                     now = datetime.datetime.now(datetime.timezone.utc)
                     
                     if now > expiry_date:
+                        print(f"    🛡️ Safety Check Passed: {rg.name} carries driftguard tag.")
                         print(f"    💀 EXPIRED: {rg.name} (Expired at {expiry_str}) - DESTROYING...")
                         if not dry_run:
                             try:
@@ -159,20 +161,21 @@ class GCPJanitor(CloudJanitor):
                     
                     now = datetime.datetime.now(datetime.timezone.utc)
 
-                    if now > expiry_date:
-                        print(f"    💀 EXPIRED: {bucket.name} (Expired at {expiry_str}) - DESTROYING...")
-                        if not dry_run:
-                            try:
-                                # Must empty bucket first
-                                bloblist = list(bucket.list_blobs())
-                                if bloblist:
-                                    bucket.delete_blobs(bloblist)
-                                    print(f"      - Deleted {len(bloblist)} objects")
-                                
-                                bucket.delete()
-                                print(f"    ✔ REAPED: {bucket.name}")
-                            except Exception as del_e:
-                                print(f"    ❌ Failed to delete Bucket {bucket.name}: {del_e}")
+                if now > expiry_date:
+                    print(f"    🛡️ Safety Check Passed: {bucket.name} carries driftguard tag.")
+                    print(f"    💀 EXPIRED: {bucket.name} (Expired at {expiry_str}) - DESTROYING...")
+                    if not dry_run:
+                        try:
+                            # Must empty bucket first
+                            bloblist = list(bucket.list_blobs())
+                            if bloblist:
+                                bucket.delete_blobs(bloblist)
+                                print(f"      - Deleted {len(bloblist)} objects")
+                            
+                            bucket.delete()
+                            print(f"    ✔ REAPED: {bucket.name}")
+                        except Exception as del_e:
+                            print(f"    ❌ Failed to delete Bucket {bucket.name}: {del_e}")
                         else:
                             print(f"    [Dry Run] Would delete Bucket {bucket.name}")
         except Exception as e:

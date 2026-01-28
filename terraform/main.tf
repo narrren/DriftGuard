@@ -9,6 +9,16 @@ terraform {
       version = "~> 3.0"
     }
   }
+
+  # REMOTE BACKEND (State Locking)
+  # Ensure you create this bucket and table manually before running!
+  backend "s3" {
+    bucket         = "driftguard-terraform-state-LOCK" # @TODO: Replace with unique bucket
+    key            = "global/s3/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "driftguard-terraform-locks"      # @TODO: Replace with DynamoDB table
+    encrypt        = true
+  }
 }
 
 provider "aws" {

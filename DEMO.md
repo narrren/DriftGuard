@@ -23,6 +23,7 @@ This guide provides a step-by-step script to demonstrate the capabilities of the
     - Wait ~30 seconds.
     - The `DriftGuard Engine` check will **FAIL**.
     - A bot comment will appear: *"❌ Documentation Drift Detected. You added `STRIPE_API_KEY` but did not document it."*
+    - **(Optional) Bypass:** Reply with `/driftguard override`. The check will re-run and **PASS**, demonstrating the manual intervention capability.
 
 ---
 

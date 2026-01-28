@@ -51,7 +51,7 @@ def execute_stage(stage, context, event_type):
 
         elif name == 'janitor_cleanup':
              from src.guards import janitor
-             janitor.cleanup_pr_resources(context, stage['config'])
+             janitor.scan_resources(stage['config'])
 
     except Exception as e:
         print(f"❌ Stage '{name}' failed: {e}")

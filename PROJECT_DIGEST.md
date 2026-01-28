@@ -3,6 +3,8 @@
 ## 1. Executive Summary
 **DriftGuard** is an autonomous **Platform Engineering Governance Suite** designed to prevent "Broken Factory" syndrome in modern DevOps environments. It acts as a "Governance-as-Code" layer that sits within the CI/CD pipeline, automatically enforcing policies related to **Documentation**, **Cost Management (FinOps)**, and **Integration Stability**. 
 
+**Security Note:** DriftGuard employs **OIDC (OpenID Connect)** "Zero Trust" authentication for Cloud Providers, eliminating the need for long-lived access keys.
+
 By treating governance as a config-driven state machine, DriftGuard eliminates manual toil, ensures compliance without friction, and maintains a clean, cost-efficient cloud footprint across **AWS, Azure, and Google Cloud Platform (GCP)**.
 
 ---
@@ -67,7 +69,7 @@ The system functions as a modular State Machine orchestrated by GitHub Actions a
 | **Cloud (AWS)** | **Boto3** | Resource scanning and deletion for AWS S3. |
 | **Cloud (Azure)** | **Azure SDK** | Resource Group management and cleanup. |
 | **Cloud (GCP)** | **Google Cloud SDK** | Storage Bucket lifecycle management. |
-| **IaC** | **Terraform** | Provisioning test infrastructure for demos. |
+| **IaC** | **Terraform** | Provisioning test infrastructure. Configured with **S3 Backend** for State Locking. |
 | **Formatting** | **YAML** | Policy definition and configuration. |
 | **Frontend** | **HTML5/Tailwind** | Project Landing Page. |
 
@@ -126,6 +128,7 @@ LLMs can occasionally "hallucinate" or flag a false positive (claiming drift whe
     - name: ai_doc_check
       severity: warning # Log it, but don't stop the merge
     ```
+*   **Manual Override:** Developers can simply type `/driftguard override` in the PR body or comments to bypass the AI check for that specific PR.
 
 ---
 
