@@ -105,10 +105,17 @@ from pythonjsonlogger import jsonlogger
 # 📊 Observability Setup (JSON API)
 # ==========================================
 logger = logging.getLogger()
+# Console Handler
 logHandler = logging.StreamHandler()
 formatter = jsonlogger.JsonFormatter('%(asctime)s %(levelname)s %(message)s')
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
+
+# File Handler (for Artifact Upload)
+fileHandler = logging.FileHandler('driftguard_engine.json.log')
+fileHandler.setFormatter(formatter)
+logger.addHandler(fileHandler)
+
 logger.setLevel(logging.INFO)
 
 def main():

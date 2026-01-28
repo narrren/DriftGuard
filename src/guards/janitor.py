@@ -7,11 +7,19 @@ import logging
 from pythonjsonlogger import jsonlogger
 
 # Setup Logger
+# Setup Logger
 logger = logging.getLogger()
+# Console Handler
 logHandler = logging.StreamHandler()
 formatter = jsonlogger.JsonFormatter('%(asctime)s %(levelname)s %(message)s')
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
+
+# File Handler (for Artifact Upload)
+fileHandler = logging.FileHandler('driftguard_janitor.json.log')
+fileHandler.setFormatter(formatter)
+logger.addHandler(fileHandler)
+
 logger.setLevel(logging.INFO)
 
 # ==========================================

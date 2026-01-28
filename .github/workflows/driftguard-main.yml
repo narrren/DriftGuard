@@ -75,3 +75,11 @@ jobs:
         run: |
           # Pass event type and action to engine
           python src/engine.py --event "${{ github.event_name }}" --action "${{ github.event.action }}"
+
+      - name: Upload DriftGuard Logs (JSON)
+        uses: actions/upload-artifact@v4
+        if: always() # Run even if engine fails (to debug crashes)
+        with:
+          name: driftguard-engine-logs
+          path: driftguard_engine.json.log
+          retention-days: 7

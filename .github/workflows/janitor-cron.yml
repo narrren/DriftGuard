@@ -38,3 +38,11 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: |
           python src/guards/janitor.py
+
+      - name: Upload Janitor Logs (JSON)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: driftguard-janitor-logs
+          path: driftguard_janitor.json.log
+          retention-days: 7
