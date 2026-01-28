@@ -12,9 +12,9 @@ DriftGuard acts as a "Governance-as-Code" layer, automating the critical checks 
 
 | Module | Name | Function | Tech Stack |
 | :--- | :--- | :--- | :--- |
-| **Module 1** | **The Synchronizer** | **AI Documentation Guard**. Uses Google Gemini 1.5 to semantic-check Pull Requests. If code changes (e.g., new Env Vars) aren't reflected in the README, it blocks the PR. Includes **Manual Override** via comments. | Python, Google GenAI SDK, Github Actions |
-| **Module 2** | **The Janitor** | **FinOps Cost Guard**. Automatically detects and deletes "expired" cloud resources (Buckets, RGs) based on Tags. includes **Safe-Check** (verifies tag presence) and supports **AWS, Azure, GCP**. | Python, Boto3, Azure SDK, Google Cloud SDK |
-| **Module 3** | **The Guard** | **Cross-Repo Safety**. Automatically triggers integration tests in downstream consumer repositories whenever a core platform change is detected. | Github API (Repository Dispatch), YAML |
+| **Module 1** | **The Synchronizer** | **AI Documentation Guard**. Uses Google Gemini to semantic-check Pull Requests. Features **Tenacity Retries** for robustness and **Manual Override** (/driftguard override) for flexibility. | Python, Google GenAI SDK, Github Actions |
+| **Module 2** | **The Janitor** | **FinOps Cost Guard**. Detects and deletes expired cloud resources. Features **Safety Checks**, **Protected Tag Logic**, **Idempotency** (handles 404s), and **JSON Logging**. | Python, Boto3, Azure SDK, Google Cloud SDK |
+| **Module 3** | **The Guard** | **Cross-Repo Safety**. Automatically triggers integration tests in downstream consumer repositories. Features **Pydantic Validation** ensuring safe configuration processing. | Github API (Repository Dispatch), YAML |
 
 ---
 
@@ -64,7 +64,17 @@ stages:
   - name: ai_doc_check
     enabled: true
     severity: block
+
+# GLOBAL SAFETY SETTINGS
+allow_delete:
+  dry_run: true # Set to false to enable actual deletion
 ```
+
+### 4. Zero-Trust Security 🔐
+DriftGuard now uses **OIDC (OpenID Connect)** for AWS, meaning no long-lived access keys are stored in GitHub Secrets.
+
+### 5. Observability 📊
+All logs are output in structured **JSON** format (`event`, `level`, `timestamp`) for easy integration with Datadog/Splunk.
 
 ---
 

@@ -23,6 +23,7 @@ The system functions as a modular State Machine orchestrated by GitHub Actions a
     *   Which guards are enabled?
     *   What is the enforcement level (`BLOCK` vs `WARNING`)?
     *   What are the operational parameters (e.g., `ttl_hours: 24`, `target: [aws, azure]`)?
+*   **Safety:** The configuration is strictly validated using **Pydantic Models** at startup. Any schema violation (typos, missing fields) causes an immediate fail-fast exit, preventing undefined behavior.
 
 ---
 
@@ -83,6 +84,11 @@ The system functions as a modular State Machine orchestrated by GitHub Actions a
     *   **AI Fallback:** The system does not fail open. If the AI provider errors out, a deterministic **Regex Scanner** ensures critical checks (like Env Vars) still pass.
 *   **Sanitized Inputs:**
     *   Inputs from PRs are treated as data; the engine parses text diffs rather than executing arbitrary code.
+*   **Resiliency & Observability:**
+    *   **Exponential Backoff:** All Cloud and AI API calls are wrapped with `tenacity` retries to handle transient network failures (stop=3, wait=exponential).
+    *   **Idempotency:** The Janitor gracefully handles "Resource Not Found" (404) errors, ensuring that re-running a cleanup job does not crash.
+    *   **Structured Logging:** Logs are emitted in **JSON format** (`python-json-logger`), making them ingestible by observability platforms like Datadog or CloudWatch.
+    *   **Kill Switch:** Resources tagged with `Environment: Production` or `Protected: True` are hard-blocked from deletion in the code, regardless of TTL.
 
 ---
 

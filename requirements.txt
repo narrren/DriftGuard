@@ -8,3 +8,7 @@ azure-identity
 azure-mgmt-resource
 azure-storage-blob
 google-cloud-storage
+pydantic
+tenacity
+python-json-logger
+pytest

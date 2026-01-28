@@ -90,13 +90,19 @@ def run(context, config):
     print("✨ Using AI Model: gemini-1.5-flash")
     client = genai.Client(api_key=gemini_key)
     
-    result = None
-    
-    try:
-        response = client.models.generate_content(
+    from tenacity import retry, stop_after_attempt, wait_exponential
+
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
+    def call_ai_with_retry():
+        return client.models.generate_content(
             model='gemini-2.0-flash-exp',
             contents=prompt
         )
+
+    result = None
+    
+    try:
+        response = call_ai_with_retry()
         # Cleanup response string to ensure JSON parsing
         text = response.text.replace('```json', '').replace('```', '').strip()
         import json

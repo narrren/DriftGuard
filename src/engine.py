@@ -7,14 +7,46 @@ import importlib
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+from pydantic import BaseModel, Field, ValidationError
+from typing import List, Dict, Any
+
+# ==========================================
+# 🛡️ Pydantic Schema Definitions
+# ==========================================
+class StageModel(BaseModel):
+    name: str
+    type: str
+    enabled: bool = True
+    severity: str = "warning"
+    trigger_on: List[str]
+    config: Dict[str, Any] = {}
+
+class PolicyModel(BaseModel):
+    stages: List[StageModel] = []
+    cleanup: List[StageModel] = []
+
 def load_policy(policy_path='policy.yaml'):
     if not os.path.exists(policy_path):
         policy_path = os.path.join(os.getcwd(), policy_path)
     if not os.path.exists(policy_path):
         print(f"❌ Policy file {policy_path} not found.")
         sys.exit(1)
+    
     with open(policy_path, 'r') as f:
-        return yaml.safe_load(f)
+        raw_data = yaml.safe_load(f)
+        
+    try:
+        print(f"📜 Validating Policy Schema ({policy_path})...")
+        policy = PolicyModel(**raw_data)
+        print("✅ Policy Schema is Valid.")
+        # Return as dict to preserve existing engine logic compatibility
+        return policy.model_dump() 
+    except ValidationError as e:
+        print("\n⛔ Policy Configuration Error (Pydantic):")
+        for err in e.errors():
+            loc = " -> ".join([str(l) for l in err['loc']])
+            print(f"   ❌ Field: {loc} | Error: {err['msg']}")
+        sys.exit(1)
 
 def execute_stage(stage, context, event_type):
     name = stage.get('name')
@@ -26,7 +58,7 @@ def execute_stage(stage, context, event_type):
     if event_type not in triggers:
         return
 
-    print(f"🚀 Executing Stage: {name} (Type: {stage.get('type')})")
+    logger.info(f"Executing Stage: {name}", extra={"event": "stage_start", "stage": name, "type": stage.get('type')})
     
     status = True
     try:
@@ -66,13 +98,32 @@ def execute_stage(stage, context, event_type):
         else:
             print(f"⚠️  Warning in '{name}', but severity is not block.")
 
+import logging
+from pythonjsonlogger import jsonlogger
+
+# ==========================================
+# 📊 Observability Setup (JSON API)
+# ==========================================
+logger = logging.getLogger()
+logHandler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter('%(asctime)s %(levelname)s %(message)s')
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
+logger.setLevel(logging.INFO)
+
 def main():
     parser = argparse.ArgumentParser(description="DriftGuard Policy Engine")
-    parser.add_argument('--event', type=str, required=True, help="GitHub Event Name (pull_request, issue_comment)")
-    parser.add_argument('--action', type=str, required=True, help="Event Action (opened, synchronize, closed)")
+    parser.add_argument('--event', type=str, required=True, help="GitHub Event Name")
+    parser.add_argument('--action', type=str, required=True, help="Event Action")
     args = parser.parse_args()
 
-    print(f"🔧 DriftGuard Engine Initializing... [Event: {args.event}, Action: {args.action}]")
+    # Log Initialization Event
+    logger.info("DriftGuard Engine Initializing", extra={
+        "event": "engine_start", 
+        "trigger": args.event, 
+        "action": args.action,
+        "repo": os.environ.get('GITHUB_REPOSITORY', 'unknown')
+    })
 
     # Load Context
     context = {

@@ -26,6 +26,9 @@ stages:
         - "gcp"   # (Requires GCP_CREDENTIALS_JSON)
       ttl_hours: 24
       enforce: true
+      # SAFETY: Dry Run Mode
+      allow_delete:
+        dry_run: true 
       terraform_dir: "./terraform"
 
   # Phase 4: The Guard (Cross-Repo)
