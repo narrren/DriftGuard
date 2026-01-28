@@ -16,6 +16,7 @@ This document tracks the evolution of DriftGuard from MVP to a Production-Ready 
 *   **[Docs]** Updated `README.md`, `PROJECT_DIGEST.md`, and `DEMO.md` with new features.
 *   **[Testing]** Initialized `tests/` directory and added `pytest` unit tests for the Engine.
 *   **[Resiliency]** Fixed **Janitor Idempotency** by handling `NoSuchBucket` (404) errors in `_nuke_bucket`.
+*   **[Safety]** Added **CLI Dry Run** (`--dry-run`) to `engine.py` to force global simulation mode.
 
 ### **2026-01-27 (Feature Enhancement)**
 *   **[Janitor]** Added specific **Safety Checks** (log verification) before deletion logic in `janitor.py`.

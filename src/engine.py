@@ -48,7 +48,7 @@ def load_policy(policy_path='policy.yaml'):
             print(f"   ❌ Field: {loc} | Error: {err['msg']}")
         sys.exit(1)
 
-def execute_stage(stage, context, event_type):
+def execute_stage(stage, context, event_type, dry_run_override=False):
     name = stage.get('name')
     if not stage.get('enabled', False):
         print(f"⏭️  Stage '{name}' is disabled. Skipping.")
@@ -67,14 +67,6 @@ def execute_stage(stage, context, event_type):
             ai_sync.run(context, stage['config'])
             
         elif name == 'infrastructure_preview':
-            # In a real engine, this might trigger terraform apply
-            # For this MVP, we assume the GitHub Action step runs terraform 
-            # OR we call a python wrapper. 
-            # The prompt implies engine decides. Let's print info for the Action to use 
-            # or if we had a python terraform wrapper, call it.
-            # We will use the janitor script's 'provision' mode if it existed, 
-            # but usually terraform is run directly by GH Actions.
-            # We'll just validate config here.
             print(f"✅ Infrastructure Policy Checked: TTL {stage['config']['ttl_hours']}h enforced.")
 
         elif name == 'cross_repo_safety':
@@ -83,7 +75,15 @@ def execute_stage(stage, context, event_type):
 
         elif name == 'janitor_cleanup':
              from src.guards import janitor
-             janitor.scan_resources(stage['config'])
+             # Apply Dry Run Override
+             janitor_config = stage['config'].copy()
+             if dry_run_override:
+                 if 'allow_delete' not in janitor_config:
+                     janitor_config['allow_delete'] = {}
+                 janitor_config['allow_delete']['dry_run'] = True
+                 logger.info("🔧 Dry Run Override Enabled via CLI", extra={"event": "dry_run_override"})
+             
+             janitor.scan_resources(janitor_config)
 
     except Exception as e:
         print(f"❌ Stage '{name}' failed: {e}")
@@ -122,6 +122,7 @@ def main():
     parser = argparse.ArgumentParser(description="DriftGuard Policy Engine")
     parser.add_argument('--event', type=str, required=True, help="GitHub Event Name")
     parser.add_argument('--action', type=str, required=True, help="Event Action")
+    parser.add_argument('--dry-run', action='store_true', help="Force globally safe execution mode (no deletions)")
     args = parser.parse_args()
 
     # Log Initialization Event
@@ -129,6 +130,7 @@ def main():
         "event": "engine_start", 
         "trigger": args.event, 
         "action": args.action,
+        "dry_run": args.dry_run,
         "repo": os.environ.get('GITHUB_REPOSITORY', 'unknown')
     })
 
@@ -152,7 +154,7 @@ def main():
         stages = policy.get('stages', [])
 
     for stage in stages:
-        execute_stage(stage, context, args.action)
+        execute_stage(stage, context, args.action, dry_run_override=args.dry_run)
 
 if __name__ == "__main__":
     main()
