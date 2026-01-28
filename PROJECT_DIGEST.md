@@ -88,7 +88,9 @@ The system functions as a modular State Machine orchestrated by GitHub Actions a
     *   **Exponential Backoff:** All Cloud and AI API calls are wrapped with `tenacity` retries to handle transient network failures (stop=3, wait=exponential).
     *   **Idempotency:** The Janitor gracefully handles "Resource Not Found" (404) errors, ensuring that re-running a cleanup job does not crash.
     *   **Structured Logging:** Logs are emitted in **JSON format** (`python-json-logger`), making them ingestible by observability platforms like Datadog or CloudWatch.
+    *   **Traceability:** Full execution logs are uploaded as **Build Artifacts** (`driftguard_engine.json.log`) for every run, ensuring auditability.
     *   **Kill Switch:** Resources tagged with `Environment: Production` or `Protected: True` are hard-blocked from deletion in the code, regardless of TTL.
+    *   **Blast Radius Protection:** The Janitor strictly filters resources by namespace (must start with `driftguard-` or `dg-`) to prevent accidental deletion of unrelated production assets.
 
 ---
 
@@ -121,8 +123,10 @@ For the Janitor to function, the provided credentials must have specific permiss
 *   **Azure:** `Contributor` role on the specific Subscription or Resource Groups (to allow `resources.begin_delete`).
 *   **GCP:** `Storage Admin` (to allow `buckets.delete` and `objects.delete`).
 
-### B. The "Nuke" Strategy vs Terraform State
-The Janitor uses a **Direct API Destruction** strategy ("Nooking"). It searches for expired tags and deletes resources immediately via the Cloud SDKs.
+### B. The Hybrid "Safe Nuke" Strategy
+The Janitor employs a robust two-phase destruction strategy:
+1.  **Phase 1 (Clean):** Attempts to run `terraform destroy` to cleanly remove infrastructure and update the state file.
+2.  **Phase 2 (Fallback):** If the state is locked or missing, it falls back to **Direct API Destruction** (the "Nuke" option). This ensures that "Zombie" resources are always cleaned up, even if IaC state is corrupted.
 *   **Benefit:** It works even if the Terraform State file is lost, corrupted, or locked. It is the ultimate cleanup for "Orphaned" resources.
 *   **Trade-off:** It does not update the Terraform State file. If you run `terraform plan` afterwards, Terraform might be confused that resources are missing.
 *   **Best Use Case:** Use this for **Ephemeral Sandbox Environments** (e.g., `dev-pr-123`) where the state file itself is also ephemeral or irrelevant after the PR closes.

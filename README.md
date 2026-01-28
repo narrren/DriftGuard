@@ -75,6 +75,14 @@ DriftGuard now uses **OIDC (OpenID Connect)** for AWS, meaning no long-lived acc
 
 ### 5. Observability 📊
 All logs are output in structured **JSON** format (`event`, `level`, `timestamp`) for easy integration with Datadog/Splunk.
+**Artifacts:** The full JSON log files (`driftguard_engine.json.log` and `driftguard_janitor.json.log`) are automatically uploaded as Build Artifacts in GitHub Actions for every run.
+
+### 6. Safety CLI 🛡️
+You can force a global simulation mode (no deletions) by using the CLI flag:
+```bash
+python src/engine.py --event pull_request --action opened --dry-run
+```
+This overrides any setting in `policy.yaml`.
 
 ---
 
