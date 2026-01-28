@@ -1,76 +1,112 @@
-# 🎥 DriftGuard Demo Script
+# � Professor Presentation: DriftGuard Demo Master Script
 
-This guide provides a step-by-step script to demonstrate the capabilities of the **DriftGuard** platform.
+**Goal:** Demonstrate DriftGuard as a "Production-Ready Internal Developer Platform" to your professor.
+**Time Estimate:** 10 Minutes.
 
 ---
 
-## 🟢 Module 1: The AI Synchronizer (Documentation Guard)
-**Scenario:** A developer adds a new environment variable requirement but forgets to document it.
+## 🏁 Phase 0: Pre-Demo Setup (Do this 5 mins before)
+1.  **Open VS Code** to the `DriftGuard` folder.
+2.  **Open the Browser** to your GitHub Repository > "Actions" tab.
+3.  **Open 3 Key Files** in VS Code tabs (Command+P):
+    *   `policy.yaml` (The config)
+    *   `src/engine.py` (The state machine)
+    *   `PROJECT_DIGEST.md` (Arch diagrams)
+4.  **Open Terminal** in VS Code (`Ctrl + ~`).
 
-1.  **Create a Branch:**
+---
+
+## �️ Phase 1: The Pitch (1 Minute)
+**Action:** Open `PROJECT_DIGEST.md` (preview mode) or just look at the professor.
+
+**Script:**
+> "Professor, in modern Cloud Engineering, there's a huge problem called 'Drift'.
+> Teams create cloud resources and forget them (wasting money), or they write code and forget to document it (creating technical debt).
+>
+> I built **DriftGuard**. It's an automated governance engine that runs inside the CI/CD pipeline. It stops bad code from merging and cleans up cloud waste automatically. It uses a State Machine architecture I call 'UniFlow' and is designed with Zero-Trust security."
+
+---
+
+## 🟢 Phase 2: The AI Documentation Guard (3 Minutes)
+**Goal:** Show that the system understands code semantics using AI.
+
+**Step 1: Create a "Bad" Branch**
+Type this in your terminal:
+```bash
+git checkout -b demo/professor-test
+```
+
+**Step 2: Inject "Undocumented" Code**
+Open `src/engine.py`.
+Scroll to the bottom (inside `main()`) and add this line:
+```python
+# Hiding a secret dependency here...
+stripe_key = os.environ.get("STRIPE_SECRET_KEY")
+```
+*Save the file (Ctrl+S).*
+
+**Step 3: Push the "Bad" Code**
+```bash
+git add src/engine.py
+git commit -m "feat: add stripe payments"
+git push origin demo/professor-test
+```
+*(GitHub will give you a link in the terminal to create a PR. Control+Click it to open browser).*
+
+**Step 4: Create the PR**
+*   Click **"Create Pull Request"**.
+*   **Say:** "I just added a hard dependency on an Environment Variable (`STRIPE_SECRET_KEY`), but I didn't document it in the README or validation config. Normally, this breaks production."
+
+**Step 5: The Block**
+*   Wait ~30 seconds for the Action to run.
+*   Show the **Red X** (Failure) on the PR page.
+*   Show the **Bot Comment**: "❌ Documentation Drift Detected. You added `STRIPE_SECRET_KEY` but did not document it."
+*   **Say:** "My AI agent scanned the git diff, realized I added a requirement, checked the docs, saw it was missing, and blocked the merge automatically."
+
+---
+
+## 🟡 Phase 3: The Janitor (The "FinOps" Drill) (2 Minutes)
+**Goal:** Show infrastructure automation and "Self-Healing".
+
+**Step 1: Navigate**
+Go to GitHub Actions Tab.
+Click **"FinOps Janitor Live Drill"** on the left sidebar.
+
+**Step 2: Trigger**
+Click the **"Run workflow"** button.
+Leave inputs as default. Click green **Run workflow**.
+
+**Step 3: Watch & Explain**
+*   Click into the running job.
+*   **Say:** "This represents a developer creating a temporary test environment. Terraform is provisioning a real S3 bucket right now."
+*   Wait for the **"Run Janitor"** step to start.
+*   **Point to Logs:** Look for the line `[Janitor] Found Tag... driftguard:expiry`.
+*   **Say:** "The Janitor sees the tag is expired. It doesn't ask permission. It executes a 'Safe Nuke' strategy to kill the cost immediately. It handled the cleanup without human intervention."
+
+---
+
+## 🔵 Phase 4: Production Hardening (The "A" Grade Component) (3 Minutes)
+**Goal:** Prove this is engineered, not just hacked together.
+
+**Step 1: Safety CLI (Dry Run)**
+*   Go back to VS Code Terminal.
+*   **Say:** "You might ask: Is this safe? Could a bug delete our database?"
+*   Run this command:
     ```bash
-    git checkout -b demo/bad-pr-test
+    python src/engine.py --event pull_request --action opened --dry-run
     ```
-2.  **Make a Change:**
-    Add this line to `src/engine.py`:
-    ```python
-    # New dependency
-    stripe_key = os.environ.get("STRIPE_API_KEY") 
-    ```
-3.  **Push & Open PR:**
-    Push the branch and open a Pull Request on GitHub.
-4.  **Observe:**
-    - Wait ~30 seconds.
-    - The `DriftGuard Engine` check will **FAIL**.
-    - A bot comment will appear: *"❌ Documentation Drift Detected. You added `STRIPE_API_KEY` but did not document it."*
-    - **(Optional) Bypass:** Reply with `/driftguard override`. The check will re-run and **PASS**, demonstrating the manual intervention capability.
+*   **Point to Output:** Show the `[Dry Run] Would delete...` logs.
+*   **Say:** "I implemented a global CLI override. We can simulate the entire governance policy locally without touching a single real API. It's safe by default."
+
+**Step 2: Observability (Audit)**
+*   Go back to the GitHub Action run you just finished.
+*   Scroll to the bottom **"Artifacts"** section.
+*   Download `driftguard-janitor-logs`.
+*   Open the JSON file.
+*   **Say:** "We don't just print text. We emit structured JSON telemetry (`timestamp`, `resource_id`, `action`). This connects to tools like Splunk for enterprise compliance auditing."
 
 ---
 
-## 🟡 Module 2: The Janitor (FinOps Guard)
-**Scenario:** An ephemeral environment was created for testing but "forgotten" (tagged with an old expiry date).
-
-1.  Go to the **Actions** tab in GitHub.
-2.  Select **FinOps Janitor Live Drill** from the left sidebar.
-3.  Click **Run workflow** (Leave "Simulate EXPIRED" as `true`).
-4.  **Observe:**
-    - Click into the run details.
-    - See Terraform **Provision** a real S3 Bucket.
-    - See the Python Janitor script **Scan** the cloud.
-    - Logs will show: `EXPIRED: driftguard-env-xxxx ... DESTROYING... ✔ REAPED`.
-
----
-
-## 🔴 Module 3: The Guard (Cross-Repo Safety)
-**Scenario:** A change in the Core Platform triggers automatic regression testing in downstream consumer apps.
-
-1.  **Observe Recent Actions:**
-    - Go to the **Actions** tab.
-    - Look for **"Consumer App Integration Test"**.
-    - Note that valid Pull Requests automatically trigger this workflow via `repository_dispatch`.
-    - *(Note: Ensure `DRIFTGUARD_PAT` is set in Secrets if dispatching to a different organization or private repo).*
-    - This proves DriftGuard is communicating across the repository boundary to enforce safety.
-
----
-
-## 🔵 Module 4: Production Safety & Observability (The "Hardening" Layer)
-**Scenario:** Prove to the professor that this isn't just a toy script, but enterprise-ready software.
-
-1.  **Safety CLI (Dry Run):**
-    *   Open your terminal (VS Code).
-    *   Run the engine in "Simulation Mode":
-        ```bash
-        python src/engine.py --event pull_request --action opened --dry-run
-        ```
-    *   **Observe:** The logs will distinctly say `🔧 Dry Run Override Enabled via CLI` and `[Dry Run] Would delete...`. Explain that this "Safety Switch" prevents accidental data loss during maintenance.
-
-2.  **Observability (Audit Trails):**
-    *   Go to any completed GitHub Action run.
-    *   Scroll down to the **Artifacts** section.
-    *   Download `driftguard-engine-logs` or `driftguard-janitor-logs`.
-    *   Open the JSON file to show the structured data (Events, Timestamps, Resource IDs).
-    *   **Pitch:** "Professor, we don't just print text. We emit structured telemetry that can be piped into Splunk or Datadog for enterprise monitoring."
-
----
-**Summary for Interviewers:**
-> "DriftGuard is a config-driven Internal Developer Platform (IDP) that enforces governance (Docs, Cost, Integration) seamlessly in the CI/CD pipeline using Python, Terraform, and AI."
+## 🏁 Phase 5: Conclusion
+**Say:**
+> "DriftGuard isn't just a script. It's a Zero-Trust, Idempotent, Config-Driven Platform. It allows engineering teams to move fast because the 'Guardrails' are automated."
