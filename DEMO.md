@@ -52,5 +52,25 @@ This guide provides a step-by-step script to demonstrate the capabilities of the
     - This proves DriftGuard is communicating across the repository boundary to enforce safety.
 
 ---
+
+## 🔵 Module 4: Production Safety & Observability (The "Hardening" Layer)
+**Scenario:** Prove to the professor that this isn't just a toy script, but enterprise-ready software.
+
+1.  **Safety CLI (Dry Run):**
+    *   Open your terminal (VS Code).
+    *   Run the engine in "Simulation Mode":
+        ```bash
+        python src/engine.py --event pull_request --action opened --dry-run
+        ```
+    *   **Observe:** The logs will distinctly say `🔧 Dry Run Override Enabled via CLI` and `[Dry Run] Would delete...`. Explain that this "Safety Switch" prevents accidental data loss during maintenance.
+
+2.  **Observability (Audit Trails):**
+    *   Go to any completed GitHub Action run.
+    *   Scroll down to the **Artifacts** section.
+    *   Download `driftguard-engine-logs` or `driftguard-janitor-logs`.
+    *   Open the JSON file to show the structured data (Events, Timestamps, Resource IDs).
+    *   **Pitch:** "Professor, we don't just print text. We emit structured telemetry that can be piped into Splunk or Datadog for enterprise monitoring."
+
+---
 **Summary for Interviewers:**
 > "DriftGuard is a config-driven Internal Developer Platform (IDP) that enforces governance (Docs, Cost, Integration) seamlessly in the CI/CD pipeline using Python, Terraform, and AI."
