@@ -50,14 +50,24 @@
             <h1 class="text-2xl font-bold tracking-tight">DriftGuard <span
                     class="text-xs text-gray-400 font-normal">Enterprise v1.0</span></h1>
         </div>
-        <div class="flex gap-4">
+        <div class="flex gap-4 items-center">
+            <!-- Mode Toggle -->
+            <div class="flex items-center gap-2 bg-gray-800 px-3 py-1 rounded-full border border-gray-600 cursor-pointer"
+                onclick="toggleMode()">
+                <span id="mode-label" class="text-xs font-mono text-green-400">SIMULATION MODE</span>
+                <div class="relative w-10 h-5 bg-gray-600 rounded-full transition" id="mode-switch-bg">
+                    <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition transform"
+                        id="mode-switch-knob"></div>
+                </div>
+            </div>
+
             <button onclick="runEntireSuite()"
                 class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-4 py-2 rounded-md font-semibold transition-all">
                 <i data-lucide="play" class="h-4 w-4"></i> Run Pipeline
             </button>
             <div class="bg-gray-800 px-3 py-1 rounded-full flex items-center gap-2 text-sm border border-gray-600">
                 <div class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-                System Healthy
+                <span id="system-status">System Healthy</span>
             </div>
         </div>
     </header>
@@ -242,6 +252,34 @@
         lucide.createIcons();
 
         // --- Helpers ---
+        let isSimulation = true;
+
+        function updateModeUI(isSim) {
+            isSimulation = isSim;
+            const label = document.getElementById('mode-label');
+            const bg = document.getElementById('mode-switch-bg');
+            const knob = document.getElementById('mode-switch-knob');
+
+            if (isSim) {
+                label.innerText = "SIMULATION MODE";
+                label.className = "text-xs font-mono text-green-400";
+                bg.className = "relative w-10 h-5 bg-gray-600 rounded-full transition";
+                knob.style.transform = "translateX(0)";
+            } else {
+                label.innerText = "REAL ENGINE MODE";
+                label.className = "text-xs font-mono text-red-500 font-bold animate-pulse";
+                bg.className = "relative w-10 h-5 bg-red-900 rounded-full transition border border-red-500";
+                knob.style.transform = "translateX(20px)";
+            }
+        }
+
+        async function toggleMode() {
+            const res = await fetch('/api/toggle_mode', { method: 'POST' });
+            const data = await res.json();
+            updateModeUI(data.is_simulation);
+            logToTerminal({ "event": "mode_switch", "new_mode": data.mode });
+        }
+
         function logToTerminal(msg) {
             const term = document.getElementById('terminal-logs');
             const time = new Date().toLocaleTimeString();
