@@ -6,6 +6,10 @@ import uvicorn
 import asyncio
 import os
 import sys
+from dotenv import load_dotenv
+
+# Load Environment Variables from .env file
+load_dotenv()
 
 # Import REAL DriftGuard Logic
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
