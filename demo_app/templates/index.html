@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard Demo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Dark Mode Theme -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#1a1b1e',
+                        panel: '#25262b',
+                        accent: '#3b82f6',
+                        danger: '#ef4444',
+                        success: '#22c55e'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #1a1b1e;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .grid-bg {
+            background-image: radial-gradient(#3b82f622 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-white min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <header
+        class="bg-panel border-b border-gray-700 px-6 py-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <i data-lucide="shield" class="text-accent h-8 w-8"></i>
+            <h1 class="text-2xl font-bold tracking-tight">DriftGuard <span
+                    class="text-xs text-gray-400 font-normal">Enterprise v1.0</span></h1>
+        </div>
+        <div class="flex gap-4">
+            <button onclick="runEntireSuite()"
+                class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-4 py-2 rounded-md font-semibold transition-all">
+                <i data-lucide="play" class="h-4 w-4"></i> Run Pipeline
+            </button>
+            <div class="bg-gray-800 px-3 py-1 rounded-full flex items-center gap-2 text-sm border border-gray-600">
+                <div class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                System Healthy
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="flex flex-1 p-6 gap-6 relative grid-bg">
+
+        <!-- Sidebar: Stats -->
+        <aside class="w-64 flex flex-col gap-6">
+            <!-- FinOps Card -->
+            <div class="bg-panel p-5 rounded-lg border border-gray-700 shadow-lg">
+                <h3 class="text-gray-400 text-sm font-uppercase mb-2 flex items-center gap-2"><i
+                        data-lucide="dollar-sign" class="h-4 w-4"></i> Savings Found</h3>
+                <p class="text-3xl font-bold text-green-400" id="savings-stat">$0.00</p>
+                <div class="text-xs text-gray-500 mt-2">Simulated Monthly Run Rate</div>
+            </div>
+
+            <!-- Drift Card -->
+            <div class="bg-panel p-5 rounded-lg border border-gray-700 shadow-lg">
+                <h3 class="text-gray-400 text-sm font-uppercase mb-2 flex items-center gap-2"><i data-lucide="file-text"
+                        class="h-4 w-4"></i> Doc Accuracy</h3>
+                <p class="text-3xl font-bold text-blue-400">98%</p>
+                <div class="text-xs text-gray-500 mt-2">AI Confidence Score</div>
+            </div>
+
+            <!-- Pipeline Status -->
+            <div class="bg-panel p-5 rounded-lg border border-gray-700 flex-1">
+                <h3 class="text-gray-400 text-sm mb-4">Pipeline Status</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">1. Policy Check</span>
+                        <i data-lucide="check-circle" id="status-policy" class="text-gray-600 h-4 w-4"></i>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">2. AI Sync</span>
+                        <i data-lucide="circle" id="status-ai_sync" class="text-gray-600 h-4 w-4"></i>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">3. Sentry Guard</span>
+                        <i data-lucide="circle" id="status-sentry" class="text-gray-600 h-4 w-4"></i>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">4. Janitor Scan</span>
+                        <i data-lucide="circle" id="status-janitor" class="text-gray-600 h-4 w-4"></i>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col gap-6">
+
+            <!-- Module 1: AI Sync -->
+            <section class="bg-panel rounded-lg border border-gray-700 overflow-hidden">
+                <div class="bg-gray-800 px-4 py-2 border-b border-gray-700 flex justify-between items-center">
+                    <h2 class="font-semibold flex items-center gap-2"><i data-lucide="brain-circuit"
+                            class="text-purple-400"></i> Module 1: AI Document Guard</h2>
+                    <button onclick="analyzeDocs()"
+                        class="bg-purple-600 hover:bg-purple-500 px-3 py-1 text-xs rounded transition">Analyze
+                        Drift</button>
+                </div>
+                <div class="p-4 grid grid-cols-2 gap-4 h-48">
+                    <!-- Code Diff -->
+                    <div class="bg-gray-900 rounded p-3 font-mono text-xs overflow-auto border border-red-900 relative">
+                        <div class="absolute top-0 right-0 bg-red-900 text-white px-2 text-[10px]">CHANGED FILE</div>
+                        <p class="text-gray-500">def connect_db():</p>
+                        <p class="text-green-400">+ secret_key = os.getenv("STRIPE_API_KEY")</p>
+                        <p class="text-gray-500"> return client.connect(secret_key)</p>
+                    </div>
+                    <!-- README -->
+                    <div
+                        class="bg-gray-900 rounded p-3 font-mono text-xs overflow-auto border border-gray-700 relative">
+                        <div class="absolute top-0 right-0 bg-gray-700 text-white px-2 text-[10px]">README.md</div>
+                        <p class="text-gray-400">## Environment Variables</p>
+                        <p class="text-gray-400">| Variable | Description |</p>
+                        <p class="text-gray-400">| DB_URL | Database Connection String |</p>
+                        <p class="text-red-400 font-bold mt-4" id="ai-suggestion" style="display:none;">
+                            >> MISSING: STRIPE_API_KEY detected in code but not here! << </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module 2: Janitor -->
+            <section class="bg-panel rounded-lg border border-gray-700 overflow-hidden">
+                <div class="bg-gray-800 px-4 py-2 border-b border-gray-700 flex justify-between items-center">
+                    <h2 class="font-semibold flex items-center gap-2"><i data-lucide="trash-2" class="text-red-400"></i>
+                        Module 2: FinOps Janitor</h2>
+                    <button onclick="scanResources()"
+                        class="bg-red-600 hover:bg-red-500 px-3 py-1 text-xs rounded transition">Scan & Reap</button>
+                </div>
+                <div class="p-0">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-900 text-gray-400">
+                            <tr>
+                                <th class="p-3">Resource ID</th>
+                                <th class="p-3">Type</th>
+                                <th class="p-3">Expiry</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resource-table" class="divide-y divide-gray-700">
+                            <!-- Populated by JS -->
+                            <tr class="animate-pulse">
+                                <td colspan="5" class="p-4 text-center text-gray-500">Waiting for scan...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Module 3: Sentry -->
+            <section class="bg-panel rounded-lg border border-gray-700 overflow-hidden">
+                <div class="bg-gray-800 px-4 py-2 border-b border-gray-700 flex justify-between items-center">
+                    <h2 class="font-semibold flex items-center gap-2"><i data-lucide="activity"
+                            class="text-blue-400"></i> Module 3: Cross-Repo Sentry</h2>
+                    <button onclick="triggerSentry()"
+                        class="bg-blue-600 hover:bg-blue-500 px-3 py-1 text-xs rounded transition">Trigger Integration
+                        Test</button>
+                </div>
+                <div class="p-6 flex items-center justify-around">
+                    <div class="text-center">
+                        <div class="bg-gray-700 p-4 rounded-lg mb-2 border border-gray-500">
+                            <i data-lucide="package" class="h-8 w-8 text-white mx-auto"></i>
+                        </div>
+                        <p class="text-sm font-semibold">Platform Core</p>
+                        <span class="text-xs text-green-400">v2.1.0 (Current)</span>
+                    </div>
+
+                    <!-- Connector arrow -->
+                    <div class="flex-1 h-0.5 bg-gray-600 mx-4 relative">
+                        <div id="signal-dot" class="hidden absolute top-[-4px] left-0 h-2 w-2 bg-blue-500 rounded-full">
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="bg-gray-700 p-4 rounded-lg mb-2 border border-gray-500 relative">
+                            <i data-lucide="box" class="h-8 w-8 text-white mx-auto"></i>
+                            <div id="sentry-badge"
+                                class="absolute -top-2 -right-2 bg-gray-500 text-xs px-1 rounded-full">Idle</div>
+                        </div>
+                        <p class="text-sm font-semibold">Consumer App</p>
+                        <span class="text-xs text-gray-400">Downstream</span>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Terminal Emulator -->
+    <footer class="h-48 bg-black border-t border-gray-700 font-mono text-xs overflow-hidden flex flex-col">
+        <div class="bg-gray-800 px-4 py-1 flex justify-between">
+            <span class="text-gray-400 flex items-center gap-2"><i data-lucide="terminal" class="h-3 w-3"></i> Live
+                System Logs (JSON Stream)</span>
+            <span class="text-green-500">● Live</span>
+        </div>
+        <div id="terminal-logs" class="flex-1 p-4 overflow-y-auto space-y-1 text-green-400">
+            <p><span class="text-gray-500">[10:00:01]</span> {"event": "system_ready", "status": "listening"}</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        lucide.createIcons();
+
+        // --- Helpers ---
+        function logToTerminal(msg) {
+            const term = document.getElementById('terminal-logs');
+            const time = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            // Format JSON nicely if it's an object
+            if (typeof msg === 'object') msg = JSON.stringify(msg);
+            p.innerHTML = `<span class="text-gray-500">[${time}]</span> ${msg}`;
+            term.appendChild(p);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        async function fetchState() {
+            try {
+                const res = await fetch('/api/dashboard_status');
+                const data = await res.json();
+
+                // Update Pipeline Icons
+                for (const [stage, status] of Object.entries(data.pipeline)) {
+                    const icon = document.getElementById(`status-${stage}`);
+                    if (!icon) continue;
+                    if (status === 'success' || status === 'completed') {
+                        icon.setAttribute('class', 'text-green-500 h-4 w-4');
+                        icon.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>'; // Checkmark
+                    } else if (status === 'running') {
+                        icon.setAttribute('class', 'text-blue-400 h-4 w-4 animate-spin');
+                    }
+                }
+
+                // Update Stats
+                document.getElementById('savings-stat').innerText = `$${data.stats.savings.toFixed(2)}`;
+
+                // Update Logs (last one only to avoid spam in poll)
+                if (data.logs.length > 0) {
+                    const latest = data.logs[data.logs.length - 1];
+                    // logToTerminal(latest); -- Using event driven log for demo feels snappier
+                }
+
+                // Update Table
+                renderTable(data.resources);
+
+            } catch (e) {
+                console.error("Poll error", e);
+            }
+        }
+
+        function renderTable(resources) {
+            const tbody = document.getElementById('resource-table');
+            tbody.innerHTML = '';
+            resources.forEach(r => {
+                let statusColor = 'text-green-400';
+                if (r.status === 'Expired') statusColor = 'text-red-400 font-bold';
+                if (r.status === 'Protected') statusColor = 'text-purple-400 font-bold';
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-800 hover:bg-gray-800/50 transition";
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-xs text-gray-300">${r.id}</td>
+                    <td class="p-3">${r.type}</td>
+                    <td class="p-3 text-xs text-gray-500">${r.expiry}</td>
+                    <td class="p-3 ${statusColor}">${r.status}</td>
+                    <td class="p-3">
+                        ${r.status === 'Expired' ?
+                        `<button onclick="reapResource('${r.id}')" class="text-red-400 hover:text-white bg-red-900/30 px-2 py-1 rounded text-xs border border-red-900 hover:bg-red-600 transition">NUKE ☢️</button>` :
+                        '<span class="text-gray-600 text-xs">-</span>'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- Demo Actions ---
+
+        async function runEntireSuite() {
+            logToTerminal({ "cmd": "run_suite", "user": "admin" });
+            await fetch('/api/run_pipeline', { method: 'POST' });
+            // The polling loop handles the UI updates
+            setTimeout(fetchState, 500);
+        }
+
+        async function analyzeDocs() {
+            logToTerminal({ "module": "ai_sync", "action": "analyzing..." });
+            const res = await fetch('/api/analyze_docs', { method: 'POST' });
+            const data = await res.json();
+
+            // Show UI Effect
+            const suggestion = document.getElementById('ai-suggestion');
+            suggestion.style.display = 'block';
+            suggestion.classList.add('animate-bounce');
+            logToTerminal({ "module": "ai_sync", "result": "DRIFT_DETECTED", "confidence": data.confidence });
+        }
+
+        async function scanResources() {
+            logToTerminal({ "module": "janitor", "action": "scanning_cloud_providers..." });
+            await fetch('/api/scan_resources', { method: 'POST' });
+            await fetchState(); // Force update
+        }
+
+        async function reapResource(id) {
+            logToTerminal({ "module": "janitor", "action": "destroying", "target": id });
+            const res = await fetch(`/api/reap_resource/${id}`, { method: 'DELETE' });
+
+            if (res.ok) {
+                logToTerminal({ "module": "janitor", "status": "success", "cost_saved": "calculated..." });
+                await fetchState();
+            } else {
+                logToTerminal({ "module": "janitor", "status": "blocked", "reason": "PROTECTED_RESOURCE" });
+            }
+        }
+
+        async function triggerSentry() {
+            const dot = document.getElementById('signal-dot');
+            const badge = document.getElementById('sentry-badge');
+
+            dot.classList.remove('hidden');
+            dot.classList.add('animate-ping'); // Simulate transmission
+            logToTerminal({ "module": "sentry", "action": "dispatching_event" });
+
+            const res = await fetch('/api/trigger_sentry', { method: 'POST' });
+
+            dot.classList.add('hidden');
+            badge.innerText = "Running Test...";
+            badge.className = "absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-1 rounded-full animate-pulse";
+
+            setTimeout(() => {
+                badge.innerText = "PASSED ✅";
+                badge.className = "absolute -top-2 -right-2 bg-green-500 text-white text-xs px-1 rounded-full";
+                logToTerminal({ "module": "sentry", "result": "SUCCESS", "consumer": "app-frontend" });
+            }, 2000);
+        }
+
+        // --- Init ---
+        setInterval(fetchState, 2000); // Poll backend every 2s
+        fetchState();
+
+    </script>
+</body>
+
+</html>

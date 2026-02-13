@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pydantic
+jinja2
+python-multipart
+python-json-logger
