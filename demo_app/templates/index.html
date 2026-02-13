@@ -208,20 +208,37 @@
         </div>
     </main>
 
-    <!-- Terminal Emulator -->
-    <footer class="h-48 bg-black border-t border-gray-700 font-mono text-xs overflow-hidden flex flex-col">
-        <div class="bg-gray-800 px-4 py-1 flex justify-between">
+    <!-- Terminal Emulator (Fixed Footer) -->
+    <footer
+        class="h-48 bg-black border-t border-gray-700 font-mono text-xs overflow-hidden flex flex-col fixed bottom-0 w-full z-50 shadow-2xl">
+        <div class="bg-gray-800 px-4 py-1 flex justify-between cursor-pointer hover:bg-gray-700 transition"
+            onclick="toggleLogs()">
             <span class="text-gray-400 flex items-center gap-2"><i data-lucide="terminal" class="h-3 w-3"></i> Live
                 System Logs (JSON Stream)</span>
-            <span class="text-green-500">● Live</span>
+            <span class="text-green-500 flex items-center gap-2">● Live <i data-lucide="chevron-down"
+                    class="h-3 w-3"></i></span>
         </div>
-        <div id="terminal-logs" class="flex-1 p-4 overflow-y-auto space-y-1 text-green-400">
-            <p><span class="text-gray-500">[10:00:01]</span> {"event": "system_ready", "status": "listening"}</p>
+        <div id="terminal-logs" class="flex-1 p-4 overflow-y-auto space-y-1 text-green-400 bg-black/95 backdrop-blur">
+            <p><span class="text-gray-500">[System]</span> {"event": "system_ready", "mode": "DEMO_SIMULATION"}</p>
         </div>
     </footer>
 
+    <!-- Spacer to prevent content being hidden behind fixed footer -->
+    <div class="h-48"></div>
+
     <!-- Logic -->
     <script>
+        function toggleLogs() {
+            const footer = document.querySelector('footer');
+            if (footer.classList.contains('h-48')) {
+                footer.classList.remove('h-48');
+                footer.classList.add('h-8'); // Collapsed
+            } else {
+                footer.classList.remove('h-8');
+                footer.classList.add('h-48'); // Expanded
+            }
+        }
+
         lucide.createIcons();
 
         // --- Helpers ---
