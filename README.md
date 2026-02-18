@@ -2,90 +2,73 @@
 
 ### **Autonomous Platform Engineering Suite for Config-Driven Governance**
 
-**Status:** 🟢 Active | **Version:** 1.0.0
+**Status:** 🟢 Active | **Version:** 2.0.0
 
-DriftGuard acts as a "Governance-as-Code" layer, automating the critical checks that prevent "Broken Factory" syndrome in Platform Engineering. Instead of manual reviews, it uses a central policy engine to enforce Documentation, Cost, and Integration safety.
+DriftGuard acts as a "Governance-as-Code" layer, automating the critical checks that prevent "Broken Factory" syndrome in Platform Engineering. It combines a powerful backend policy engine with a **modern web dashboard** to enforce Documentation, Cost, and Integration safety.
 
 ---
 
-## ⚡ Key Features (The 3 Pillars)
+## ⚡ Key Features
 
 | Module | Name | Function | Tech Stack |
 | :--- | :--- | :--- | :--- |
-| **Module 1** | **The Synchronizer** | **AI Documentation Guard**. Uses Google Gemini 1.5 to semantic-check Pull Requests. If code changes (e.g., new Env Vars) aren't reflected in the README, it blocks the PR. | Python, Google GenAI SDK, Github Actions |
+| **Dashboard** | **The Console** | **Unified Web Interface**. A responsive, dark-mode UI to visualize drift, manage policies, view logs, and track cloud costs. | FastAPI, Jinja2, Tailwind CSS |
+| **Module 1** | **The Synchronizer** | **AI Documentation Guard**. Uses Google Gemini 1.5 to semantic-check Pull Requests. If code changes (e.g., new Env Vars) aren't reflected in the README, it blocks the PR. | Python, Google GenAI SDK |
 | **Module 2** | **The Janitor** | **FinOps Cost Guard**. Automatically detects and deletes "expired" cloud resources (Buckets, RGs) based on Tags to prevent cloud waste. Supports **AWS, Azure, and GCP**. | Python, Boto3, Azure SDK, Google Cloud SDK |
-| **Module 3** | **The Guard** | **Cross-Repo Safety**. Automatically triggers integration tests in downstream consumer repositories whenever a core platform change is detected. | Github API (Repository Dispatch), YAML |
-
----
-
-## 🏗️ Architecture
-
-DriftGuard uses a **State Machine** strategy. A central `policy.yaml` dictates which guards are active for every Pull Request.
-
-```mermaid
-graph LR
-    A[Pull Request] --> B[GitHub Actions]
-    B --> C{DriftGuard Engine}
-    C -->|Read Policy| D[policy.yaml]
-    D --> E[AI Guard]
-    D --> F[FinOps Janitor]
-    D --> G[Cross-Repo Dispatch]
-    E -->|Fail?| H[Block Merge]
-    E -->|Pass?| I[Allow Merge]
-```
+| **Module 3** | **The Guard** | **Cross-Repo Safety**. Automatically triggers integration tests in downstream consumer repositories whenever a core platform change is detected. | Github API (Repository Dispatch) |
 
 ---
 
 ## 🚀 Quickstart & Setup
 
 ### 1. Prerequisites
-*   **GitHub Repository**: Hosted on GitHub.
-*   **AWS Account**: For FinOps demonstrations.
-*   **Google Gemini API Key**: For AI Analysis (Free tier works).
+*   Python 3.9+
+*   **Google Gemini API Key**: For AI Analysis.
+*   **Cloud Credentials**: AWS, Azure, or GCP credentials for Janitor features.
 
-### 2. Configure Secrets
-Navigate to **Settings > Secrets and variables > Actions** and add:
-*   `GEMINI_API_KEY`: Your Google Gemini API Key.
-*   `AWS_ACCESS_KEY_ID`: AWS IAM User Key.
-*   `AWS_SECRET_ACCESS_KEY`: AWS IAM User Secret.
-*   `AZURE_SUBSCRIPTION_ID`: (Optional) For Azure Resources.
-*   `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`: Azure Service Principal credentials.
-*   `GCP_CREDENTIALS_JSON`: (Optional) Google Cloud Service Account Key (JSON).
-*   `DRIFTGUARD_PAT`: (Recommended) A Personal Access Token with `repo` scope for Cross-Repo dispatching.
-*   `DATABASE_URL`: (Optional) Example variable for testing the AI Guard.
+### 2. Installation
+```bash
+# Clone the repository
+git clone https://github.com/your-username/driftguard.git
+cd driftguard
 
-### 3. Usage
-The platform runs automatically on every Pull Request.
-
-**Configuration:**
-Edit `policy.yaml` to enable/disable specific guards:
-```yaml
-stages:
-  - name: ai_doc_check
-    enabled: true
-    severity: block
+# Install dependencies
+pip install -r requirements.txt
 ```
+
+### 3. Run Locally
+Start the FastAPI server with hot-reload:
+```bash
+uvicorn api.index:app --reload
+```
+Acccess the dashboard at **http://localhost:8000/dashboard**.
 
 ---
 
-## 🎥 How to Demonstrate (The Demo Script)
+## 🌐 Web Dashboard
 
-See [DEMO.md](DEMO.md) for a step-by-step presentation script.
+The new UI provides a comprehensive view of your infrastructure governance:
 
-### 1. Trip the AI Guard 🧠
-1.  Add a new environment variable requirement in `src/engine.py`.
-2.  Open a PR **without** updating the README.
-3.  **Result:** PR assumes "Drift" and blocks the merge.
+*   **Landing Page**: `http://localhost:8000/`
+*   **Dashboard**: `http://localhost:8000/dashboard`
+*   **AI Guard**: `http://localhost:8000/ai-guard` - Visualize code drift.
+*   **Janitor**: `http://localhost:8000/janitor` - Manage cloud resource cleanup.
+*   **FinOps**: `http://localhost:8000/finops` - Cost forecasting and savings.
+*   **Policy Editor**: `http://localhost:8000/policy` - Edit `policy.yaml`.
+*   **Sentry**: `http://localhost:8000/sentry` - Cross-repo integration status.
+*   **Logs**: `http://localhost:8000/logs` - Real-time system logs.
 
-### 2. Run the Janitor 🧹
-1.  Go to **Actions > FinOps Janitor Live Drill**.
-2.  Run the workflow.
-3.  **Result:** It provisions a live S3 bucket, detects it as "Expired", and reaps it immediately.
+---
 
-### 3. Verify Cross-Repo Safety 🛡️
-1.  Open any PR in the core repo.
-2.  Check the **Actions** tab.
-3.  **Result:** A "Consumer App Integration Test" workflow is automatically triggered to verify downstream compatibility.
+## 📦 Deployment
+
+### Vercel
+DriftGuard is configured for deployment on Vercel.
+
+1.  Push your code to a GitHub repository.
+2.  Import the project into Vercel.
+3.  Vercel will automatically detect `api/index.py` based on `vercel.json`.
+4.  Add your Environment Variables in the Vercel Dashboard.
 
 ---
 
@@ -93,25 +76,14 @@ See [DEMO.md](DEMO.md) for a step-by-step presentation script.
 
 ```bash
 driftguard/
-├── .github/workflows/
-│   ├── driftguard-main.yml    # (The Orchestrator) Running on every PR
-│   ├── janitor-cron.yml       # (The Scheduler) Running hourly cleanup
-│   └── finops-drill.yml       # (The Demo) Manual verification tool
-├── src/
-│   ├── engine.py              # (The Brain) Parses policy and executes modules
-│   ├── guards/
-│   │   ├── ai_sync.py         # Module 1: AI Logic
-│   │   ├── janitor.py         # Module 2: FinOps Logic
-│   │   └── cross_repo.py      # Module 3: Dispatch Logic
-├── terraform/                 # Infrastructure Templates for AWS
-├── policy.yaml                # The Source of Truth for Governance
+├── .github/                   # GitHub Actions Workflows
+├── api/                       # Web Application
+│   ├── templates/             # HTML/Jinja2 Templates (UI)
+│   ├── static/                # Static Assets
+│   └── index.py               # FastAPI Entrypoint
+├── src/                       # Core Logic
+│   ├── engine.py              # Policy Orchestrator
+│   └── guards/                # Guard Modules
+├── policy.yaml                # Governance Configuration
 └── requirements.txt           # Python Dependencies
 ```
-
-## ⚙️ Environment Variables Reference
-| Variable | Description |
-| :--- | :--- |
-| `DRIFTGUARD_PAT` | **Recommended**. Personal Access Token for triggering workflows in external repositories (Cross-Repo Guard). |
-| `ANY_ENV_VAR` | The AI Guard now scans for *any* `os.getenv` or `os.environ` usage in your code. Check the README! |
-
-
