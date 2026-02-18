@@ -58,6 +58,18 @@ async def finops_page(request: Request):
 async def policy_page(request: Request):
     return templates.TemplateResponse("policy.html", {"request": request})
 
+@app.get("/sentry", response_class=HTMLResponse)
+async def sentry_page(request: Request):
+    return templates.TemplateResponse("sentry.html", {"request": request})
+
+@app.get("/logs", response_class=HTMLResponse)
+async def logs_page(request: Request):
+    return templates.TemplateResponse("logs.html", {"request": request})
+
+@app.get("/settings", response_class=HTMLResponse)
+async def settings_page(request: Request):
+    return templates.TemplateResponse("settings.html", {"request": request})
+
 # --- API Endpoints ---
 
 class PolicyUpdate(BaseModel):
@@ -92,13 +104,10 @@ async def janitor_scan(background_tasks: BackgroundTasks):
         }
     }
 
+
 @app.post("/api/janitor/cleanup")
 async def janitor_cleanup():
     # Trigger cleanup
     return {"status": "success", "message": "Cleanup job queued."}
-
-@app.post("/api/finops/simulate_spike")
-async def simulate_spike(active: bool):
-    return {"status": "success", "active": active}
 
 # Vercel requires 'app' to be exposed

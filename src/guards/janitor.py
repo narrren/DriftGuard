@@ -191,6 +191,16 @@ def scan_resources(policy_config):
     for janitor in janitors:
         janitor.scan_and_clean()
 
+def cleanup_pr_resources(context, policy_config):
+    """
+    Wrapper for engine.py compatibility.
+    Triggers the resource scan/cleanup process.
+    """
+    print(f"🧹 [PR Cleanup] Triggered for PR #{context.get('pr_number')}")
+    # In a real PR cleanup, we might target specific resources tagged with this PR.
+    # For now, we run the general expiry scan as a safety net.
+    scan_resources(policy_config)
+
 if __name__ == "__main__":
     # Test Run
     scan_resources({'target': ['aws', 'azure', 'gcp']})

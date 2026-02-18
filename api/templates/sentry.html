@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Sentry Integration Guard Graph - DriftGuard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13cbec",
+                        "primary-dark": "#0ea5e9",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#111718",
+                        "surface-dark": "#1c2628",
+                        "surface-border": "#283639",
+                        "text-secondary": "#9db5b9",
+                        "status-success": "#4ade80",
+                        "status-error": "#f87171",
+                        "status-warning": "#facc15",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1c2628;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #283639;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #3b5054;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        .pulse-ring::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #facc15;
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .connector-line {
+            stroke-dasharray: 5;
+            animation: dash 1s linear infinite;
+        }
+
+        @keyframes dispatch-flow {
+            0% {
+                stroke-dashoffset: 100;
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                stroke-dashoffset: 0;
+                opacity: 0;
+            }
+        }
+
+        .dispatch-signal {
+            stroke-dasharray: 10, 10;
+            animation: dispatch-flow 1.5s linear infinite;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col overflow-x-hidden">
+    <header
+        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-surface-border px-10 py-3 bg-[#111718]">
+        <div class="flex items-center gap-4 text-white">
+            <div class="size-8 text-primary">
+                <span class="material-symbols-outlined text-[32px]">security</span>
+            </div>
+            <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
+        </div>
+        <div class="flex flex-1 justify-end gap-8">
+            <div class="flex items-center gap-9">
+                <a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                    href="/dashboard">Home</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                    href="/sentry">Sentry</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                    href="/policy">Docs</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                    href="/settings">Settings</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-text-secondary hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 size-2 bg-primary rounded-full"></span>
+                </button>
+                <div class="h-8 w-[1px] bg-surface-border"></div>
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-surface-border"
+                    data-alt="User profile picture"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBR8SNLYS7U-fGQXRdZoJK95e3_gZlK31jzNOhS1B4C3LD1QK6rCysxg1GyclEJQNHgQ4ZQzHUY5NFmAsaZtXiq1wwGTnB9ZSqbVgZK2TN_ijpXxNsFQtA6ZgF0VbbRrLJo2YR46guZgR0-dv9pOciYV4qDXGIiOKIZHkCqzLpM8Sd6ssSX8w8ABEiksxwsg7tBxAP0IlGFLnju3KfLzHS3xZRhioKhi4OsxV3SzS63KHB8isKRh61wBAO9K4F9mRMApZAkt1wge5zY");'>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="flex-1 flex flex-col max-w-[1440px] mx-auto w-full px-6 py-8 gap-8">
+        <div class="flex flex-col gap-6">
+            <div class="flex items-center gap-2 text-sm">
+                <a class="text-text-secondary hover:text-white transition-colors" href="/dashboard">Home</a>
+                <span class="text-text-secondary">/</span>
+                <a class="text-text-secondary hover:text-white transition-colors" href="/sentry">Sentry</a>
+                <span class="text-text-secondary">/</span>
+                <span class="text-primary font-medium">Integration Safety</span>
+            </div>
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <div class="flex flex-col gap-2">
+                    <h1 class="text-4xl font-black tracking-tight text-white">Cross-Repo Integration Safety</h1>
+                    <div class="flex items-center gap-2 text-text-secondary text-sm">
+                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                        <span>Last updated: <span class="text-white font-mono">Just now</span></span>
+                        <span class="mx-1">•</span>
+                        <span>Environment: <span class="text-primary font-medium">Production</span></span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-surface-dark border border-surface-border text-white text-sm font-bold hover:bg-[#283639] transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">settings</span>
+                        <span>Settings</span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center gap-2 rounded-lg h-10 px-6 bg-surface-dark border border-surface-border text-text-secondary text-sm font-bold hover:bg-[#283639] transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">hourglass_empty</span>
+                        <span>Await Status</span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center gap-2 rounded-lg h-10 px-6 bg-primary text-[#111718] text-sm font-bold hover:bg-[#0ea5e9] transition-colors shadow-[0_0_15px_rgba(19,203,236,0.3)]">
+                        <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+                        <span>Trigger Dispatch</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+                class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-symbols-outlined text-[64px] text-white">hub</span>
+                </div>
+                <p class="text-text-secondary text-sm font-medium uppercase tracking-wider">Total Repos</p>
+                <p class="text-3xl font-bold text-white">12</p>
+                <div class="flex items-center gap-1 text-xs text-status-success mt-2">
+                    <span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                    <span>2 added this week</span>
+                </div>
+            </div>
+            <div
+                class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-symbols-outlined text-[64px] text-status-success">check_circle</span>
+                </div>
+                <p class="text-text-secondary text-sm font-medium uppercase tracking-wider">Passing Integrations</p>
+                <p class="text-3xl font-bold text-white">9</p>
+                <div class="w-full bg-[#283639] h-1.5 rounded-full mt-3 overflow-hidden">
+                    <div class="bg-status-success h-full rounded-full" style="width: 75%"></div>
+                </div>
+            </div>
+            <div
+                class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-symbols-outlined text-[64px] text-status-error">error</span>
+                </div>
+                <p class="text-text-secondary text-sm font-medium uppercase tracking-wider">Failed Integrations</p>
+                <p class="text-3xl font-bold text-white">3</p>
+                <p class="text-text-secondary text-xs mt-2">Requires attention</p>
+            </div>
+            <div
+                class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-symbols-outlined text-[64px] text-primary">timer</span>
+                </div>
+                <p class="text-text-secondary text-sm font-medium uppercase tracking-wider">Avg Duration</p>
+                <p class="text-3xl font-bold text-white">4m 12s</p>
+                <div class="flex items-center gap-1 text-xs text-text-secondary mt-2">
+                    <span>-12s vs last run</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-6">
+            <div
+                class="bg-surface-dark border border-surface-border rounded-xl p-6 relative flex flex-col min-h-[500px]">
+                <div class="flex justify-between items-start mb-4 z-10">
+                    <div>
+                        <h3 class="text-white text-lg font-bold">Dependency Health Graph</h3>
+                        <p class="text-text-secondary text-sm">Visualizing real-time drift between Core and Consumers
+                        </p>
+                    </div>
+                    <div
+                        class="flex gap-4 items-center bg-[#111718]/80 backdrop-blur-sm p-2 rounded-lg border border-surface-border text-xs">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="size-2.5 rounded-full bg-status-success shadow-[0_0_8px_rgba(74,222,128,0.5)]"></span>
+                            <span class="text-text-secondary">Healthy</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="size-2.5 rounded-full bg-status-warning shadow-[0_0_8px_rgba(250,204,21,0.5)]"></span>
+                            <span class="text-text-secondary">Running</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="size-2.5 rounded-full bg-status-error shadow-[0_0_8px_rgba(248,113,113,0.5)]"></span>
+                            <span class="text-text-secondary">Failed</span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="flex-1 relative w-full h-full min-h-[400px] overflow-hidden rounded-lg bg-[#111718] border border-surface-border/50">
+                    <div class="absolute inset-0 z-0"
+                        style="background-image: radial-gradient(#283639 1px, transparent 1px); background-size: 20px 20px; opacity: 0.3;">
+                    </div>
+                    <svg class="absolute inset-0 z-0 w-full h-full pointer-events-none">
+                        <defs>
+                            <marker id="arrowhead-red" markerHeight="7" markerWidth="10" orient="auto" refX="9"
+                                refY="3.5">
+                                <polygon fill="#f87171" opacity="0.6" points="0 0, 10 3.5, 0 7"></polygon>
+                            </marker>
+                            <marker id="arrowhead-green" markerHeight="7" markerWidth="10" orient="auto" refX="9"
+                                refY="3.5">
+                                <polygon fill="#4ade80" opacity="0.6" points="0 0, 10 3.5, 0 7"></polygon>
+                            </marker>
+                            <marker id="arrowhead-yellow" markerHeight="7" markerWidth="10" orient="auto" refX="9"
+                                refY="3.5">
+                                <polygon fill="#facc15" opacity="0.6" points="0 0, 10 3.5, 0 7"></polygon>
+                            </marker>
+                        </defs>
+                        <path class="opacity-30" d="M500 250 L250 150" fill="none" marker-end="url(#arrowhead-red)"
+                            stroke="#f87171" stroke-width="2"></path>
+                        <path class="dispatch-signal" d="M500 250 L250 150" fill="none" stroke="#f87171"
+                            stroke-linecap="round" stroke-width="2"></path>
+                        <path class="opacity-30" d="M500 250 L750 150" fill="none" marker-end="url(#arrowhead-green)"
+                            stroke="#4ade80" stroke-width="2"></path>
+                        <path class="dispatch-signal" d="M500 250 L750 150" fill="none" stroke="#4ade80"
+                            stroke-linecap="round" stroke-width="2" style="animation-delay: 0.5s"></path>
+                        <path class="opacity-30" d="M500 250 L250 350" fill="none" marker-end="url(#arrowhead-yellow)"
+                            stroke="#facc15" stroke-width="2"></path>
+                        <path class="connector-line" d="M500 250 L250 350" fill="none" stroke="#facc15"
+                            stroke-dasharray="6,4" stroke-width="2"></path>
+                        <path class="opacity-30" d="M500 250 L750 350" fill="none" marker-end="url(#arrowhead-green)"
+                            stroke="#4ade80" stroke-width="2"></path>
+                        <path class="dispatch-signal" d="M500 250 L750 350" fill="none" stroke="#4ade80"
+                            stroke-linecap="round" stroke-width="2" style="animation-delay: 1s"></path>
+                    </svg>
+                    <div
+                        class="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2">
+                        <div
+                            class="size-24 bg-surface-dark rounded-full border-[3px] border-primary flex items-center justify-center shadow-[0_0_40px_rgba(19,203,236,0.3)] relative z-20">
+                            <span class="material-symbols-outlined text-primary text-5xl">dns</span>
+                            <div class="absolute -top-1 -right-1 flex h-4 w-4">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-4 w-4 bg-primary"></span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-surface-dark/95 px-4 py-1.5 rounded-full text-sm font-bold text-white border border-primary/40 shadow-lg">
+                            driftguard-core</div>
+                    </div>
+                    <div
+                        class="absolute top-[30%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-2 group cursor-pointer hover:z-30">
+                        <div
+                            class="size-16 bg-surface-dark rounded-full border-2 border-status-error flex items-center justify-center shadow-[0_0_20px_rgba(248,113,113,0.2)] group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-status-error text-2xl">credit_card</span>
+                        </div>
+                        <div
+                            class="bg-surface-dark/90 px-3 py-1 rounded-md text-xs font-medium text-white border border-surface-border shadow-md">
+                            billing-service</div>
+                    </div>
+                    <div
+                        class="absolute top-[30%] left-[75%] -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-2 group cursor-pointer hover:z-30">
+                        <div
+                            class="size-16 bg-surface-dark rounded-full border-2 border-status-success flex items-center justify-center shadow-[0_0_20px_rgba(74,222,128,0.2)] group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-status-success text-2xl">lock</span>
+                        </div>
+                        <div
+                            class="bg-surface-dark/90 px-3 py-1 rounded-md text-xs font-medium text-white border border-surface-border shadow-md">
+                            auth-module</div>
+                    </div>
+                    <div
+                        class="absolute top-[70%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-2 group cursor-pointer hover:z-30">
+                        <div
+                            class="size-16 bg-surface-dark rounded-full border-2 border-status-warning flex items-center justify-center shadow-[0_0_20px_rgba(250,204,21,0.2)] pulse-ring relative group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-status-warning text-2xl">dashboard</span>
+                        </div>
+                        <div
+                            class="bg-surface-dark/90 px-3 py-1 rounded-md text-xs font-medium text-white border border-surface-border shadow-md">
+                            dashboard-ui</div>
+                    </div>
+                    <div
+                        class="absolute top-[70%] left-[75%] -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-2 group cursor-pointer hover:z-30">
+                        <div
+                            class="size-16 bg-surface-dark rounded-full border-2 border-status-success flex items-center justify-center shadow-[0_0_20px_rgba(74,222,128,0.2)] group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-status-success text-2xl">description</span>
+                        </div>
+                        <div
+                            class="bg-surface-dark/90 px-3 py-1 rounded-md text-xs font-medium text-white border border-surface-border shadow-md">
+                            docs-portal</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h3 class="text-white text-xl font-bold">Integration Workflows</h3>
+                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                        <div class="relative flex-1 sm:flex-initial">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[20px]">search</span>
+                            <input
+                                class="bg-surface-dark border border-surface-border text-white text-sm rounded-lg focus:ring-primary focus:border-primary block w-full pl-10 p-2.5 placeholder-text-secondary/50"
+                                placeholder="Search workflows..." type="text" />
+                        </div>
+                        <button
+                            class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-surface-dark border border-surface-border text-white text-sm font-bold hover:bg-[#283639] transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">filter_list</span>
+                            <span>Filter</span>
+                        </button>
+                        <button
+                            class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-status-error/10 border border-status-error/30 text-status-error text-sm font-bold hover:bg-status-error/20 transition-colors ml-auto sm:ml-0">
+                            <span class="material-symbols-outlined text-[20px]">replay</span>
+                            <span>Re-run Failed</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-surface-dark border border-surface-border rounded-xl overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-sm text-left text-text-secondary">
+                            <thead
+                                class="text-xs text-text-secondary uppercase bg-[#111718] border-b border-surface-border">
+                                <tr>
+                                    <th class="px-6 py-4 font-semibold" scope="col">Repo Name</th>
+                                    <th class="px-6 py-4 font-semibold" scope="col">Workflow ID</th>
+                                    <th class="px-6 py-4 font-semibold" scope="col">Commit Hash</th>
+                                    <th class="px-6 py-4 font-semibold" scope="col">CI Status</th>
+                                    <th class="px-6 py-4 font-semibold" scope="col">Duration</th>
+                                    <th class="px-6 py-4 font-semibold" scope="col">Started</th>
+                                    <th class="px-6 py-4 text-right font-semibold" scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-surface-border">
+                                <tr class="bg-surface-dark hover:bg-[#202b2d] transition-colors group">
+                                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                                        <span class="p-1.5 rounded-md bg-status-error/10 text-status-error">
+                                            <span class="material-symbols-outlined text-[18px]">credit_card</span>
+                                        </span>
+                                        billing-service
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <a class="font-mono text-primary hover:underline hover:text-primary-dark"
+                                            href="#">wf-8293</a>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono text-xs">8a2b9d1</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-error/10 text-status-error border border-status-error/20">
+                                            <span class="size-1.5 rounded-full bg-status-error"></span>
+                                            Failed
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">2m 14s</td>
+                                    <td class="px-6 py-4">10 mins ago</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="text-text-secondary hover:text-primary p-2 rounded hover:bg-surface-border/50 transition-colors"
+                                            title="Re-run">
+                                            <span class="material-symbols-outlined text-[20px]">refresh</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="bg-surface-dark hover:bg-[#202b2d] transition-colors group">
+                                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                                        <span class="p-1.5 rounded-md bg-status-success/10 text-status-success">
+                                            <span class="material-symbols-outlined text-[18px]">lock</span>
+                                        </span>
+                                        auth-module
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <a class="font-mono text-primary hover:underline hover:text-primary-dark"
+                                            href="#">wf-8291</a>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono text-xs">c4f9e21</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">
+                                            <span class="size-1.5 rounded-full bg-status-success"></span>
+                                            Passing
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">4m 30s</td>
+                                    <td class="px-6 py-4">15 mins ago</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="text-text-secondary hover:text-primary p-2 rounded hover:bg-surface-border/50 transition-colors"
+                                            title="Re-run">
+                                            <span class="material-symbols-outlined text-[20px]">refresh</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="bg-surface-dark hover:bg-[#202b2d] transition-colors group">
+                                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                                        <span class="p-1.5 rounded-md bg-status-warning/10 text-status-warning">
+                                            <span class="material-symbols-outlined text-[18px]">dashboard</span>
+                                        </span>
+                                        dashboard-ui
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <a class="font-mono text-primary hover:underline hover:text-primary-dark"
+                                            href="#">wf-8100</a>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono text-xs">e1a7f09</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-warning/10 text-status-warning border border-status-warning/20">
+                                            <span class="size-1.5 rounded-full bg-status-warning animate-pulse"></span>
+                                            Running
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">1m 02s</td>
+                                    <td class="px-6 py-4">Just now</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="text-text-secondary hover:text-white p-2 rounded hover:bg-surface-border/50 transition-colors"
+                                            title="Cancel">
+                                            <span class="material-symbols-outlined text-[20px]">cancel</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="bg-surface-dark hover:bg-[#202b2d] transition-colors group">
+                                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                                        <span class="p-1.5 rounded-md bg-status-success/10 text-status-success">
+                                            <span class="material-symbols-outlined text-[18px]">description</span>
+                                        </span>
+                                        docs-portal
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <a class="font-mono text-primary hover:underline hover:text-primary-dark"
+                                            href="#">wf-8055</a>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono text-xs">b2c8a11</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">
+                                            <span class="size-1.5 rounded-full bg-status-success"></span>
+                                            Passing
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">3m 15s</td>
+                                    <td class="px-6 py-4">1 hour ago</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="text-text-secondary hover:text-primary p-2 rounded hover:bg-surface-border/50 transition-colors"
+                                            title="Re-run">
+                                            <span class="material-symbols-outlined text-[20px]">refresh</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="bg-surface-dark hover:bg-[#202b2d] transition-colors group">
+                                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                                        <span class="p-1.5 rounded-md bg-status-success/10 text-status-success">
+                                            <span class="material-symbols-outlined text-[18px]">api</span>
+                                        </span>
+                                        api-gateway
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <a class="font-mono text-primary hover:underline hover:text-primary-dark"
+                                            href="#">wf-8042</a>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono text-xs">f5d3e22</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">
+                                            <span class="size-1.5 rounded-full bg-status-success"></span>
+                                            Passing
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">5m 22s</td>
+                                    <td class="px-6 py-4">1 hour ago</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            class="text-text-secondary hover:text-primary p-2 rounded hover:bg-surface-border/50 transition-colors"
+                                            title="Re-run">
+                                            <span class="material-symbols-outlined text-[20px]">refresh</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex items-center justify-between p-4 border-t border-surface-border bg-[#111718]">
+                        <span class="text-sm text-text-secondary">
+                            Showing <span class="font-medium text-white">1</span> to <span
+                                class="font-medium text-white">5</span> of <span
+                                class="font-medium text-white">12</span> results
+                        </span>
+                        <div class="flex gap-2">
+                            <button
+                                class="flex items-center justify-center h-8 px-3 rounded bg-surface-dark border border-surface-border text-text-secondary text-sm hover:text-white hover:bg-surface-border transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled="">
+                                Previous
+                            </button>
+                            <button
+                                class="flex items-center justify-center h-8 px-3 rounded bg-surface-dark border border-surface-border text-text-secondary text-sm hover:text-white hover:bg-surface-border transition-colors">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

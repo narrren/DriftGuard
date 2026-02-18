@@ -1,7 +1,7 @@
 PyGithub
 boto3
 google-genai
-pyyaml
+google-cloud-storage
 requests
 python-dateutil
 azure-identity

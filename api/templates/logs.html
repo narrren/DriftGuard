@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>System Logs Console - DriftGuard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13cbec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                        "surface-dark": "#182022",
+                        "sidebar-dark": "#0d1416",
+                        "border-color": "#283639",
+                        "log-info": "#82aaff",
+                        "log-warn": "#ffcb6b",
+                        "log-error": "#f07178",
+                        "log-debug": "#c792ea",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #101f22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #283639;
+            border-radius: 5px;
+            border: 2px solid #101f22;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b5054;
+        }
+
+        .log-entry:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-200 font-display h-screen flex flex-col overflow-hidden">
+    <header
+        class="h-16 bg-sidebar-dark border-b border-border-color flex items-center justify-between px-6 shrink-0 z-20">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 text-primary font-bold text-xl tracking-tight">
+                <span class="material-symbols-outlined text-2xl">terminal</span>
+                DriftGuard Logs
+            </div>
+            <div class="h-6 w-px bg-border-color mx-2"></div>
+            <div class="flex items-center gap-2 text-sm text-slate-400">
+                <span class="flex items-center gap-1"><span
+                        class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Live Stream</span>
+                <span class="text-slate-600">|</span>
+                <span>Buffer: 1000 lines</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-lg">search</span>
+                <input
+                    class="bg-surface-dark border border-border-color rounded-md pl-9 pr-4 py-1.5 text-sm text-slate-300 focus:outline-none focus:border-primary w-64 placeholder-slate-600"
+                    placeholder="Filter logs..." type="text" />
+            </div>
+            <button
+                class="flex items-center gap-2 px-4 py-1.5 bg-surface-dark border border-border-color hover:bg-white/5 text-slate-300 text-sm font-medium rounded transition-colors">
+                <span class="material-symbols-outlined text-lg">download</span>
+                Export
+            </button>
+            <button
+                class="flex items-center gap-2 px-4 py-1.5 bg-surface-dark border border-border-color hover:bg-white/5 text-slate-300 text-sm font-medium rounded transition-colors">
+                <span class="material-symbols-outlined text-lg">settings</span>
+                Config
+            </button>
+        </div>
+    </header>
+    <main class="flex-1 flex overflow-hidden">
+        <aside class="w-64 bg-sidebar-dark border-r border-border-color flex flex-col shrink-0 z-10">
+            <div class="p-4 border-b border-border-color">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Log Levels</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <div
+                            class="flex items-center gap-2 text-sm text-slate-300 group-hover:text-white transition-colors">
+                            <input checked=""
+                                class="form-checkbox bg-surface-dark border-border-color text-red-500 focus:ring-0 rounded"
+                                type="checkbox" />
+                            <span class="w-2 h-2 rounded-full bg-log-error"></span>
+                            ERROR
+                        </div>
+                        <span class="text-xs text-slate-600 font-mono">12</span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <div
+                            class="flex items-center gap-2 text-sm text-slate-300 group-hover:text-white transition-colors">
+                            <input checked=""
+                                class="form-checkbox bg-surface-dark border-border-color text-yellow-500 focus:ring-0 rounded"
+                                type="checkbox" />
+                            <span class="w-2 h-2 rounded-full bg-log-warn"></span>
+                            WARN
+                        </div>
+                        <span class="text-xs text-slate-600 font-mono">45</span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <div
+                            class="flex items-center gap-2 text-sm text-slate-300 group-hover:text-white transition-colors">
+                            <input checked=""
+                                class="form-checkbox bg-surface-dark border-border-color text-blue-400 focus:ring-0 rounded"
+                                type="checkbox" />
+                            <span class="w-2 h-2 rounded-full bg-log-info"></span>
+                            INFO
+                        </div>
+                        <span class="text-xs text-slate-600 font-mono">892</span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <div
+                            class="flex items-center gap-2 text-sm text-slate-300 group-hover:text-white transition-colors">
+                            <input
+                                class="form-checkbox bg-surface-dark border-border-color text-purple-400 focus:ring-0 rounded"
+                                type="checkbox" />
+                            <span class="w-2 h-2 rounded-full bg-log-debug"></span>
+                            DEBUG
+                        </div>
+                        <span class="text-xs text-slate-600 font-mono">2.4k</span>
+                    </label>
+                </div>
+            </div>
+            <div class="p-4 flex-1 overflow-y-auto">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Components</h3>
+                <div class="space-y-1">
+                    <button
+                        class="w-full text-left px-3 py-2 rounded-md bg-primary/10 text-primary text-sm font-medium border border-primary/20 flex items-center justify-between">
+                        All Systems
+                        <span class="material-symbols-outlined text-sm">check</span>
+                    </button>
+                    <button
+                        class="w-full text-left px-3 py-2 rounded-md hover:bg-white/5 text-slate-400 hover:text-white text-sm transition-colors flex items-center justify-between">
+                        Auth Service
+                    </button>
+                    <button
+                        class="w-full text-left px-3 py-2 rounded-md hover:bg-white/5 text-slate-400 hover:text-white text-sm transition-colors flex items-center justify-between">
+                        Policy Engine
+                    </button>
+                    <button
+                        class="w-full text-left px-3 py-2 rounded-md hover:bg-white/5 text-slate-400 hover:text-white text-sm transition-colors flex items-center justify-between">
+                        Janitor Guard
+                    </button>
+                    <button
+                        class="w-full text-left px-3 py-2 rounded-md hover:bg-white/5 text-slate-400 hover:text-white text-sm transition-colors flex items-center justify-between">
+                        API Gateway
+                    </button>
+                </div>
+            </div>
+        </aside>
+        <div class="flex-1 flex flex-col bg-background-dark font-mono text-sm relative">
+            <div class="flex-1 overflow-y-auto p-4 space-y-1" id="logs-container">
+                <div class="log-entry flex items-start gap-4 p-1 rounded transition-colors group">
+                    <span class="text-slate-600 min-w-[140px] select-none">2023-10-27 10:42:15</span>
+                    <span class="text-log-info font-bold min-w-[60px]">INFO</span>
+                    <span class="text-slate-500 min-w-[120px]">[JanitorGuard]</span>
+                    <span class="text-slate-300 break-all">Scan completed for AWS region us-east-1. Found 12 orphaned
+                        resources.</span>
+                </div>
+                <div class="log-entry flex items-start gap-4 p-1 rounded transition-colors group">
+                    <span class="text-slate-600 min-w-[140px] select-none">2023-10-27 10:42:18</span>
+                    <span class="text-log-warn font-bold min-w-[60px]">WARN</span>
+                    <span class="text-slate-500 min-w-[120px]">[PolicyEngine]</span>
+                    <span class="text-slate-300 break-all">Policy violation detected in S3 bucket "backup-logs-2023":
+                        Missing required tag "CostCenter".</span>
+                </div>
+                <div class="log-entry flex items-start gap-4 p-1 rounded transition-colors group">
+                    <span class="text-slate-600 min-w-[140px] select-none">2023-10-27 10:42:19</span>
+                    <span class="text-log-info font-bold min-w-[60px]">INFO</span>
+                    <span class="text-slate-500 min-w-[120px]">[APIGateway]</span>
+                    <span class="text-slate-300 break-all">Request received: POST /api/v1/policy/validate (User:
+                        admin@driftguard.io)</span>
+                </div>
+                <div class="log-entry flex items-start gap-4 p-1 rounded transition-colors group">
+                    <span class="text-slate-600 min-w-[140px] select-none">2023-10-27 10:42:22</span>
+                    <span class="text-log-error font-bold min-w-[60px]">ERROR</span>
+                    <span class="text-slate-500 min-w-[120px]">[AuthService]</span>
+                    <span class="text-slate-300 break-all">Failed validation for token 8f9a...2b3c:
+                        ExpiredSignatureError</span>
+                </div>
+                <div class="log-entry flex items-start gap-4 p-1 rounded transition-colors group">
+                    <span class="text-slate-600 min-w-[140px] select-none">2023-10-27 10:42:25</span>
+                    <span class="text-log-debug font-bold min-w-[60px]">DEBUG</span>
+                    <span class="text-slate-500 min-w-[120px]">[SystemCore]</span>
+                    <span class="text-slate-300 break-all">Memory usage at 42%. Garbage collection triggered.</span>
+                </div>
+                <div class="log-entry flex items-start gap-4 p-1 rounded transition-colors group">
+                    <span class="text-slate-600 min-w-[140px] select-none">2023-10-27 10:42:28</span>
+                    <span class="text-log-info font-bold min-w-[60px]">INFO</span>
+                    <span class="text-slate-500 min-w-[120px]">[JanitorGuard]</span>
+                    <span class="text-slate-300 break-all">Scheduled cleanup task started. Targeting expired EBS
+                        volumes.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

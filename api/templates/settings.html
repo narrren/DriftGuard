@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Settings - DriftGuard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13cbec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                        "surface-dark": "#182022",
+                        "card-dark": "#141c1e",
+                        "border-color": "#283639",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #101f22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #283639;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b5054;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-200 font-display min-h-screen flex flex-col overflow-x-hidden">
+    <header
+        class="h-16 bg-surface-dark border-b border-border-color flex items-center justify-between px-6 shrink-0 z-20">
+        <div class="flex items-center gap-4">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">settings</span>
+                Settings
+            </h1>
+        </div>
+        <div class="flex items-center gap-6">
+            <nav class="flex items-center gap-4 text-sm font-medium">
+                <a class="text-slate-400 hover:text-white transition-colors" href="/dashboard">Back to Dashboard</a>
+            </nav>
+            <div class="h-10 w-10 rounded-full bg-slate-700/50 flex items-center justify-center text-slate-300">
+                <span class="material-symbols-outlined">person</span>
+            </div>
+        </div>
+    </header>
+    <main class="flex-1 max-w-4xl mx-auto w-full py-8 px-6 flex flex-col gap-8">
+        <section>
+            <h2 class="text-lg font-bold text-white mb-4 border-b border-border-color pb-2">Cloud Providers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-surface-dark border border-border-color rounded-xl p-5 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded bg-[#232f3e] flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-orange-400 text-2xl">cloud</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-white">AWS</h3>
+                            <span
+                                class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-500/10 text-green-400 border border-green-500/20">Connected</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Account ID: <span
+                                class="font-mono text-slate-300">1234-5678-9012</span></p>
+                        <div class="mt-4 flex gap-2">
+                            <button
+                                class="text-xs bg-card-dark hover:bg-white/5 border border-border-color px-3 py-1.5 rounded text-white transition-colors">Manage
+                                Credentials</button>
+                            <button
+                                class="text-xs bg-card-dark hover:bg-white/5 border border-border-color px-3 py-1.5 rounded text-white transition-colors">Usage</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-dark border border-border-color rounded-xl p-5 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded bg-[#4285F4]/20 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[#4285F4] text-2xl">cloud_queue</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-white">Google Cloud</h3>
+                            <span
+                                class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-700 text-slate-400 border border-slate-600">Not
+                                Connected</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Connect your GCP projects to enable Janitor cleanup.</p>
+                        <div class="mt-4 flex gap-2">
+                            <button
+                                class="text-xs bg-primary hover:bg-primary/90 text-background-dark font-bold px-3 py-1.5 rounded transition-colors shadow-lg shadow-primary/20">Connect
+                                GCP</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-dark border border-border-color rounded-xl p-5 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded bg-[#0078D4]/20 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[#0078D4] text-2xl">cloud_circle</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-white">Azure</h3>
+                            <span
+                                class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-500/10 text-green-400 border border-green-500/20">Connected</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Tenant ID: <span
+                                class="font-mono text-slate-300">fb9a...2c1d</span></p>
+                        <div class="mt-4 flex gap-2">
+                            <button
+                                class="text-xs bg-card-dark hover:bg-white/5 border border-border-color px-3 py-1.5 rounded text-white transition-colors">Manage
+                                Credentials</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2 class="text-lg font-bold text-white mb-4 border-b border-border-color pb-2">Integrations &amp; API Keys
+            </h2>
+            <div
+                class="bg-surface-dark border border-border-color rounded-xl overflow-hidden divide-y divide-border-color">
+                <div class="p-4 flex items-center justify-between group hover:bg-white/5 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined text-xl">smart_toy</span>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Google Gemini</h4>
+                            <p class="text-xs text-slate-400">AI analysis for policy documents and code reviews.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex items-center gap-2 px-2 py-1 bg-background-dark rounded border border-border-color font-mono text-xs text-slate-500 mb-0">
+                            <span class="rounded-full w-1.5 h-1.5 bg-green-500"></span>
+                            AIzaSy...Xy8z
+                        </div>
+                        <button class="p-2 text-slate-400 hover:text-white transition-colors rounded hover:bg-white/10">
+                            <span class="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-4 flex items-center justify-between group hover:bg-white/5 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded bg-slate-800 flex items-center justify-center text-white border border-slate-700">
+                            <span class="material-symbols-outlined text-xl">code</span>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">GitHub API</h4>
+                            <p class="text-xs text-slate-400">Repository scanning and PR management.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex items-center gap-2 px-2 py-1 bg-background-dark rounded border border-border-color font-mono text-xs text-slate-500 mb-0">
+                            <span class="rounded-full w-1.5 h-1.5 bg-green-500"></span>
+                            ghp_12...90ab
+                        </div>
+                        <button class="p-2 text-slate-400 hover:text-white transition-colors rounded hover:bg-white/10">
+                            <span class="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2 class="text-lg font-bold text-white mb-4 border-b border-border-color pb-2">System Preferences</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-surface-dark border border-border-color rounded-xl p-5">
+                    <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wider">Appearance</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between">
+                            <span class="text-sm text-slate-300">Theme</span>
+                            <select
+                                class="bg-background-dark border border-border-color text-white text-xs rounded px-2 py-1 focus:ring-primary focus:border-primary">
+                                <option>Dark (Default)</option>
+                                <option>Light</option>
+                                <option>System</option>
+                            </select>
+                        </label>
+                        <label class="flex items-center justify-between">
+                            <span class="text-sm text-slate-300">Compact Mode</span>
+                            <input
+                                class="form-checkbox bg-background-dark border-border-color text-primary rounded focus:ring-0"
+                                type="checkbox" />
+                        </label>
+                    </div>
+                </div>
+                <div class="bg-surface-dark border border-border-color rounded-xl p-5">
+                    <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wider">Notifications</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between">
+                            <span class="text-sm text-slate-300">Email Alerts</span>
+                            <input checked=""
+                                class="form-checkbox bg-background-dark border-border-color text-primary rounded focus:ring-0"
+                                type="checkbox" />
+                        </label>
+                        <label class="flex items-center justify-between">
+                            <span class="text-sm text-slate-300">Slack Integration</span>
+                            <input
+                                class="form-checkbox bg-background-dark border-border-color text-primary rounded focus:ring-0"
+                                type="checkbox" />
+                        </label>
+                        <label class="flex items-center justify-between">
+                            <span class="text-sm text-slate-300">Critical Drifts Only</span>
+                            <input
+                                class="form-checkbox bg-background-dark border-border-color text-primary rounded focus:ring-0"
+                                type="checkbox" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

@@ -1,36 +1,39 @@
+<!-- DriftGuard Control Center Dashboard -->
 <!DOCTYPE html>
 <html class="dark" lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>DriftGuard - Control Center</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+    <title>DriftGuard Operational Dashboard</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
         rel="stylesheet" />
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
-    <script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#13b6ec",
-                        "primary-dark": "#0ea5d7",
+                        "primary": "#13cbec",
+                        "primary-dark": "#0ea4c1",
                         "background-light": "#f6f8f8",
-                        "background-dark": "#101d22",
-                        "surface-dark": "#16262c",
-                        "border-dark": "#233f48",
-                        "success": "#10b981",
-                        "warning": "#f59e0b",
-                        "danger": "#ef4444",
-                        "text-secondary": "#92bbc9",
+                        "background-dark": "#0D1117",
+                        "surface-dark": "#161B22",
+                        "surface-border": "#30363d",
+                        "success": "#2ea043",
+                        "warning": "#d29922",
+                        "danger": "#f85149",
                     },
                     fontFamily: {
                         "display": ["Inter", "sans-serif"],
-                        "sans": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
                     },
                     borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
                 },
@@ -42,264 +45,448 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .scrollbar-hide::-webkit-scrollbar {
+        .hide-scrollbar::-webkit-scrollbar {
             display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes flow {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .animate-flow {
+            stroke-dasharray: 6 4;
+            animation: flow 1s linear infinite;
+        }
+
+        .pipeline-node-active {
+            box-shadow: 0 0 15px rgba(19, 203, 236, 0.3);
+            border-color: #13cbec;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .animate-shimmer {
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(to right, #161B22 4%, #21262d 25%, #161B22 36%);
+            background-size: 1000px 100%;
         }
     </style>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white overflow-x-hidden">
-    <div class="relative flex h-screen w-full flex-col overflow-hidden">
-        <header
-            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark px-6 py-3 shrink-0 z-20">
-            <div class="flex items-center gap-8">
-                <div class="flex items-center gap-3 text-white">
-                    <div class="size-8 text-primary">
-                        <span class="material-symbols-outlined text-3xl">dashboard</span>
-                    </div>
-                    <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
-                </div>
-                <label class="flex flex-col min-w-40 !h-10 max-w-64">
-                    <div
-                        class="flex w-full flex-1 items-stretch rounded-lg h-full ring-1 ring-border-dark bg-surface-dark overflow-hidden focus-within:ring-primary transition-all">
-                        <div class="text-[#92bbc9] flex items-center justify-center pl-3">
-                            <span class="material-symbols-outlined text-[20px]">search</span>
-                        </div>
-                        <input
-                            class="w-full bg-transparent border-none text-white focus:outline-0 focus:ring-0 h-full placeholder:text-[#92bbc9] px-3 text-sm font-normal leading-normal"
-                            placeholder="Search resources..." />
-                    </div>
-                </label>
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200 h-screen overflow-hidden flex flex-col">
+    <header
+        class="h-16 border-b border-surface-border bg-surface-dark flex items-center justify-between px-6 shrink-0 z-20">
+        <div class="flex items-center gap-3 w-64">
+            <div class="size-8 text-primary">
+                <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <path clip-rule="evenodd"
+                        d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z"
+                        fill="currentColor" fill-rule="evenodd"></path>
+                </svg>
             </div>
-            <div class="flex items-center justify-end gap-6">
-                <div class="flex gap-2">
-                    <button
-                        class="flex items-center justify-center rounded-lg size-10 hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors">
-                        <span class="material-symbols-outlined">notifications</span>
-                    </button>
-                    <button
-                        class="flex items-center justify-center rounded-lg size-10 hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors">
-                        <span class="material-symbols-outlined">settings</span>
-                    </button>
-                </div>
-                <div class="size-9 rounded-full bg-cover bg-center border border-border-dark" data-alt="User Avatar"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA1JuNQ4uXTwYg3eT_cyuGvFMEJAAh7Zh2aJ5x0NFfvE45MRhEhKGxz6NyCO37ARnvh-mjrBKNdJRneWBx2zVdCNkVpuk2HmZ_GScWibS8UuANYMHOohQfQeSuoAEAq8KWx84jnCL964SlQFV1u9S_GrITaFu_vExrthYfBkFFQ5xCwKffHYliGoPWuacKdzJBlJ1ukasM_cO_Jh2q61yxiVhthX6wjLxS6r7SXOjlzVOaqfLM_yCjAzK813OvZ4_OyKIuorVelAf9h");'>
-                </div>
-            </div>
-        </header>
-        <div class="flex flex-1 overflow-hidden">
-            <aside
-                class="w-64 bg-background-dark border-r border-border-dark flex flex-col justify-between py-6 px-4 shrink-0 overflow-y-auto">
-                <div class="flex flex-col gap-6">
-                    <div>
-                        <h3 class="text-[#92bbc9] text-xs font-bold uppercase tracking-wider mb-4 px-3">Platform</h3>
-                        <nav class="flex flex-col gap-1">
-                            <a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors"
-                                href="/dashboard">
-                                <span class="material-symbols-outlined text-[20px] fill-1">dashboard</span>
-                                <span class="text-sm font-medium">Dashboard</span>
-                            </a>
-                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
-                                href="/ai-guard">
-                                <span
-                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">shield</span>
-                                <span class="text-sm font-medium">Governance</span>
-                            </a>
-                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
-                                href="/finops">
-                                <span
-                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">attach_money</span>
-                                <span class="text-sm font-medium">FinOps</span>
-                            </a>
-                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
-                                href="/janitor">
-                                <span
-                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">delete</span>
-                                <span class="text-sm font-medium">Janitor</span>
-                            </a>
-                        </nav>
-                    </div>
-                    <div>
-                        <h3 class="text-[#92bbc9] text-xs font-bold uppercase tracking-wider mb-4 px-3">Configuration
-                        </h3>
-                        <nav class="flex flex-col gap-1">
-                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
-                                href="/policy">
-                                <span
-                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">rule</span>
-                                <span class="text-sm font-medium">Policies</span>
-                            </a>
-                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
-                                href="#">
-                                <span
-                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">integration_instructions</span>
-                                <span class="text-sm font-medium">Integrations</span>
-                            </a>
-                        </nav>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white cursor-pointer mt-auto"
-                    onclick="window.location.href='/login'">
-                    <span class="material-symbols-outlined text-[20px]">logout</span>
-                    <span class="text-sm font-medium">Sign Out</span>
-                </div>
-            </aside>
-            <main class="flex-1 flex flex-col min-w-0 bg-background-dark overflow-hidden">
-                <div class="flex-1 overflow-y-auto p-8">
-                    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
-                        <div class="flex flex-col gap-1">
-                            <h1 class="text-3xl font-bold text-white tracking-tight">Control Center</h1>
-                            <p class="text-[#92bbc9] text-sm max-w-2xl">Overview of your cloud infrastructure health,
-                                security posture, and recent activity.</p>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div
-                                class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group">
-                                <div
-                                    class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span class="material-symbols-outlined text-6xl text-white">dns</span>
-                                </div>
-                                <p class="text-[#92bbc9] text-sm font-medium">Total Resources</p>
-                                <div>
-                                    <p class="text-3xl font-bold text-white tracking-tight">12,405</p>
-                                    <p class="text-success text-xs font-medium mt-1 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                                        +12% vs last week
-                                    </p>
-                                </div>
-                            </div>
-                            <div
-                                class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group">
-                                <div
-                                    class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span class="material-symbols-outlined text-6xl text-danger">gpp_maybe</span>
-                                </div>
-                                <p class="text-[#92bbc9] text-sm font-medium">Drift Detected</p>
-                                <div>
-                                    <p class="text-3xl font-bold text-white tracking-tight">23</p>
-                                    <p class="text-danger text-xs font-medium mt-1 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px]">warning</span>
-                                        Requires Attention
-                                    </p>
-                                </div>
-                            </div>
-                            <div
-                                class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group">
-                                <div
-                                    class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span class="material-symbols-outlined text-6xl text-success">verified</span>
-                                </div>
-                                <p class="text-[#92bbc9] text-sm font-medium">Compliance Score</p>
-                                <div>
-                                    <p class="text-3xl font-bold text-white tracking-tight">94%</p>
-                                    <p class="text-success text-xs font-medium mt-1 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px]">check_circle</span>
-                                        Excellent
-                                    </p>
-                                </div>
-                            </div>
-                            <div
-                                class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group">
-                                <div
-                                    class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span class="material-symbols-outlined text-6xl text-primary">attach_money</span>
-                                </div>
-                                <p class="text-[#92bbc9] text-sm font-medium">Est. Cost (MTD)</p>
-                                <div>
-                                    <p class="text-3xl font-bold text-white tracking-tight">$9,240</p>
-                                    <p class="text-[#92bbc9] text-xs mt-1 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px]">info</span>
-                                        On Budget
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <div class="lg:col-span-2 bg-surface-dark border border-border-dark rounded-xl p-6">
-                                <div class="flex items-center justify-between mb-6">
-                                    <h3 class="text-lg font-bold text-white">Recent Drift Activity</h3>
-                                    <button class="text-primary text-xs font-bold hover:underline">View Log</button>
-                                </div>
-                                <div class="space-y-4">
-                                    <div
-                                        class="flex items-start gap-4 p-3 rounded-lg hover:bg-white/[0.02] transition-colors border border-transparent hover:border-border-dark">
-                                        <div
-                                            class="size-8 rounded bg-danger/10 text-danger flex items-center justify-center shrink-0">
-                                            <span class="material-symbols-outlined text-[18px]">warning</span>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-white">Security Group Modified</p>
-                                            <p class="text-xs text-[#92bbc9] mt-0.5 truncate">sg-0a1b2c3d allowed
-                                                0.0.0.0/0 on port 22</p>
-                                        </div>
-                                        <span class="text-xs text-[#92bbc9] whitespace-nowrap">2m ago</span>
-                                    </div>
-                                    <div
-                                        class="flex items-start gap-4 p-3 rounded-lg hover:bg-white/[0.02] transition-colors border border-transparent hover:border-border-dark">
-                                        <div
-                                            class="size-8 rounded bg-warning/10 text-warning flex items-center justify-center shrink-0">
-                                            <span class="material-symbols-outlined text-[18px]">refresh</span>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-white">Drift Reverted (Auto)</p>
-                                            <p class="text-xs text-[#92bbc9] mt-0.5 truncate">restored
-                                                s3-bucket-logs-prod policy to v4</p>
-                                        </div>
-                                        <span class="text-xs text-[#92bbc9] whitespace-nowrap">15m ago</span>
-                                    </div>
-                                    <div
-                                        class="flex items-start gap-4 p-3 rounded-lg hover:bg-white/[0.02] transition-colors border border-transparent hover:border-border-dark">
-                                        <div
-                                            class="size-8 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                            <span class="material-symbols-outlined text-[18px]">add_circle</span>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-white">New Resource Detected</p>
-                                            <p class="text-xs text-[#92bbc9] mt-0.5 truncate">Azure VM 'dev-test-01'
-                                                provisioned</p>
-                                        </div>
-                                        <span class="text-xs text-[#92bbc9] whitespace-nowrap">1h ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
-                                <h3 class="text-lg font-bold text-white mb-6">System Status</h3>
-                                <div class="space-y-6">
-                                    <div>
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-sm text-[#92bbc9]">Engine Heartbeat</span>
-                                            <span class="text-xs font-bold text-success">Active</span>
-                                        </div>
-                                        <div class="w-full bg-background-dark h-1.5 rounded-full overflow-hidden">
-                                            <div class="bg-success h-full rounded-full animate-pulse"
-                                                style="width: 100%"></div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-sm text-[#92bbc9]">Policy Sync</span>
-                                            <span class="text-xs font-bold text-primary">Syncing...</span>
-                                        </div>
-                                        <div class="w-full bg-background-dark h-1.5 rounded-full overflow-hidden">
-                                            <div
-                                                class="bg-primary h-full rounded-full w-2/3 animate-[shimmer_2s_infinite]">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="pt-4 border-t border-border-dark">
-                                        <button
-                                            class="w-full py-2 bg-primary text-[#111e22] text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
-                                            onclick="alert('System Scan Initiated')">
-                                            Scan All Systems
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <h1 class="text-white text-lg font-bold tracking-tight">DriftGuard</h1>
         </div>
+        <div class="flex bg-background-dark rounded-lg p-1 border border-surface-border">
+            <button
+                class="px-4 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors">Simulation</button>
+            <button
+                class="px-4 py-1.5 text-xs font-bold text-background-dark bg-primary rounded shadow-sm">Real-World</button>
+        </div>
+        <div class="flex items-center gap-4 w-64 justify-end">
+            <button class="text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-[20px]">help</span>
+            </button>
+            <button class="text-slate-400 hover:text-white transition-colors relative">
+                <span class="material-symbols-outlined text-[20px]">notifications</span>
+                <span class="absolute top-0 right-0 size-2 bg-primary rounded-full ring-2 ring-surface-dark"></span>
+            </button>
+            <div class="h-6 w-px bg-surface-border mx-1"></div>
+            <div class="flex items-center gap-3 cursor-pointer group">
+                <div class="text-right hidden xl:block">
+                    <p class="text-xs font-medium text-white group-hover:text-primary transition-colors">DevOps Lead</p>
+                    <p class="text-[10px] text-slate-500">Workspace A</p>
+                </div>
+                <div
+                    class="size-8 rounded-full bg-slate-700 overflow-hidden ring-2 ring-transparent group-hover:ring-primary transition-all">
+                    <img alt="User Profile" class="w-full h-full object-cover" data-alt="Profile picture of a user"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSsFqj6CW_eSe2pQmNTNtOgj84AJWGK7qEVlRSTL5MjMpflRyRpkmI9Uwq_Dp41t-TvZerlPUjRMPWmGNYlymYf0vKC5z2atete_bQlp0YFMP8erKFyI1WWboOdgh8s_Kfn2kN7-7cZ-qCtAM0V5bPARBZf00UNoS5oJChANWXRuup_QLyLuBxyllVEWY5ncnag3wPgyq0kXRLcjBW9L9BQLetjkeyD917Ir49UltR0R1pKTN-9m5oFneyhL5ODEHecfBrSHbdd9MG" />
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="flex flex-1 overflow-hidden">
+        <nav
+            class="w-64 bg-surface-dark border-r border-surface-border flex flex-col justify-between py-6 shrink-0 overflow-y-auto hide-scrollbar">
+            <div class="flex flex-col gap-1 px-3">
+                <div class="px-3 pb-4">
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Main Menu</p>
+                </div>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary border border-primary/20 group transition-all"
+                    href="/dashboard">
+                    <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                    <span class="text-sm font-medium">Overview</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
+                    href="/ai-guard">
+                    <span
+                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">sync</span>
+                    <span class="text-sm font-medium">AI Sync</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
+                    href="/janitor">
+                    <span
+                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">cleaning_services</span>
+                    <span class="text-sm font-medium">Janitor</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
+                    href="/sentry">
+                    <span
+                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">security</span>
+                    <span class="text-sm font-medium">Sentry</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
+                    href="/finops">
+                    <span
+                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">payments</span>
+                    <span class="text-sm font-medium">FinOps</span>
+                </a>
+                <div class="px-3 pt-6 pb-2">
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">System</p>
+                </div>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
+                    href="/logs">
+                    <span
+                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">description</span>
+                    <span class="text-sm font-medium">Logs</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
+                    href="/policy">
+                    <span
+                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">policy</span>
+                    <span class="text-sm font-medium">Policy</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
+                    href="/settings">
+                    <span
+                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+                    <span class="text-sm font-medium">Settings</span>
+                </a>
+            </div>
+            <div class="px-6">
+                <div class="p-4 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 border border-surface-border">
+                    <div class="flex items-center gap-2 mb-2 text-primary">
+                        <span class="material-symbols-outlined text-lg">bolt</span>
+                        <span class="text-xs font-bold uppercase">Pro Plan</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-3 leading-relaxed">Your team has used 85% of monthly drift
+                        credits.</p>
+                    <div class="w-full bg-slate-700 h-1 rounded-full mb-3">
+                        <div class="bg-primary h-1 rounded-full w-[85%]"></div>
+                    </div>
+                    <button class="text-xs text-white font-medium hover:text-primary transition-colors">Upgrade
+                        Plan</button>
+                </div>
+            </div>
+        </nav>
+        <main class="flex-1 flex flex-col overflow-hidden bg-background-dark relative">
+            <div
+                class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none">
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 lg:p-8">
+                <div class="grid grid-cols-12 gap-6 max-w-[1920px] mx-auto">
+                    <div
+                        class="col-span-12 bg-surface-dark border border-surface-border rounded-lg p-6 relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 class="text-white text-base font-semibold flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary">account_tree</span>
+                                    Pipeline Diagram
+                                </h2>
+                                <p class="text-xs text-slate-500 mt-1">Real-time request flow tracing</p>
+                            </div>
+                            <span class="text-xs text-slate-500 font-mono bg-surface-border/30 px-2 py-1 rounded">Trace
+                                ID: pipe-8f2a-99x</span>
+                        </div>
+                        <div class="relative flex items-center justify-between px-4 lg:px-20 py-10">
+                            <div
+                                class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-800 -z-10 transform -translate-y-1/2">
+                            </div>
+                            <svg class="absolute top-1/2 left-0 w-full h-1 -z-0 transform -translate-y-1/2 pointer-events-none"
+                                preserveAspectRatio="none">
+                                <line class="animate-flow" stroke="#13cbec" stroke-width="2" x1="0" x2="100%" y1="50%"
+                                    y2="50%"></line>
+                            </svg>
+                            <div class="flex flex-col items-center gap-3 relative z-10 group">
+                                <div
+                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                                <div
+                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
+                                    <p class="text-xs font-bold text-slate-300 pt-1">User</p>
+                                    <p class="text-[10px] text-slate-500 pb-1">Initiator</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-3 relative z-10 group">
+                                <div
+                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
+                                    <span class="material-symbols-outlined">api</span>
+                                </div>
+                                <div
+                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
+                                    <p class="text-xs font-bold text-slate-300 pt-1">FastAPI</p>
+                                    <p class="text-[10px] text-slate-500 pb-1">Gateway</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-3 relative z-10">
+                                <div
+                                    class="size-16 rounded-full bg-surface-dark border-2 border-primary text-primary flex items-center justify-center pipeline-node-active animate-pulse">
+                                    <span class="material-symbols-outlined text-[32px]">settings_suggest</span>
+                                </div>
+                                <div
+                                    class="text-center bg-surface-dark px-3 py-1 border border-primary/30 rounded shadow-[0_0_10px_rgba(19,203,236,0.2)] -mb-2 z-20">
+                                    <p class="text-xs font-bold text-primary">Engine</p>
+                                    <p class="text-[10px] text-slate-400">Processing</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-3 relative z-10 group">
+                                <div
+                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
+                                    <span class="material-symbols-outlined">shield</span>
+                                </div>
+                                <div
+                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
+                                    <p class="text-xs font-bold text-slate-300 pt-1">Guards</p>
+                                    <p class="text-[10px] text-slate-500 pb-1">Validating</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-3 relative z-10 group">
+                                <div
+                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
+                                    <span class="material-symbols-outlined">cloud_sync</span>
+                                </div>
+                                <div
+                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
+                                    <p class="text-xs font-bold text-slate-300 pt-1">Ext. APIs</p>
+                                    <p class="text-[10px] text-slate-500 pb-1">Target</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-span-12 xl:col-span-4 bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3
+                                class="text-slate-200 text-sm font-semibold uppercase tracking-wider flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-lg">dns</span>
+                                System Status
+                            </h3>
+                            <div class="flex h-3 w-3 relative">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-slate-900/50 rounded p-3 border border-surface-border">
+                                <p class="text-xs text-slate-500 mb-1">Engine State</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white text-lg font-bold font-mono">Running</span>
+                                    <span
+                                        class="text-[10px] px-2 py-0.5 bg-success/20 text-success rounded border border-success/30">HEALTHY</span>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/50 rounded p-3 border border-surface-border">
+                                <div class="flex justify-between items-center mb-1">
+                                    <p class="text-xs text-slate-500">Active Guards</p>
+                                    <span class="text-[10px] text-slate-600 font-mono">policy.yaml</span>
+                                </div>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span
+                                        class="text-[10px] px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded">s3-public-read</span>
+                                    <span
+                                        class="text-[10px] px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded">sg-open-ssh</span>
+                                    <span
+                                        class="text-[10px] px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded">ebs-unencrypted</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 mt-2 text-right">Loaded 12 policies</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-12 md:col-span-6 xl:col-span-4 flex flex-col gap-4">
+                        <div
+                            class="bg-surface-dark border border-surface-border rounded-lg p-5 flex-1 hover:border-primary/50 transition-all">
+                            <p class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Last Execution
+                            </p>
+                            <h3 class="text-white text-2xl font-bold font-mono">2m 45s ago</h3>
+                            <p class="mt-2 text-xs text-slate-500">Trigger: <span
+                                    class="text-primary/80">git-push-main</span></p>
+                        </div>
+                        <div
+                            class="bg-surface-dark border border-surface-border rounded-lg p-5 flex-1 hover:border-primary/50 transition-all">
+                            <div class="flex justify-between items-center mb-2">
+                                <p class="text-slate-400 text-xs font-medium uppercase tracking-wider">Drift Coverage
+                                </p>
+                                <span class="text-white font-mono font-bold">94.2%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-primary-dark to-primary h-full rounded-full"
+                                    style="width: 94.2%"></div>
+                            </div>
+                            <div class="flex justify-between mt-2 text-[10px] text-slate-500">
+                                <span>Infrastructure</span>
+                                <span>Compliance</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-span-12 md:col-span-6 xl:col-span-4 bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col justify-between overflow-hidden">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="h-4 w-24 bg-slate-800 rounded animate-shimmer"></div>
+                            <div class="h-4 w-4 bg-slate-800 rounded animate-shimmer"></div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="h-8 w-1/2 bg-slate-800 rounded animate-shimmer"></div>
+                            <div class="h-2 w-full bg-slate-800 rounded animate-shimmer"></div>
+                            <div class="h-2 w-3/4 bg-slate-800 rounded animate-shimmer"></div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between">
+                            <div class="h-3 w-16 bg-slate-800 rounded animate-shimmer"></div>
+                            <div class="h-3 w-12 bg-slate-800 rounded animate-shimmer"></div>
+                        </div>
+                        <p class="text-[10px] text-slate-600 font-mono mt-4 text-center">// Loading Telemetry...</p>
+                    </div>
+                    <div
+                        class="col-span-12 bg-surface-dark border border-surface-border rounded-lg flex flex-col min-h-[400px]">
+                        <div class="p-5 border-b border-surface-border flex items-center justify-between">
+                            <h2 class="text-white text-base font-semibold">Recent Events</h2>
+                            <div class="flex gap-2">
+                                <button
+                                    class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">filter_list</span>
+                                </button>
+                                <button
+                                    class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">download</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-surface-border bg-slate-900/50">
+                                        <th
+                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-32">
+                                            Timestamp</th>
+                                        <th
+                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-32">
+                                            Module</th>
+                                        <th
+                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-24">
+                                            Severity</th>
+                                        <th class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider">
+                                            Action Description</th>
+                                        <th
+                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-32 text-right">
+                                            Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-surface-border text-sm font-mono">
+                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
+                                        <td class="p-4 text-slate-400">10:42:05</td>
+                                        <td class="p-4 text-white font-medium">Janitor</td>
+                                        <td class="p-4">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-danger/10 text-danger border border-danger/20">
+                                                CRITICAL
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-slate-300">Orphaned EBS Volume (vol-0af32...) deleted</td>
+                                        <td class="p-4 text-right">
+                                            <span class="text-success text-xs">Completed</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
+                                        <td class="p-4 text-slate-400">10:41:22</td>
+                                        <td class="p-4 text-white font-medium">Sentry</td>
+                                        <td class="p-4">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-warning/10 text-warning border border-warning/20">
+                                                HIGH
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-slate-300">Security Group (sg-123) open to 0.0.0.0/0</td>
+                                        <td class="p-4 text-right">
+                                            <span class="text-primary text-xs">Flagged</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
+                                        <td class="p-4 text-slate-400">10:38:15</td>
+                                        <td class="p-4 text-white font-medium">FinOps</td>
+                                        <td class="p-4">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-700 text-slate-300 border border-slate-600">
+                                                LOW
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-slate-300">Tagging policy applied to 4 new resources</td>
+                                        <td class="p-4 text-right">
+                                            <span class="text-success text-xs">Completed</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
+                                        <td class="p-4 text-slate-400">10:35:00</td>
+                                        <td class="p-4 text-white font-medium">Policy</td>
+                                        <td class="p-4">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-700 text-slate-300 border border-slate-600">
+                                                LOW
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-slate-300">S3 Bucket Encryption compliance check</td>
+                                        <td class="p-4 text-right">
+                                            <span class="text-success text-xs">Pass</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
+                                        <td class="p-4 text-slate-400">10:32:41</td>
+                                        <td class="p-4 text-white font-medium">Janitor</td>
+                                        <td class="p-4">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
+                                                MEDIUM
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-slate-300">Unused Elastic IP released</td>
+                                        <td class="p-4 text-right">
+                                            <span class="text-success text-xs">Completed</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
+
 </body>
 
 </html>
