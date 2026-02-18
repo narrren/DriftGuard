@@ -1,10 +1,16 @@
 version: "1.0"
 description: "DriftGuard Governance Policy"
+severity: "HIGH"
+
+notifications:
+  enabled: true
+  webhook_url_env: "SLACK_WEBHOOK_URL"
+  on_events: ["failure", "critical_drift"]
+  channel: "#ops-alerts"
 
 # The "UniFlow" State Machine
-stages:
-  # Phase 2: The Synchronizer
-  - name: ai_doc_check
+rules:
+  - name: "Documentation Integrity"
     type: documentation
     enabled: true
     severity: block
