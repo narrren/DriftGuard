@@ -77,12 +77,13 @@ async def save_policy(update: PolicyUpdate):
         return JSONResponse(status_code=400, content={"detail": str(e)})
 
 @app.post("/api/janitor/scan")
+@app.post("/api/janitor/dry_run")
 async def janitor_scan(background_tasks: BackgroundTasks):
     if not MODULES_AVAILABLE:
-        return {"status": "mock", "message": "Scanning... (Mock)"}
+        return {"status": "mock", "message": "Scanning... (Mode: Simulation)"}
     
     # In a real scenario, this would trigger the scan logic
-    # For now, we mock the success response expected by the UI
+    # For now, we mock the success response expected by the UI for immediate feedback
     return {
         "status": "success", 
         "data": {
