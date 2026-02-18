@@ -1,271 +1,452 @@
-<!-- DriftGuard FinOps & Developer Experience -->
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>DriftGuard - FinOps Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#13b6ec", "background-dark": "#101d22",
-                        "surface-dark": "#18282f", "border-dark": "#233f48",
-                    },
-                    fontFamily: { "display": ["Inter", "sans-serif"], "mono": ["JetBrains Mono", "monospace"] },
-                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-                },
-            },
-        }
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard — FinOps Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0f1e;
         }
 
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #111e22;
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #233f48;
-            border-radius: 4px;
+        .sidebar-item {
+            transition: all 0.15s ease;
         }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #375a66;
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: white;
         }
 
-        .text-gradient {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #13b6ec, #0bda57);
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .pulse-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid #10b981;
+            animation: pulse-ring 2s infinite;
+        }
+
+        .status-dot {
+            position: relative;
+            display: inline-block;
+        }
+
+        .btn-action {
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-action:active {
+            transform: translateY(0);
+        }
+
+        .toast {
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .bar {
+            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes count-up {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .count-up {
+            animation: count-up 0.5s ease forwards;
         }
     </style>
 </head>
 
-<body class="bg-background-dark font-display text-white antialiased selection:bg-primary/30">
-    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-        <header
-            class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark/95 backdrop-blur px-6 py-3 lg:px-10">
-            <div class="flex items-center gap-4 text-white">
-                <div class="size-8 text-primary">
-                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <path clip-rule="evenodd"
-                            d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z"
-                            fill="currentColor" fill-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
+<body class="text-slate-300 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
+        <div class="p-6 border-b border-white/5">
+            <a href="/" class="flex items-center gap-3">
+                <div
+                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
+                    D</div>
+                <span class="text-lg font-bold text-white">DriftGuard</span>
+            </a>
+        </div>
+        <div
+            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
+            <span class="status-dot pulse-ring w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <a href="/dashboard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
+                Dashboard</a>
+            <a href="/ai-guard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧠</span>
+                AI Guard</a>
+            <a href="/janitor"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧹</span>
+                Janitor</a>
+            <a href="/sentry"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
+                Sentry</a>
+            <a href="/finops"
+                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>💰</span>
+                FinOps</a>
+            <a href="/policy"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>📋</span>
+                Policy</a>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Cloud Connections</p>
+            <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs"><span class="text-slate-400">AWS</span><span
+                        id="sb-aws" class="text-slate-600 font-mono">—</span></div>
+                <div class="flex items-center justify-between text-xs"><span class="text-slate-400">Azure</span><span
+                        id="sb-azure" class="text-slate-600 font-mono">—</span></div>
+                <div class="flex items-center justify-between text-xs"><span class="text-slate-400">GCP</span><span
+                        id="sb-gcp" class="text-slate-600 font-mono">—</span></div>
             </div>
-            <div class="hidden flex-1 justify-end gap-8 md:flex">
-                <div class="flex items-center gap-9">
-                    <a class="text-slate-300 hover:text-white transition-colors text-sm font-medium"
-                        href="/dashboard">Dashboard</a>
-                    <a class="text-slate-300 hover:text-white transition-colors text-sm font-medium"
-                        href="/janitor">Janitor</a>
-                    <a class="text-white text-sm font-medium border-b-2 border-primary pb-3 -mb-3"
-                        href="/finops">FinOps</a>
-                    <a class="text-slate-300 hover:text-white transition-colors text-sm font-medium"
-                        href="/policy">Policy</a>
-                </div>
-                <div class="flex gap-3">
-                    <a href="/login"
-                        class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-surface-dark border border-border-dark text-white hover:bg-border-dark transition-colors text-sm font-bold">Login</a>
-                </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 overflow-y-auto">
+        <header
+            class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-white glow-text">💰 FinOps Intelligence</h1>
+                <p class="text-xs text-slate-500 font-mono mt-0.5">Real-time cost velocity tracking & budget burn rate
+                    analysis</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="loadStats(false)" id="btnLoad"
+                    class="btn-action px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg shadow-lg shadow-indigo-600/20">↻
+                    Load Stats</button>
+                <button onclick="loadStats(true)"
+                    class="btn-action px-4 py-2 border border-red-500/30 hover:bg-red-500/10 text-red-400 text-sm font-medium rounded-lg transition">⚡
+                    Simulate Spike</button>
             </div>
         </header>
-        <main class="flex-1 flex flex-col items-center">
-            <div class="w-full max-w-7xl px-4 py-12 md:px-10 lg:py-20">
-                <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-                    <div class="flex flex-col gap-6">
-                        <div class="flex flex-col gap-4 text-left">
-                            <div
-                                class="inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                                <span class="material-symbols-outlined text-sm">bolt</span><span>v2.4 Release: Smart
-                                    Policy Engine</span></div>
-                            <h1
-                                class="text-white text-4xl font-black leading-tight tracking-[-0.033em] md:text-5xl lg:text-6xl">
-                                Governance that speaks <span class="text-gradient">Finance &amp; Engineering</span></h1>
-                            <p class="text-slate-400 text-lg font-normal leading-relaxed max-w-xl">Unify your cloud cost
-                                controls with developer workflows. Real-time budget velocity meets policy-as-code,
-                                ensuring you never drift from your bottom line.</p>
-                        </div>
-                        <div class="flex flex-wrap gap-4 pt-2">
-                            <button onclick="loadRealStats()"
-                                class="flex h-12 items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-[#111e22] hover:bg-primary/90 transition-all shadow-[0_0_20px_-5px_#13b6ec]">Load
-                                Real Stats</button>
-                            <button onclick="loadRealStats(true)"
-                                class="flex h-12 items-center justify-center rounded-lg border border-border-dark bg-surface-dark px-6 text-base font-bold text-white hover:bg-border-dark transition-all"><span
-                                    class="material-symbols-outlined mr-2 text-lg">warning</span>Simulate Spike</button>
-                        </div>
+
+        <div class="p-8 space-y-8">
+            <!-- Alert Banner (hidden by default) -->
+            <div id="alertBanner"
+                class="hidden rounded-xl border border-red-500/30 bg-red-500/5 p-4 flex items-start gap-3">
+                <span class="text-2xl">🚨</span>
+                <div>
+                    <p class="text-red-400 font-semibold" id="alertTitle">Alert</p>
+                    <p class="text-red-300/70 text-sm" id="alertMsg"></p>
+                </div>
+                <button onclick="document.getElementById('alertBanner').classList.add('hidden')"
+                    class="ml-auto text-slate-500 hover:text-white">✕</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Credits Used</p>
+                    <p class="text-3xl font-bold text-white">$<span id="statUsed">0.00</span></p>
+                    <p class="text-xs text-slate-500 mt-1">of $1,000 budget</p>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Remaining</p>
+                    <p class="text-3xl font-bold text-white">$<span id="statRemaining">1000.00</span></p>
+                    <p class="text-xs text-emerald-400 mt-1" id="statPct">0% used</p>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Zombies Reaped</p>
+                    <p class="text-3xl font-bold text-white" id="statZombies">0</p>
+                    <p class="text-xs text-emerald-400 mt-1">↑ this week</p>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Burn Rate</p>
+                    <p class="text-3xl font-bold text-white" id="statBurnRate">$0</p>
+                    <p class="text-xs text-slate-500 mt-1">per day avg</p>
+                </div>
+            </div>
+
+            <!-- Chart + Breakdown -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Bar Chart -->
+                <div class="glass rounded-xl p-6 md:col-span-2">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                            Cost Velocity — Last 7 Days
+                        </h2>
+                        <span id="chartBadge"
+                            class="text-xs font-mono px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Normal</span>
                     </div>
-                    <div
-                        class="relative w-full aspect-video rounded-xl bg-surface-dark border border-border-dark shadow-2xl overflow-hidden">
-                        <div
-                            class="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-xl blur opacity-25">
+                    <div class="flex items-end justify-between gap-2 h-40" id="barChart">
+                        <!-- Bars rendered by JS -->
+                        <div class="flex flex-col items-center gap-1 flex-1">
+                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
+                                class="text-xs text-slate-600 font-mono">Mon</span>
                         </div>
-                        <div class="relative h-full w-full bg-background-dark/90 p-6 flex flex-col justify-between">
-                            <div class="flex justify-between items-center mb-4">
-                                <div>
-                                    <h3 class="text-white font-bold text-lg">Cost Velocity</h3>
-                                    <p class="text-slate-400 text-xs uppercase tracking-wider">Production Cluster</p>
-                                </div>
-                                <span id="efficiency-badge"
-                                    class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs font-bold">+12%
-                                    Efficient</span>
-                            </div>
-                            <div class="flex items-end justify-between gap-2 h-32 w-full" id="bar-chart">
-                                <div
-                                    class="w-full bg-border-dark/30 rounded-t-sm h-[40%] hover:h-[45%] transition-all duration-300">
-                                </div>
-                                <div
-                                    class="w-full bg-border-dark/30 rounded-t-sm h-[60%] hover:h-[65%] transition-all duration-300">
-                                </div>
-                                <div
-                                    class="w-full bg-border-dark/30 rounded-t-sm h-[50%] hover:h-[55%] transition-all duration-300">
-                                </div>
-                                <div
-                                    class="w-full bg-primary/20 rounded-t-sm h-[80%] border-t-2 border-primary shadow-[0_0_15px_-5px_#13b6ec]">
-                                </div>
-                                <div
-                                    class="w-full bg-border-dark/30 rounded-t-sm h-[45%] hover:h-[50%] transition-all duration-300">
-                                </div>
-                                <div
-                                    class="w-full bg-border-dark/30 rounded-t-sm h-[35%] hover:h-[40%] transition-all duration-300">
-                                </div>
-                                <div
-                                    class="w-full bg-border-dark/30 rounded-t-sm h-[30%] hover:h-[35%] transition-all duration-300">
-                                </div>
-                            </div>
-                            <div class="flex justify-between text-xs text-slate-500 mt-2" id="chart-labels">
-                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                            </div>
+                        <div class="flex flex-col items-center gap-1 flex-1">
+                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
+                                class="text-xs text-slate-600 font-mono">Tue</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 flex-1">
+                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
+                                class="text-xs text-slate-600 font-mono">Wed</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 flex-1">
+                            <div class="bar w-full bg-indigo-500/30 rounded-t border-t-2 border-indigo-400"
+                                style="height:40%"></div><span class="text-xs text-slate-600 font-mono">Thu</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 flex-1">
+                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
+                                class="text-xs text-slate-600 font-mono">Fri</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 flex-1">
+                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
+                                class="text-xs text-slate-600 font-mono">Sat</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 flex-1">
+                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
+                                class="text-xs text-slate-600 font-mono">Sun</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Stats Bar -->
-            <div class="w-full border-y border-border-dark bg-surface-dark/50 mt-12">
-                <div class="mx-auto max-w-7xl px-4 py-8 md:px-10">
-                    <div class="flex flex-wrap gap-4">
-                        <div
-                            class="flex min-w-[200px] flex-1 flex-col gap-1 rounded-xl p-4 hover:bg-white/5 transition-colors">
-                            <div class="flex items-center gap-2"><span
-                                    class="material-symbols-outlined text-primary text-xl">savings</span>
-                                <p class="text-slate-400 text-sm font-medium">Monthly Savings</p>
-                            </div>
-                            <div class="flex items-baseline gap-3">
-                                <p class="text-white text-2xl font-bold tracking-tight" id="stat-savings">$0.00</p>
-                                <p class="text-[#0bda57] text-sm font-bold">+18%</p>
-                            </div>
-                        </div>
-                        <div class="w-px bg-border-dark hidden md:block"></div>
-                        <div
-                            class="flex min-w-[200px] flex-1 flex-col gap-1 rounded-xl p-4 hover:bg-white/5 transition-colors">
-                            <div class="flex items-center gap-2"><span
-                                    class="material-symbols-outlined text-primary text-xl">cloud_off</span>
-                                <p class="text-slate-400 text-sm font-medium">Credits Used</p>
-                            </div>
-                            <div class="flex items-baseline gap-3">
-                                <p class="text-white text-2xl font-bold tracking-tight" id="stat-credits">$0.00</p>
-                                <p class="text-[#0bda57] text-sm font-bold">of $1000</p>
-                            </div>
-                        </div>
-                        <div class="w-px bg-border-dark hidden md:block"></div>
-                        <div
-                            class="flex min-w-[200px] flex-1 flex-col gap-1 rounded-xl p-4 hover:bg-white/5 transition-colors">
-                            <div class="flex items-center gap-2"><span
-                                    class="material-symbols-outlined text-primary text-xl">speed</span>
-                                <p class="text-slate-400 text-sm font-medium">Remaining Budget</p>
-                            </div>
-                            <div class="flex items-baseline gap-3">
-                                <p class="text-white text-2xl font-bold tracking-tight" id="stat-remaining">$1000.00</p>
-                                <p class="text-[#fa5f38] text-sm font-bold" id="stat-pct">0%</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Alert Banner -->
-            <div id="alert-banner" class="hidden w-full mt-6 px-4">
-                <div
-                    class="max-w-7xl mx-auto bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
-                    <span class="material-symbols-outlined text-red-500 text-2xl mt-0.5">warning</span>
-                    <div>
-                        <p class="text-red-400 font-bold" id="alert-title">Alert</p>
-                        <p class="text-red-200/70 text-sm" id="alert-msg"></p>
-                    </div>
-                </div>
-            </div>
-            <!-- Anomalies -->
-            <div class="w-full max-w-7xl px-4 py-8 md:px-10">
-                <h2 class="text-white text-2xl font-bold mb-6 flex items-center gap-3"><span
-                        class="flex h-8 w-8 items-center justify-center rounded bg-primary/20 text-primary"><span
-                            class="material-symbols-outlined text-lg">monitoring</span></span>Recent Anomalies</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="anomalies-list">
-                    <div class="flex items-start gap-3 rounded-lg bg-red-500/10 p-4 border border-red-500/20"><span
-                            class="material-symbols-outlined text-red-500 text-lg mt-0.5">warning</span>
+
+                <!-- Spend Breakdown -->
+                <div class="glass rounded-xl p-6">
+                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                        Spend Breakdown
+                    </h2>
+                    <div class="space-y-4">
                         <div>
-                            <p class="text-sm font-semibold text-red-200">RDS Spike Detected</p>
-                            <p class="text-xs text-red-200/60">+240% cost increase in us-east-1</p>
+                            <div class="flex justify-between text-xs mb-1.5"><span
+                                    class="text-slate-400">Compute</span><span class="text-white font-mono"
+                                    id="computePct">65%</span></div>
+                            <div class="h-2 rounded-full bg-white/5 overflow-hidden">
+                                <div id="computeBar"
+                                    class="h-full rounded-full bg-indigo-500 transition-all duration-700"
+                                    style="width:65%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5"><span
+                                    class="text-slate-400">Storage</span><span class="text-white font-mono"
+                                    id="storagePct">25%</span></div>
+                            <div class="h-2 rounded-full bg-white/5 overflow-hidden">
+                                <div id="storageBar"
+                                    class="h-full rounded-full bg-purple-500 transition-all duration-700"
+                                    style="width:25%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5"><span
+                                    class="text-slate-400">Network</span><span class="text-white font-mono"
+                                    id="networkPct">10%</span></div>
+                            <div class="h-2 rounded-full bg-white/5 overflow-hidden">
+                                <div id="networkBar"
+                                    class="h-full rounded-full bg-emerald-500 transition-all duration-700"
+                                    style="width:10%"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex items-start gap-3 rounded-lg bg-amber-500/10 p-4 border border-amber-500/20"><span
-                            class="material-symbols-outlined text-amber-500 text-lg mt-0.5">info</span>
-                        <div>
-                            <p class="text-sm font-semibold text-amber-200">Unused EIPs</p>
-                            <p class="text-xs text-amber-200/60">5 addresses idle &gt; 48hrs</p>
-                        </div>
+                    <div class="mt-6 pt-4 border-t border-white/5 space-y-2">
+                        <div class="flex justify-between text-xs"><span class="text-slate-500">Budget Limit</span><span
+                                class="text-white font-mono">$1,000.00</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-slate-500">Forecast
+                                (30d)</span><span class="text-white font-mono" id="forecast30d">$0.00</span></div>
                     </div>
                 </div>
             </div>
-    </div>
+
+            <!-- Anomalies + Log -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass rounded-xl p-6">
+                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-red-400"></span>
+                        Recent Anomalies
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/10">
+                            <span class="text-lg">⚠️</span>
+                            <div>
+                                <p class="text-sm font-semibold text-red-300">RDS Spike Detected</p>
+                                <p class="text-xs text-slate-500">+240% cost increase in us-east-1</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/10">
+                            <span class="text-lg">💡</span>
+                            <div>
+                                <p class="text-sm font-semibold text-yellow-300">Unused EIPs</p>
+                                <p class="text-xs text-slate-500">5 addresses idle > 48hrs</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span class="text-lg">✅</span>
+                            <div>
+                                <p class="text-sm font-semibold text-emerald-300">Janitor Saved $89</p>
+                                <p class="text-xs text-slate-500">12 zombie resources reaped</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-xl p-6">
+                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                        FinOps Event Log
+                    </h2>
+                    <div id="finopsLog" class="font-mono text-xs text-slate-400 space-y-1.5 h-40 overflow-y-auto">
+                        <div class="text-slate-600">Click "Load Stats" to fetch real cost data...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
-    <footer class="border-t border-border-dark bg-background-dark py-8 px-10 text-center text-slate-500 text-sm">
-        <p>© 2024 DriftGuard Inc. All rights reserved.</p>
-    </footer>
+
+    <!-- Toast -->
+    <div id="toast"
+        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
+        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
     </div>
+
     <script>
-        async function loadRealStats(simulateSpike = false) {
-            try {
-                const res = await fetch('/api/finops/stats' + (simulateSpike ? '?simulate_leak=true' : ''));
-                const data = await res.json();
-                document.getElementById('stat-savings').textContent = '$' + data.credits.used.toFixed(2);
-                document.getElementById('stat-credits').textContent = '$' + data.credits.used.toFixed(2);
-                document.getElementById('stat-remaining').textContent = '$' + data.credits.remaining.toFixed(2);
-                const pct = Math.round((data.credits.used / data.credits.limit) * 100);
-                document.getElementById('stat-pct').textContent = pct + '% used';
-                if (data.alert) {
-                    document.getElementById('alert-banner').classList.remove('hidden');
-                    document.getElementById('alert-title').textContent = data.alert.title;
-                    document.getElementById('alert-msg').textContent = data.alert.msg;
-                    document.getElementById('efficiency-badge').textContent = '🚨 Spike Detected';
-                    document.getElementById('efficiency-badge').className = 'px-2 py-1 rounded bg-red-500/10 text-red-400 text-xs font-bold';
-                }
-                // Update bar chart
-                const bars = document.querySelectorAll('#bar-chart > div');
-                data.actual_spend.forEach((val, i) => {
-                    const maxVal = Math.max(...data.actual_spend);
-                    const pct = Math.round((val / maxVal) * 90);
-                    if (bars[i]) bars[i].style.height = pct + '%';
-                });
-            } catch (e) {
-                console.error('Stats load failed:', e);
-            }
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+            toast.className = `toast show fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px] ${type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-indigo-600'}`;
+            setTimeout(() => toast.classList.remove('show'), 3500);
         }
-        loadRealStats();
+        function addLog(msg, type = 'info') {
+            const log = document.getElementById('finopsLog');
+            const colors = { info: 'text-slate-400', success: 'text-emerald-400', error: 'text-red-400', warn: 'text-yellow-400' };
+            const time = new Date().toLocaleTimeString();
+            if (log.querySelector('.text-slate-600')) log.innerHTML = '';
+            log.innerHTML += `<div class="${colors[type] || 'text-slate-400'}">[${time}] ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+        async function loadStats(simulateSpike = false) {
+            const btn = document.getElementById('btnLoad');
+            btn.textContent = '⏳ Loading...'; btn.disabled = true;
+            addLog(simulateSpike ? 'Simulating cost spike...' : 'Fetching real cost data...', 'info');
+            showToast(simulateSpike ? 'Simulating spike...' : 'Loading stats...', 'info');
+            try {
+                const url = '/api/finops/stats' + (simulateSpike ? '?simulate_leak=true' : '');
+                const res = await fetch(url);
+                const data = await res.json();
+                // Update stats
+                document.getElementById('statUsed').textContent = data.credits.used.toFixed(2);
+                document.getElementById('statRemaining').textContent = data.credits.remaining.toFixed(2);
+                const pct = Math.round((data.credits.used / data.credits.limit) * 100);
+                const pctEl = document.getElementById('statPct');
+                pctEl.textContent = pct + '% used';
+                pctEl.className = `text-xs mt-1 ${pct > 70 ? 'text-red-400' : pct > 40 ? 'text-yellow-400' : 'text-emerald-400'}`;
+                // Zombies
+                const totalZombies = data.zombies_reaped?.reduce((a, b) => a + b, 0) || 0;
+                document.getElementById('statZombies').textContent = totalZombies;
+                // Burn rate
+                const avgDaily = data.credits.used / 7;
+                document.getElementById('statBurnRate').textContent = '$' + avgDaily.toFixed(2);
+                // Forecast
+                document.getElementById('forecast30d').textContent = '$' + (avgDaily * 30).toFixed(2);
+                // Update bars
+                const bars = document.querySelectorAll('#barChart .bar');
+                const maxVal = Math.max(...data.actual_spend);
+                data.actual_spend.forEach((val, i) => {
+                    if (bars[i]) {
+                        const h = Math.round((val / maxVal) * 90) + 10;
+                        bars[i].style.height = h + '%';
+                        if (simulateSpike && i >= 5) {
+                            bars[i].className = 'bar w-full bg-red-500/40 rounded-t border-t-2 border-red-400';
+                        } else {
+                            bars[i].className = i === 3 ? 'bar w-full bg-indigo-500/30 rounded-t border-t-2 border-indigo-400' : 'bar w-full bg-indigo-500/20 rounded-t';
+                        }
+                    }
+                });
+                // Alert
+                if (data.alert) {
+                    document.getElementById('alertBanner').classList.remove('hidden');
+                    document.getElementById('alertTitle').textContent = data.alert.title;
+                    document.getElementById('alertMsg').textContent = data.alert.msg;
+                    document.getElementById('chartBadge').textContent = '🚨 Spike';
+                    document.getElementById('chartBadge').className = 'text-xs font-mono px-2 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20';
+                    addLog(`ALERT: ${data.alert.msg}`, 'error');
+                    showToast('Cost spike detected!', 'error');
+                } else {
+                    document.getElementById('chartBadge').textContent = 'Normal';
+                    document.getElementById('chartBadge').className = 'text-xs font-mono px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+                    addLog(`Stats loaded — $${data.credits.used.toFixed(2)} used of $${data.credits.limit}`, 'success');
+                    showToast('Stats loaded!', 'success');
+                }
+            } catch (e) {
+                addLog(`Error: ${e.message}`, 'error');
+                showToast('Failed to load stats', 'error');
+            }
+            btn.textContent = '↻ Load Stats'; btn.disabled = false;
+        }
+        async function loadSidebarStatus() {
+            try {
+                const res = await fetch('/auth/status');
+                const status = await res.json();
+                ['aws', 'azure', 'gcp'].forEach(k => {
+                    const el = document.getElementById(`sb-${k}`);
+                    if (el) el.innerHTML = status[k]?.connected
+                        ? '<span class="text-emerald-400">● on</span>'
+                        : '<span class="text-slate-600">○ off</span>';
+                });
+            } catch (e) { }
+        }
+        loadSidebarStatus();
+        loadStats(false);
     </script>
 </body>
 
