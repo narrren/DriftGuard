@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard | Autonomous Platform Governance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+        }
+
+        .grid-bg {
+            background-image: linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+
+        @keyframes blob {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .delay-4000 {
+            animation-delay: 4s;
+        }
+    </style>
+</head>
+
+<body class="bg-[#020617] text-slate-300 antialiased overflow-x-hidden">
+
+    <div class="fixed inset-0 grid-bg opacity-20 pointer-events-none"></div>
+    <div
+        class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full mix-blend-screen filter blur-[128px] animate-blob pointer-events-none">
+    </div>
+    <div
+        class="fixed bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[128px] animate-blob delay-2000 pointer-events-none">
+    </div>
+
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-[#020617]/80 backdrop-blur-xl">
+        <div class="container mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/20">
+                    D</div>
+                <span class="text-xl font-bold text-white tracking-tight">DriftGuard</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-sm font-medium hover:text-white transition">Features</a>
+                <a href="#how-it-works" class="text-sm font-medium hover:text-white transition">How it Works</a>
+            </div>
+            <a href="/login"
+                class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-all shadow-lg shadow-indigo-600/20">
+                Launch App →
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative pt-40 pb-32 overflow-hidden">
+        <div class="container mx-auto px-6 text-center z-10 relative">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
+                <span class="flex h-2 w-2 relative">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="text-sm font-medium text-emerald-300">DriftGuard Engine v1.0 — Live</span>
+            </div>
+
+            <h1 class="text-6xl md:text-8xl font-extrabold text-white tracking-tight mb-8 leading-tight">
+                Governance as <br />
+                <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-glow">Artificial
+                    Intelligence.</span>
+            </h1>
+
+            <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 font-light leading-relaxed">
+                The first <strong>Config-Driven IDP</strong> that uses Gemini 1.5 to read your code, verify your docs,
+                and autonomously manage your cloud costs.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <a href="/login"
+                    class="group relative px-8 py-4 bg-indigo-600 rounded-xl font-bold text-white shadow-xl shadow-indigo-600/20 overflow-hidden transition-all hover:scale-105">
+                    Connect Your Cloud →
+                </a>
+                <a href="#how-it-works"
+                    class="px-8 py-4 rounded-xl border border-white/10 hover:bg-white/5 font-semibold text-white transition-all">
+                    See How It Works
+                </a>
+            </div>
+
+            <!-- Code preview card -->
+            <div
+                class="mt-24 mx-auto max-w-5xl rounded-2xl border border-white/10 bg-[#0f172a]/80 backdrop-blur-sm shadow-2xl overflow-hidden">
+                <div class="flex items-center gap-2 px-6 py-4 bg-white/5 border-b border-white/5">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                    </div>
+                    <div class="ml-4 text-xs font-mono text-slate-500">driftguard/policy.yaml</div>
+                </div>
+                <div class="grid md:grid-cols-2 text-left">
+                    <div class="p-8 border-r border-white/5">
+                        <pre class="font-mono text-sm leading-7"><code><span class="text-indigo-400">governance:</span>
+  <span class="text-pink-400">version:</span> "1.0"
+
+  <span class="text-gray-500"># 🧠 AI Doc Integrity</span>
+  <span class="text-purple-400">- guard:</span> ai_synchronizer
+    <span class="text-blue-300">model:</span> "gemini-1.5-pro"
+    <span class="text-blue-300">enforcement:</span> BLOCK_PR
+
+  <span class="text-gray-500"># 🧹 Cloud Hygiene</span>
+  <span class="text-purple-400">- guard:</span> finops_janitor
+    <span class="text-blue-300">target:</span> [aws_s3, aws_ec2]
+    <span class="text-blue-300">ttl:</span> 24h
+
+  <span class="text-gray-500"># 🛡️ Cross-Repo Safety</span>
+  <span class="text-purple-400">- guard:</span> integration_sentry
+    <span class="text-blue-300">notify:</span> [consumer-app-1]</code></pre>
+                    </div>
+                    <div class="p-8 bg-indigo-900/10 flex flex-col justify-center">
+                        <h3 class="text-xl font-bold text-white mb-2">Simplicity by Design</h3>
+                        <p class="text-slate-400 mb-6">You define the policy. DriftGuard enforces it. No messy custom
+                            scripts.</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 text-sm">
+                                <div
+                                    class="w-5 h-5 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-xs">
+                                    ✓</div><span>Blocks undocumented secrets</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <div
+                                    class="w-5 h-5 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-xs">
+                                    ✓</div><span>Deletes $1000/mo zombie waste</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <div
+                                    class="w-5 h-5 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-xs">
+                                    ✓</div><span>Prevents regression loops</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-20 border-t border-white/5">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Three Pillars of Protection</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">An active defense system for the three major anxieties of
+                    Platform Engineering.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass rounded-2xl p-8 hover:border-indigo-500/30 transition-all group">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-2xl mb-6">
+                        🧠</div>
+                    <h3 class="text-xl font-bold text-white mb-3">AI Synchronizer</h3>
+                    <p class="text-slate-400 leading-relaxed">Gemini 1.5 reads your code changes and blocks PRs that
+                        introduce undocumented secrets or breaking changes.</p>
+                </div>
+                <div class="glass rounded-2xl p-8 hover:border-emerald-500/30 transition-all group">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-2xl mb-6">
+                        🧹</div>
+                    <h3 class="text-xl font-bold text-white mb-3">FinOps Janitor</h3>
+                    <p class="text-slate-400 leading-relaxed">Scans AWS, Azure, and GCP for expired resources and
+                        automatically destroys zombie infrastructure saving you money.</p>
+                </div>
+                <div class="glass rounded-2xl p-8 hover:border-purple-500/30 transition-all group">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center text-2xl mb-6">
+                        🛡️</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Cross-Repo Sentry</h3>
+                    <p class="text-slate-400 leading-relaxed">Dispatches integration test signals to downstream repos
+                        before you merge, preventing cascading failures.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="py-32">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-16">Connect. Govern. Save.</h2>
+            <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-2xl font-bold text-indigo-400 mx-auto mb-4">
+                        1</div>
+                    <h3 class="text-white font-bold mb-2">Connect Cloud</h3>
+                    <p class="text-slate-400 text-sm">Sign in with AWS, Azure, or GCP via OAuth SSO. No API keys needed.
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 rounded-full bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-2xl font-bold text-purple-400 mx-auto mb-4">
+                        2</div>
+                    <h3 class="text-white font-bold mb-2">Define Policy</h3>
+                    <p class="text-slate-400 text-sm">Configure your governance rules in a simple YAML file. DriftGuard
+                        handles the rest.</p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 rounded-full bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-2xl font-bold text-emerald-400 mx-auto mb-4">
+                        3</div>
+                    <h3 class="text-white font-bold mb-2">Automate & Save</h3>
+                    <p class="text-slate-400 text-sm">DriftGuard runs continuously, blocking bad PRs and cleaning zombie
+                        resources.</p>
+                </div>
+            </div>
+            <div class="mt-16">
+                <a href="/login"
+                    class="inline-flex items-center gap-2 px-10 py-5 bg-indigo-600 rounded-2xl font-bold text-white text-lg shadow-xl shadow-indigo-600/20 hover:scale-105 transition-transform">
+                    Get Started Free →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-white/5 text-center text-slate-600 text-sm">
+        &copy; 2026 DriftGuard. Built by <a href="https://github.com/narrren"
+            class="text-indigo-400 hover:text-indigo-300">narrren</a>.
+        <span class="mx-2">·</span>
+        <a href="https://github.com/narrren/DriftGuard" class="text-indigo-400 hover:text-indigo-300">GitHub</a>
+    </footer>
+
+</body>
+
+</html>

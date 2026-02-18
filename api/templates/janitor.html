@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard — Janitor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0f1e;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sidebar-item {
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: white;
+        }
+
+        .toast {
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        .scan-line {
+            animation: scan 2s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="text-slate-300 min-h-screen flex">
+
+    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
+        <div class="p-6 border-b border-white/5">
+            <a href="/" class="flex items-center gap-3">
+                <div
+                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
+                    D</div>
+                <span class="text-lg font-bold text-white">DriftGuard</span>
+            </a>
+        </div>
+        <div
+            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1">
+            <a href="/dashboard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
+                Dashboard</a>
+            <a href="/ai-guard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧠</span>
+                AI Guard</a>
+            <a href="/janitor"
+                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>🧹</span>
+                Janitor</a>
+            <a href="/sentry"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
+                Sentry</a>
+            <a href="/finops"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>💰</span>
+                FinOps</a>
+            <a href="/policy"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>📋</span>
+                Policy</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto">
+        <header class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4">
+            <h1 class="text-xl font-bold text-white">🧹 FinOps Janitor</h1>
+            <p class="text-xs text-slate-500 font-mono mt-0.5">Scan & destroy zombie cloud resources</p>
+        </header>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-4">
+                <div class="glass rounded-xl p-5 text-center">
+                    <p class="text-3xl font-bold text-emerald-400" id="statReaped">0</p>
+                    <p class="text-xs text-slate-500 mt-1">Resources Reaped</p>
+                </div>
+                <div class="glass rounded-xl p-5 text-center">
+                    <p class="text-3xl font-bold text-white">$<span id="statSaved">0</span></p>
+                    <p class="text-xs text-slate-500 mt-1">Estimated Savings</p>
+                </div>
+                <div class="glass rounded-xl p-5 text-center">
+                    <p class="text-3xl font-bold text-indigo-400" id="statClouds">0</p>
+                    <p class="text-xs text-slate-500 mt-1">Clouds Scanned</p>
+                </div>
+            </div>
+
+            <!-- Scan Controls -->
+            <div class="glass rounded-xl p-6">
+                <h2 class="text-white font-semibold mb-4">Scan Controls</h2>
+                <div class="flex flex-wrap gap-3 mb-4">
+                    <label class="flex items-center gap-2 text-sm cursor-pointer">
+                        <input type="checkbox" id="chkAws" class="rounded" checked> <span>AWS</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm cursor-pointer">
+                        <input type="checkbox" id="chkAzure" class="rounded" checked> <span>Azure</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm cursor-pointer">
+                        <input type="checkbox" id="chkGcp" class="rounded" checked> <span>GCP</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm cursor-pointer ml-4">
+                        <input type="checkbox" id="chkDryRun" class="rounded" checked> <span class="text-yellow-400">Dry
+                            Run (safe)</span>
+                    </label>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="runScan()" id="btnScan"
+                        class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-lg transition">
+                        🔍 Start Scan
+                    </button>
+                    <button onclick="clearResults()"
+                        class="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-slate-300 text-sm font-medium rounded-lg transition">
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scan Output -->
+            <div class="glass rounded-xl p-6">
+                <h2 class="text-white font-semibold mb-4 flex items-center gap-2">
+                    Scan Output
+                    <span id="scanBadge"
+                        class="hidden text-xs font-mono px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full">Running...</span>
+                </h2>
+                <div id="scanOutput"
+                    class="font-mono text-xs text-slate-400 space-y-1.5 h-64 overflow-y-auto bg-[#0d1117] rounded-lg p-4">
+                    <div class="text-slate-600">$ janitor --scan --dry-run</div>
+                    <div class="text-slate-600">Waiting for scan...</div>
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div id="resultsSection" class="hidden glass rounded-xl p-6">
+                <h2 class="text-white font-semibold mb-4">Scan Results</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-xs text-slate-500 uppercase tracking-wider border-b border-white/5">
+                                <th class="text-left py-2 pr-4">Provider</th>
+                                <th class="text-left py-2 pr-4">Resource ID</th>
+                                <th class="text-left py-2 pr-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody" class="divide-y divide-white/5"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="toast"
+        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
+        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
+    </div>
+
+    <script>
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+            toast.className = `toast show fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px] ${type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-indigo-600'}`;
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        function addLog(msg, type = 'info') {
+            const out = document.getElementById('scanOutput');
+            const colors = { info: 'text-slate-400', success: 'text-emerald-400', error: 'text-red-400', warn: 'text-yellow-400' };
+            const time = new Date().toLocaleTimeString();
+            out.innerHTML += `<div class="${colors[type]}">[${time}] ${msg}</div>`;
+            out.scrollTop = out.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('scanOutput').innerHTML = '<div class="text-slate-600">$ janitor --scan --dry-run</div><div class="text-slate-600">Waiting for scan...</div>';
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('statReaped').textContent = '0';
+            document.getElementById('statSaved').textContent = '0';
+            document.getElementById('statClouds').textContent = '0';
+        }
+
+        async function runScan() {
+            const btn = document.getElementById('btnScan');
+            btn.textContent = '⏳ Scanning...';
+            btn.disabled = true;
+            document.getElementById('scanBadge').classList.remove('hidden');
+            addLog('Initiating cloud resource scan...', 'info');
+            showToast('Scanning resources...', 'info');
+
+            try {
+                const res = await fetch('/api/scan_resources', { method: 'POST' });
+                const data = await res.json();
+                const resources = data.resources || [];
+                let cloudsScanned = 0;
+
+                resources.forEach(r => {
+                    const isError = r.status.includes('Error') || r.status.includes('error');
+                    addLog(`[${r.type}] ${r.id}: ${r.status}`, isError ? 'error' : 'success');
+                    if (!isError && r.type !== 'Info') cloudsScanned++;
+                });
+
+                document.getElementById('statClouds').textContent = cloudsScanned;
+
+                // Populate table
+                const tbody = document.getElementById('resultsBody');
+                tbody.innerHTML = '';
+                resources.forEach(r => {
+                    const isError = r.status.includes('Error') || r.status.includes('error');
+                    tbody.innerHTML += `
+                        <tr class="text-sm">
+                            <td class="py-3 pr-4 text-slate-300">${r.type}</td>
+                            <td class="py-3 pr-4 font-mono text-xs text-slate-400">${r.id}</td>
+                            <td class="py-3 pr-4"><span class="px-2 py-1 rounded-full text-xs ${isError ? 'bg-red-500/10 text-red-400' : 'bg-emerald-500/10 text-emerald-400'}">${r.status}</span></td>
+                        </tr>`;
+                });
+                document.getElementById('resultsSection').classList.remove('hidden');
+                addLog('Scan complete.', 'success');
+                showToast('Scan complete!', 'success');
+            } catch (e) {
+                addLog(`Scan failed: ${e.message}`, 'error');
+                showToast('Scan failed', 'error');
+            }
+
+            btn.textContent = '🔍 Start Scan';
+            btn.disabled = false;
+            document.getElementById('scanBadge').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard — Connect Your Cloud</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        @keyframes blob {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .card-hover {
+            transition: all 0.2s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.5) !important;
+        }
+    </style>
+</head>
+
+<body class="bg-[#0D1117] text-slate-300 min-h-screen flex items-center justify-center relative overflow-hidden">
+
+    <div
+        class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full filter blur-[128px] animate-blob pointer-events-none">
+    </div>
+    <div
+        class="fixed bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full filter blur-[128px] animate-blob delay-2000 pointer-events-none">
+    </div>
+
+    <div class="relative z-10 w-full max-w-md mx-auto px-4">
+
+        <!-- Logo -->
+        <div class="text-center mb-10">
+            <a href="/" class="inline-flex items-center gap-3 group">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30 group-hover:scale-110 transition-transform">
+                    D</div>
+                <span class="text-2xl font-bold text-white tracking-tight">DriftGuard</span>
+            </a>
+            <p class="mt-4 text-slate-400 text-sm">Connect your cloud provider to get started</p>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-[#161B22] border border-[#30363d] rounded-2xl p-8 shadow-2xl">
+            <h1 class="text-xl font-bold text-white mb-2 text-center">Sign in via SSO</h1>
+            <p class="text-slate-500 text-sm text-center mb-8">Choose your cloud provider. No API keys required.</p>
+
+            <div class="space-y-3">
+                <!-- GitHub -->
+                <button onclick="handleSSO('github')" type="button"
+                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
+                    <svg class="h-5 w-5 fill-white flex-shrink-0" viewBox="0 0 24 24">
+                        <path clip-rule="evenodd"
+                            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                            fill-rule="evenodd" />
+                    </svg>
+                    <span>Continue with GitHub</span>
+                    <span class="ml-auto text-slate-500 text-xs">→</span>
+                </button>
+
+                <!-- AWS -->
+                <button onclick="handleSSO('aws')" type="button"
+                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
+                    <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.064.056.128.056.184 0 .08-.048.16-.152.24l-.504.336a.383.383 0 01-.208.072c-.08 0-.16-.04-.24-.112a2.47 2.47 0 01-.288-.376 6.18 6.18 0 01-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103-.295.072-.583.16-.862.272a2.287 2.287 0 01-.28.104.488.488 0 01-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 01.224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 011.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 00-.735-.136 6.02 6.02 0 00-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 01-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 01.32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 01.311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 01-.056.2l-1.923 6.17c-.048.16-.104.263-.168.311a.51.51 0 01-.303.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 01-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 00.415-.758.777.777 0 00-.215-.559c-.144-.151-.416-.287-.807-.415l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 01-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415.32-.096.655-.136 1.006-.136.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.144a.69.69 0 01.24.2.43.43 0 01.071.263v.375c0 .168-.064.256-.184.256a.83.83 0 01-.303-.096 3.652 3.652 0 00-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.877.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.336.511-.583.703-.248.2-.543.343-.886.447-.36.111-.743.167-1.15.167z"
+                            fill="#FF9900" />
+                    </svg>
+                    <span>Continue with AWS</span>
+                    <span class="ml-auto text-slate-500 text-xs">→</span>
+                </button>
+
+                <!-- Azure -->
+                <button onclick="handleSSO('azure')" type="button"
+                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
+                    <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24">
+                        <path
+                            d="M13.05 4.24L6.56 18.05l-2.04.03 5.02-8.65-3.06-5.19h6.57zm.95 1.12l3.77 10.63-8.48 2.38 8.48-2.38-3.77-10.63z"
+                            fill="#0078D4" />
+                    </svg>
+                    <span>Continue with Azure</span>
+                    <span class="ml-auto text-slate-500 text-xs">→</span>
+                </button>
+
+                <!-- GCP -->
+                <button onclick="handleSSO('gcp')" type="button"
+                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
+                    <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24">
+                        <path
+                            d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                            fill="#4285F4" />
+                    </svg>
+                    <span>Continue with Google Cloud</span>
+                    <span class="ml-auto text-slate-500 text-xs">→</span>
+                </button>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-[#30363d] text-center">
+                <p class="text-xs text-slate-500">By connecting, you grant DriftGuard read-only access to scan your
+                    cloud resources. You can disconnect at any time.</p>
+            </div>
+        </div>
+
+        <p class="text-center text-slate-600 text-xs mt-6">
+            <a href="/" class="hover:text-slate-400 transition">← Back to home</a>
+        </p>
+    </div>
+
+    <script>
+        function handleSSO(provider) {
+            const btn = event.currentTarget;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+            btn.disabled = true;
+
+            if (provider === 'github') {
+                // GitHub doesn't need OAuth for basic access — go straight to dashboard
+                setTimeout(() => { window.location.href = '/dashboard'; }, 800);
+                return;
+            }
+
+            // Open OAuth popup for cloud providers
+            const width = 500, height = 650;
+            const left = (screen.width / 2) - (width / 2);
+            const top = (screen.height / 2) - (height / 2);
+            const popup = window.open(`/auth/login/${provider}`, `DriftGuard_${provider}_Auth`, `width=${width},height=${height},top=${top},left=${left}`);
+
+            window.addEventListener('message', function handler(event) {
+                if (event.data && event.data.type === 'OAUTH_SUCCESS') {
+                    window.removeEventListener('message', handler);
+                    window.location.href = '/dashboard';
+                }
+            });
+
+            // Fallback: if popup closed without message
+            const timer = setInterval(() => {
+                if (popup && popup.closed) {
+                    clearInterval(timer);
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                }
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

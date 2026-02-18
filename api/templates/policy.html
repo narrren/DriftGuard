@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard — Policy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0f1e;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sidebar-item {
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: white;
+        }
+
+        .toast {
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body class="text-slate-300 min-h-screen flex">
+
+    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
+        <div class="p-6 border-b border-white/5">
+            <a href="/" class="flex items-center gap-3">
+                <div
+                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
+                    D</div>
+                <span class="text-lg font-bold text-white">DriftGuard</span>
+            </a>
+        </div>
+        <div
+            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1">
+            <a href="/dashboard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
+                Dashboard</a>
+            <a href="/ai-guard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧠</span>
+                AI Guard</a>
+            <a href="/janitor"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧹</span>
+                Janitor</a>
+            <a href="/sentry"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
+                Sentry</a>
+            <a href="/finops"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>💰</span>
+                FinOps</a>
+            <a href="/policy"
+                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>📋</span>
+                Policy</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto">
+        <header class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4">
+            <h1 class="text-xl font-bold text-white">📋 Policy Configuration</h1>
+            <p class="text-xs text-slate-500 font-mono mt-0.5">policy.yaml — governance rules</p>
+        </header>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Stages -->
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="glass rounded-xl p-5 border-l-4 border-indigo-500">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono text-indigo-400 uppercase">Stage 1</span>
+                        <span class="text-xs px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-full">enabled</span>
+                    </div>
+                    <h3 class="text-white font-semibold mb-1">AI Synchronizer</h3>
+                    <p class="text-slate-500 text-xs">Trigger: PR opened/sync</p>
+                    <p class="text-slate-500 text-xs">Model: gemini-1.5-pro</p>
+                    <p class="text-slate-500 text-xs">Enforcement: BLOCK_PR</p>
+                </div>
+                <div class="glass rounded-xl p-5 border-l-4 border-emerald-500">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono text-emerald-400 uppercase">Stage 2</span>
+                        <span class="text-xs px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-full">enabled</span>
+                    </div>
+                    <h3 class="text-white font-semibold mb-1">FinOps Janitor</h3>
+                    <p class="text-slate-500 text-xs">Trigger: schedule / manual</p>
+                    <p class="text-slate-500 text-xs">Targets: AWS S3, EC2</p>
+                    <p class="text-slate-500 text-xs">TTL: 24h</p>
+                </div>
+                <div class="glass rounded-xl p-5 border-l-4 border-purple-500">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono text-purple-400 uppercase">Stage 3</span>
+                        <span class="text-xs px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-full">enabled</span>
+                    </div>
+                    <h3 class="text-white font-semibold mb-1">Cross-Repo Sentry</h3>
+                    <p class="text-slate-500 text-xs">Trigger: PR opened</p>
+                    <p class="text-slate-500 text-xs">Downstream: consumer-app-1</p>
+                    <p class="text-slate-500 text-xs">Severity: critical</p>
+                </div>
+            </div>
+
+            <!-- YAML Editor -->
+            <div class="glass rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-white font-semibold">policy.yaml</h2>
+                    <div class="flex gap-2">
+                        <button onclick="copyPolicy()"
+                            class="px-3 py-1.5 border border-white/10 hover:bg-white/5 text-slate-300 text-xs font-medium rounded-lg transition">Copy</button>
+                        <a href="https://github.com/narrren/DriftGuard/blob/main/policy.yaml" target="_blank"
+                            class="px-3 py-1.5 border border-indigo-500/30 hover:bg-indigo-500/10 text-indigo-300 text-xs font-medium rounded-lg transition">View
+                            on GitHub ↗</a>
+                    </div>
+                </div>
+                <pre class="font-mono text-sm text-slate-300 bg-[#0d1117] rounded-lg p-6 overflow-x-auto leading-7"
+                    id="policyYaml"><code><span class="text-slate-500"># DriftGuard Policy Configuration</span>
+<span class="text-indigo-400">stages:</span>
+
+  <span class="text-slate-500"># ─── Module 1: AI Documentation Guard ───────────────</span>
+  - <span class="text-pink-400">name:</span> ai_synchronizer
+    <span class="text-blue-300">type:</span> ai_sync
+    <span class="text-blue-300">enabled:</span> <span class="text-orange-300">true</span>
+    <span class="text-blue-300">severity:</span> critical
+    <span class="text-blue-300">trigger_on:</span> [opened, synchronize]
+    <span class="text-blue-300">config:</span>
+      <span class="text-purple-300">readme_path:</span> README.md
+      <span class="text-purple-300">model:</span> gemini-1.5-pro
+      <span class="text-purple-300">enforcement:</span> BLOCK_PR
+
+  <span class="text-slate-500"># ─── Module 2: FinOps Janitor ────────────────────────</span>
+  - <span class="text-pink-400">name:</span> finops_janitor
+    <span class="text-blue-300">type:</span> janitor
+    <span class="text-blue-300">enabled:</span> <span class="text-orange-300">true</span>
+    <span class="text-blue-300">severity:</span> warning
+    <span class="text-blue-300">trigger_on:</span> [schedule, manual]
+    <span class="text-blue-300">config:</span>
+      <span class="text-purple-300">targets:</span> [aws_s3, aws_ec2, azure_rg, gcp_storage]
+      <span class="text-purple-300">ttl:</span> 24h
+      <span class="text-purple-300">dry_run:</span> <span class="text-orange-300">true</span>
+
+  <span class="text-slate-500"># ─── Module 3: Cross-Repo Sentry ─────────────────────</span>
+  - <span class="text-pink-400">name:</span> integration_sentry
+    <span class="text-blue-300">type:</span> cross_repo
+    <span class="text-blue-300">enabled:</span> <span class="text-orange-300">true</span>
+    <span class="text-blue-300">severity:</span> critical
+    <span class="text-blue-300">trigger_on:</span> [opened]
+    <span class="text-blue-300">config:</span>
+      <span class="text-purple-300">downstream_repos:</span>
+        - narrren/DriftGuard
+      <span class="text-purple-300">event_type:</span> driftguard_signal</code></pre>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="toast"
+        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
+        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
+    </div>
+
+    <script>
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : '✕';
+            toast.className = `toast show fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px] ${type === 'success' ? 'bg-emerald-600' : 'bg-red-600'}`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function copyPolicy() {
+            const text = document.getElementById('policyYaml').innerText;
+            navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+        }
+    </script>
+</body>
+
+</html>

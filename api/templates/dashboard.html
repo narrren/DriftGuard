@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard — Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0f1e;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .sidebar-item {
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: white;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .pulse-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid #10b981;
+            animation: pulse-ring 2s infinite;
+        }
+
+        .status-dot {
+            position: relative;
+            display: inline-block;
+        }
+
+        .toast {
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .btn-action {
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-action:active {
+            transform: translateY(0);
+        }
+
+        .cloud-card {
+            transition: all 0.2s ease;
+        }
+
+        .cloud-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="text-slate-300 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
+        <!-- Logo -->
+        <div class="p-6 border-b border-white/5">
+            <a href="/" class="flex items-center gap-3">
+                <div
+                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
+                    D</div>
+                <span class="text-lg font-bold text-white">DriftGuard</span>
+            </a>
+        </div>
+
+        <!-- Live Status Badge -->
+        <div
+            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
+            <span class="status-dot pulse-ring w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <a href="/dashboard"
+                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium">
+                <span>🏠</span> Dashboard
+            </a>
+            <a href="/ai-guard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400">
+                <span>🧠</span> AI Guard
+            </a>
+            <a href="/janitor"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400">
+                <span>🧹</span> Janitor
+            </a>
+            <a href="/sentry"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400">
+                <span>🛡️</span> Sentry
+            </a>
+            <a href="/finops"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400">
+                <span>💰</span> FinOps
+            </a>
+            <a href="/policy"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400">
+                <span>📋</span> Policy
+            </a>
+        </nav>
+
+        <!-- Cloud Connections -->
+        <div class="p-4 border-t border-white/5">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Cloud Connections</p>
+            <div class="space-y-2" id="sidebarClouds">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-400">AWS</span>
+                    <span id="sb-aws" class="text-slate-600 font-mono">—</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Azure</span>
+                    <span id="sb-azure" class="text-slate-600 font-mono">—</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-400">GCP</span>
+                    <span id="sb-gcp" class="text-slate-600 font-mono">—</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto">
+
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-white glow-text">Control Center</h1>
+                <p class="text-xs text-slate-500 font-mono mt-0.5" id="headerStatus">Initializing...</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="runPipeline()" id="btnPipeline"
+                    class="btn-action px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg shadow-lg shadow-indigo-600/20">
+                    ▶ Run Pipeline
+                </button>
+                <a href="/login"
+                    class="px-4 py-2 border border-white/10 hover:bg-white/5 text-white text-sm font-medium rounded-lg transition">
+                    + Connect Cloud
+                </a>
+            </div>
+        </header>
+
+        <div class="p-8 space-y-8">
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Drift Score</p>
+                    <p class="text-3xl font-bold text-white" id="statDrift">100</p>
+                    <p class="text-xs text-emerald-400 mt-1">↑ Healthy</p>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Savings</p>
+                    <p class="text-3xl font-bold text-white">$<span id="statSavings">0</span></p>
+                    <p class="text-xs text-slate-500 mt-1">this month</p>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Clouds</p>
+                    <p class="text-3xl font-bold text-white" id="statClouds">0</p>
+                    <p class="text-xs text-slate-500 mt-1">connected</p>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Status</p>
+                    <p class="text-lg font-bold text-emerald-400 mt-1" id="statStatus">Live</p>
+                    <p class="text-xs text-slate-500 mt-1">real engine</p>
+                </div>
+            </div>
+
+            <!-- Cloud Connections -->
+            <div>
+                <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Cloud Providers</h2>
+                <div class="grid md:grid-cols-3 gap-4" id="cloudCards">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Pipeline + Logs -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Pipeline -->
+                <div class="glass rounded-xl p-6">
+                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                        Pipeline Status
+                    </h2>
+                    <div class="space-y-3" id="pipelineStatus">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-400">Policy Loader</span>
+                            <span class="text-emerald-400 font-mono text-xs">● ready</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-400">AI Guard</span>
+                            <span class="text-emerald-400 font-mono text-xs">● ready</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-400">Janitor</span>
+                            <span class="text-emerald-400 font-mono text-xs">● ready</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-400">Sentry</span>
+                            <span class="text-emerald-400 font-mono text-xs">● ready</span>
+                        </div>
+                    </div>
+                    <button onclick="runPipeline()"
+                        class="btn-action mt-5 w-full py-2.5 bg-indigo-600/20 hover:bg-indigo-600/40 border border-indigo-500/30 text-indigo-300 text-sm font-medium rounded-lg transition">
+                        Execute Pipeline
+                    </button>
+                </div>
+
+                <!-- Logs -->
+                <div class="glass rounded-xl p-6">
+                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                        System Logs
+                    </h2>
+                    <div id="logOutput" class="font-mono text-xs text-slate-400 space-y-1.5 h-40 overflow-y-auto">
+                        <div class="text-slate-600">Waiting for events...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div>
+                <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Quick Actions</h2>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <button onclick="scanResources()"
+                        class="btn-action glass rounded-xl p-5 text-left hover:border-emerald-500/30 transition group">
+                        <div class="text-2xl mb-3">🧹</div>
+                        <h3 class="text-white font-semibold text-sm mb-1">Scan Resources</h3>
+                        <p class="text-slate-500 text-xs">Find zombie cloud resources across all connected providers</p>
+                    </button>
+                    <button onclick="analyzeDocs()"
+                        class="btn-action glass rounded-xl p-5 text-left hover:border-indigo-500/30 transition group">
+                        <div class="text-2xl mb-3">🧠</div>
+                        <h3 class="text-white font-semibold text-sm mb-1">Analyze Docs</h3>
+                        <p class="text-slate-500 text-xs">Run Gemini AI to detect documentation drift in your codebase
+                        </p>
+                    </button>
+                    <button onclick="triggerSentry()"
+                        class="btn-action glass rounded-xl p-5 text-left hover:border-purple-500/30 transition group">
+                        <div class="text-2xl mb-3">🛡️</div>
+                        <h3 class="text-white font-semibold text-sm mb-1">Trigger Sentry</h3>
+                        <p class="text-slate-500 text-xs">Dispatch integration tests to downstream repositories</p>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Toast -->
+    <div id="toast"
+        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
+        <span id="toastIcon">✓</span>
+        <span id="toastMsg">Done</span>
+    </div>
+
+    <script>
+        const CLOUDS = {
+            aws: { label: 'AWS', icon: '🟠', color: 'orange' },
+            azure: { label: 'Microsoft Azure', icon: '🔵', color: 'blue' },
+            gcp: { label: 'Google Cloud', icon: '🔴', color: 'red' }
+        };
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const text = document.getElementById('toastMsg');
+            text.textContent = msg;
+            icon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+            toast.className = `toast show fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px] ${type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-indigo-600'}`;
+            setTimeout(() => { toast.classList.remove('show'); }, 3500);
+        }
+
+        function addLog(msg, type = 'info') {
+            const log = document.getElementById('logOutput');
+            const colors = { info: 'text-slate-400', success: 'text-emerald-400', error: 'text-red-400', warn: 'text-yellow-400' };
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `<div class="${colors[type] || 'text-slate-400'}">[${time}] ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function renderCloudCards(status) {
+            const container = document.getElementById('cloudCards');
+            container.innerHTML = '';
+            let connectedCount = 0;
+            Object.entries(CLOUDS).forEach(([key, info]) => {
+                const connected = status[key]?.connected;
+                if (connected) connectedCount++;
+                container.innerHTML += `
+                    <div class="cloud-card glass rounded-xl p-5 border ${connected ? 'border-emerald-500/20' : 'border-white/5'}">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">${info.icon}</span>
+                                <span class="font-semibold text-white text-sm">${info.label}</span>
+                            </div>
+                            <span class="text-xs font-mono px-2 py-1 rounded-full ${connected ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-500'}">
+                                ${connected ? '● Connected' : '○ Offline'}
+                            </span>
+                        </div>
+                        ${connected
+                        ? `<button onclick="disconnectCloud('${key}')" class="w-full text-xs py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition">Disconnect</button>`
+                        : `<a href="/login" class="block w-full text-xs py-2 rounded-lg border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/10 transition text-center">Connect via SSO →</a>`
+                    }
+                    </div>`;
+            });
+            document.getElementById('statClouds').textContent = connectedCount;
+
+            // Update sidebar
+            Object.keys(CLOUDS).forEach(key => {
+                const el = document.getElementById(`sb-${key}`);
+                if (el) el.innerHTML = status[key]?.connected
+                    ? '<span class="text-emerald-400">● on</span>'
+                    : '<span class="text-slate-600">○ off</span>';
+            });
+        }
+
+        async function refreshStatus() {
+            try {
+                const res = await fetch('/api/dashboard_status');
+                const data = await res.json();
+                document.getElementById('headerStatus').textContent = data.stats?.system_state || 'Live';
+                document.getElementById('statDrift').textContent = data.stats?.drift_score ?? 100;
+                document.getElementById('statSavings').textContent = (data.stats?.savings ?? 0).toFixed(2);
+                if (data.logs?.length) {
+                    data.logs.forEach(l => addLog(l));
+                }
+            } catch (e) { addLog('Failed to fetch status', 'error'); }
+
+            try {
+                const res = await fetch('/auth/status');
+                const status = await res.json();
+                renderCloudCards(status);
+            } catch (e) { }
+        }
+
+        async function disconnectCloud(provider) {
+            if (!confirm(`Disconnect ${provider.toUpperCase()}?`)) return;
+            await fetch(`/auth/disconnect/${provider}`, { method: 'POST' });
+            showToast(`${provider.toUpperCase()} disconnected`, 'info');
+            refreshStatus();
+        }
+
+        async function runPipeline() {
+            const btn = document.getElementById('btnPipeline');
+            btn.textContent = '⏳ Running...';
+            btn.disabled = true;
+            addLog('Pipeline execution started...', 'info');
+            try {
+                const res = await fetch('/api/run_pipeline', { method: 'POST' });
+                const data = await res.json();
+                addLog(`Pipeline: ${data.status}`, 'success');
+                if (data.results) {
+                    Object.entries(data.results).forEach(([k, v]) => addLog(`  ${k}: ${v}`, v === 'success' ? 'success' : 'error'));
+                }
+                showToast('Pipeline complete!', 'success');
+            } catch (e) {
+                addLog(`Pipeline error: ${e.message}`, 'error');
+                showToast('Pipeline failed', 'error');
+            }
+            btn.textContent = '▶ Run Pipeline';
+            btn.disabled = false;
+        }
+
+        async function scanResources() {
+            addLog('Scanning cloud resources...', 'info');
+            showToast('Scanning resources...', 'info');
+            try {
+                const res = await fetch('/api/scan_resources', { method: 'POST' });
+                const data = await res.json();
+                data.resources?.forEach(r => addLog(`[${r.type}] ${r.id}: ${r.status}`, r.status.includes('Error') ? 'error' : 'success'));
+                showToast('Scan complete — check logs', 'success');
+            } catch (e) {
+                addLog(`Scan error: ${e.message}`, 'error');
+                showToast('Scan failed', 'error');
+            }
+        }
+
+        async function analyzeDocs() {
+            addLog('Running AI doc analysis...', 'info');
+            showToast('Analyzing with Gemini...', 'info');
+            try {
+                const res = await fetch('/api/analyze_docs', { method: 'POST' });
+                const data = await res.json();
+                if (data.drift_detected) {
+                    addLog(`Drift detected (${(data.confidence * 100).toFixed(0)}% confidence)`, 'warn');
+                    addLog(`Suggestion: ${data.suggestion?.substring(0, 100)}...`, 'warn');
+                    showToast('Drift detected! Check logs.', 'error');
+                } else {
+                    addLog(data.suggestion || data.error || 'No drift detected', data.error ? 'error' : 'success');
+                    showToast('Analysis complete', 'success');
+                }
+            } catch (e) {
+                addLog(`Analysis error: ${e.message}`, 'error');
+                showToast('Analysis failed', 'error');
+            }
+        }
+
+        async function triggerSentry() {
+            addLog('Triggering cross-repo sentry...', 'info');
+            showToast('Dispatching signals...', 'info');
+            try {
+                const res = await fetch('/api/trigger_sentry', { method: 'POST' });
+                const data = await res.json();
+                addLog(`Sentry: ${data.status}`, data.status.includes('Error') || data.status.includes('Failed') ? 'error' : 'success');
+                showToast(data.status, data.status.includes('Error') ? 'error' : 'success');
+            } catch (e) {
+                addLog(`Sentry error: ${e.message}`, 'error');
+                showToast('Sentry failed', 'error');
+            }
+        }
+
+        // Init
+        refreshStatus();
+        setInterval(refreshStatus, 30000);
+    </script>
+</body>
+
+</html>

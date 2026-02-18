@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriftGuard — FinOps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0f1e;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sidebar-item {
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: white;
+        }
+
+        .toast {
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body class="text-slate-300 min-h-screen flex">
+
+    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
+        <div class="p-6 border-b border-white/5">
+            <a href="/" class="flex items-center gap-3">
+                <div
+                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
+                    D</div>
+                <span class="text-lg font-bold text-white">DriftGuard</span>
+            </a>
+        </div>
+        <div
+            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1">
+            <a href="/dashboard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
+                Dashboard</a>
+            <a href="/ai-guard"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧠</span>
+                AI Guard</a>
+            <a href="/janitor"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧹</span>
+                Janitor</a>
+            <a href="/sentry"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
+                Sentry</a>
+            <a href="/finops"
+                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>💰</span>
+                FinOps</a>
+            <a href="/policy"
+                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>📋</span>
+                Policy</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto">
+        <header
+            class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-white">💰 FinOps Dashboard</h1>
+                <p class="text-xs text-slate-500 font-mono mt-0.5">Cloud spend analytics & savings tracker</p>
+            </div>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                <input type="checkbox" id="toggleLeak" onchange="loadStats()" class="rounded">
+                <span class="text-yellow-400">Simulate Cost Spike</span>
+            </label>
+        </header>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Alert Banner -->
+            <div id="alertBanner" class="hidden glass rounded-xl p-4 border-l-4 border-red-500 bg-red-900/10">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🚨</span>
+                    <div>
+                        <h3 id="alertTitle" class="text-red-400 font-bold"></h3>
+                        <p id="alertMsg" class="text-red-300 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credits -->
+            <div class="grid grid-cols-3 gap-4">
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Credits Used</p>
+                    <p class="text-3xl font-bold text-white">$<span id="credUsed">--</span></p>
+                    <div class="mt-3 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div id="credBar"
+                            class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all"
+                            style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Remaining</p>
+                    <p class="text-3xl font-bold text-emerald-400">$<span id="credRemaining">--</span></p>
+                    <p class="text-xs text-slate-500 mt-3">of $1,000 limit</p>
+                </div>
+                <div class="glass rounded-xl p-5">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Zombies Reaped</p>
+                    <p class="text-3xl font-bold text-purple-400"><span id="totalReaped">--</span></p>
+                    <p class="text-xs text-slate-500 mt-3">this week</p>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass rounded-xl p-6 md:col-span-2">
+                    <h2 class="text-white font-semibold mb-4">Spend: Actual vs Without Janitor</h2>
+                    <canvas id="spendChart" height="120"></canvas>
+                </div>
+                <div class="glass rounded-xl p-6">
+                    <h2 class="text-white font-semibold mb-4">Spend by Provider</h2>
+                    <canvas id="pieChart" height="180"></canvas>
+                    <div class="mt-4 space-y-2 text-xs">
+                        <div class="flex justify-between"><span class="text-slate-400">AWS</span><span
+                                class="text-white font-mono">65%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Azure</span><span
+                                class="text-white font-mono">25%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">GCP</span><span
+                                class="text-white font-mono">10%</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="toast"
+        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
+        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
+    </div>
+
+    <script>
+        let spendChart, pieChart;
+
+        function initCharts(data) {
+            const ctx1 = document.getElementById('spendChart').getContext('2d');
+            const ctx2 = document.getElementById('pieChart').getContext('2d');
+
+            if (spendChart) spendChart.destroy();
+            if (pieChart) pieChart.destroy();
+
+            spendChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: data.forecast_dates,
+                    datasets: [
+                        { label: 'Actual Spend', data: data.actual_spend, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.1)', fill: true, tension: 0.4, borderWidth: 2 },
+                        { label: 'Without Janitor', data: data.predicted_without_janitor, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', fill: true, tension: 0.4, borderWidth: 2, borderDash: [5, 5] }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#94a3b8', font: { family: 'Outfit' } } } },
+                    scales: {
+                        x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.03)' } },
+                        y: { ticks: { color: '#64748b', callback: v => '$' + v }, grid: { color: 'rgba(255,255,255,0.03)' } }
+                    }
+                }
+            });
+
+            pieChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['AWS', 'Azure', 'GCP'],
+                    datasets: [{ data: data.spend_distribution, backgroundColor: ['#f97316', '#3b82f6', '#ef4444'], borderWidth: 0 }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        async function loadStats() {
+            const leak = document.getElementById('toggleLeak').checked;
+            try {
+                const res = await fetch(`/api/finops/stats?simulate_leak=${leak}`);
+                const data = await res.json();
+
+                document.getElementById('credUsed').textContent = data.credits.used.toFixed(2);
+                document.getElementById('credRemaining').textContent = data.credits.remaining.toFixed(2);
+                document.getElementById('totalReaped').textContent = data.zombies_reaped.reduce((a, b) => a + b, 0);
+                const pct = (data.credits.used / data.credits.limit * 100).toFixed(1);
+                document.getElementById('credBar').style.width = pct + '%';
+
+                if (data.alert) {
+                    document.getElementById('alertBanner').classList.remove('hidden');
+                    document.getElementById('alertTitle').textContent = data.alert.title;
+                    document.getElementById('alertMsg').textContent = data.alert.msg;
+                } else {
+                    document.getElementById('alertBanner').classList.add('hidden');
+                }
+
+                initCharts(data);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        loadStats();
+    </script>
+</body>
+
+</html>
