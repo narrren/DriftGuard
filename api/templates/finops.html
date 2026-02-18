@@ -4,312 +4,372 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>DriftGuard - FinOps</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
+    <title>FinOps Cost Optimization - DriftGuard</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
     <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#4f46e5",
-                        "background-dark": "#0a0f1e",
-                        "surface-dark": "#0d1117",
-                        "border-dark": "rgba(255,255,255,0.05)",
+                        "primary": "#13b6ec",
+                        "primary-dark": "#0ea5d7",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101d22",
+                        "surface-dark": "#16262c",
+                        "border-dark": "#233f48",
+                        "success": "#10b981",
+                        "warning": "#f59e0b",
+                        "danger": "#ef4444",
                     },
                     fontFamily: {
-                        "display": ["Outfit", "sans-serif"],
-                        "mono": ["JetBrains Mono", "monospace"],
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
                     },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
                 },
             },
         }
     </script>
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .sidebar-active {
-            background: rgba(99, 102, 241, 0.1);
-            color: #818cf8;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #0a0f1e;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 3px;
-        }
-
-        /* Burn Gauge */
-        .burn-bg {
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.05);
-            stroke-width: 10;
-            stroke-linecap: round;
-        }
-
-        .burn-val {
-            fill: none;
-            stroke: #6366f1;
-            stroke-width: 10;
-            stroke-linecap: round;
-            stroke-dasharray: 220;
-            stroke-dashoffset: 220;
-            transition: stroke-dashoffset 1.5s ease-out;
-        }
+        /* Custom checkbox style if needed */
     </style>
 </head>
 
-<body class="bg-background-dark font-display antialiased min-h-screen text-slate-300">
-    <div class="flex h-screen w-full overflow-hidden">
-
-        <!-- Sidebar -->
-        <aside
-            class="w-64 bg-[#0d1117] border-r border-border-dark flex flex-col justify-between py-6 px-4 shrink-0 overflow-y-auto">
-            <div class="flex flex-col gap-6">
-                <div class="flex items-center gap-3 px-3 mb-2">
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white overflow-x-hidden">
+    <div class="relative flex h-screen w-full flex-col overflow-hidden">
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark px-6 py-3 shrink-0 z-20">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-3 text-white">
+                    <div class="size-8 text-primary">
+                        <span class="material-symbols-outlined text-3xl">savings</span>
+                    </div>
+                    <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
+                </div>
+                <label class="flex flex-col min-w-40 !h-10 max-w-64">
                     <div
-                        class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
-                        🛡️
-                    </div>
-                    <span class="text-white text-lg font-bold tracking-tight">DriftGuard</span>
-                </div>
-                <div>
-                    <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-4 px-3">Platform</h3>
-                    <nav class="flex flex-col gap-1">
-                        <a href="/dashboard"
-                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
-                            <span>🏠</span><span class="text-sm font-medium">Dashboard</span>
-                        </a>
-                        <a href="/ai-guard"
-                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
-                            <span>🧠</span><span class="text-sm font-medium">AI Guard</span>
-                        </a>
-                        <a href="/janitor"
-                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
-                            <span>🧹</span><span class="text-sm font-medium">Janitor</span>
-                        </a>
-                        <a href="/sentry"
-                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
-                            <span>🛡️</span><span class="text-sm font-medium">Sentry</span>
-                        </a>
-                        <a href="/finops"
-                            class="sidebar-active flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group">
-                            <span>💰</span><span class="text-sm font-medium">FinOps</span>
-                        </a>
-                        <a href="/policy"
-                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
-                            <span>📋</span><span class="text-sm font-medium">Policy</span>
-                        </a>
-                    </nav>
-                </div>
-            </div>
-            <a href="/login" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white cursor-pointer">
-                <span class="material-symbols-outlined text-[20px]">logout</span><span class="text-sm font-medium">Sign
-                    Out</span>
-            </a>
-        </aside>
-
-        <!-- Main -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header
-                class="px-8 py-5 border-b border-border-dark bg-[#0a0f1e]/80 backdrop-blur-xl shrink-0 sticky top-0 z-40">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="flex items-center gap-2 text-sm text-slate-500 mb-1">
-                            <a class="hover:text-primary" href="/dashboard">DriftGuard</a>
-                            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                            <span class="text-white font-medium">FinOps</span>
+                        class="flex w-full flex-1 items-stretch rounded-lg h-full ring-1 ring-border-dark bg-surface-dark overflow-hidden focus-within:ring-primary transition-all">
+                        <div class="text-[#92bbc9] flex items-center justify-center pl-3">
+                            <span class="material-symbols-outlined text-[20px]">search</span>
                         </div>
-                        <h1 class="text-2xl font-bold text-white tracking-tight">Cost Intelligence</h1>
-                        <p class="text-slate-400 text-sm mt-1">Real-time cloud spend monitoring and forecasting.</p>
+                        <input
+                            class="w-full bg-transparent border-none text-white focus:outline-0 focus:ring-0 h-full placeholder:text-[#92bbc9] px-3 text-sm font-normal leading-normal"
+                            placeholder="Search costs..." />
                     </div>
-                    <button onclick="runSimulation()"
-                        class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px]">bolt</span>
-                        Simulate Spike
+                </label>
+            </div>
+            <div class="flex items-center justify-end gap-6">
+                <div class="flex gap-2">
+                    <button
+                        class="flex items-center justify-center rounded-lg size-10 hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center rounded-lg size-10 hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">settings</span>
                     </button>
                 </div>
-            </header>
-
-            <!-- Content -->
-            <main class="flex-1 overflow-y-auto custom-scrollbar p-8">
-                <div class="max-w-[1400px] mx-auto grid grid-cols-1 xl:grid-cols-12 gap-6">
-
-                    <!-- Main Chart -->
-                    <div class="xl:col-span-8 flex flex-col gap-6">
-                        <div class="glass rounded-xl p-6 shadow-sm min-h-[400px] flex flex-col">
-                            <div class="flex items-center justify-between mb-8">
-                                <div>
-                                    <h2 class="text-lg font-bold text-white">Daily Burn Rate</h2>
-                                    <p class="text-xs text-slate-400">AWS + GCP + Azure</p>
+                <div class="size-9 rounded-full bg-cover bg-center border border-border-dark" data-alt="User Avatar"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA1JuNQ4uXTwYg3eT_cyuGvFMEJAAh7Zh2aJ5x0NFfvE45MRhEhKGxz6NyCO37ARnvh-mjrBKNdJRneWBx2zVdCNkVpuk2HmZ_GScWibS8UuANYMHOohQfQeSuoAEAq8KWx84jnCL964SlQFV1u9S_GrITaFu_vExrthYfBkFFQ5xCwKffHYliGoPWuacKdzJBlJ1ukasM_cO_Jh2q61yxiVhthX6wjLxS6r7SXOjlzVOaqfLM_yCjAzK813OvZ4_OyKIuorVelAf9h");'>
+                </div>
+            </div>
+        </header>
+        <div class="flex flex-1 overflow-hidden">
+            <aside
+                class="w-64 bg-background-dark border-r border-border-dark flex flex-col justify-between py-6 px-4 shrink-0 overflow-y-auto">
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <h3 class="text-[#92bbc9] text-xs font-bold uppercase tracking-wider mb-4 px-3">Platform</h3>
+                        <nav class="flex flex-col gap-1">
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/dashboard">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+                                <span class="text-sm font-medium">Dashboard</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/finops">
+                                <span
+                                    class="material-symbols-outlined text-[20px] text-primary transition-colors">attach_money</span>
+                                <span class="text-sm font-medium text-white">FinOps</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/janitor">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">delete</span>
+                                <span class="text-sm font-medium">Janitor</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="#">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">history_edu</span>
+                                <span class="text-sm font-medium">Audit Logs</span>
+                            </a>
+                        </nav>
+                    </div>
+                    <div>
+                        <h3 class="text-[#92bbc9] text-xs font-bold uppercase tracking-wider mb-4 px-3">Configuration
+                        </h3>
+                        <nav class="flex flex-col gap-1">
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/policy">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">rule</span>
+                                <span class="text-sm font-medium">Policies</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="#">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">integration_instructions</span>
+                                <span class="text-sm font-medium">Integrations</span>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white cursor-pointer mt-auto"
+                    onclick="window.location.href='/login'">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                    <span class="text-sm font-medium">Sign Out</span>
+                </div>
+            </aside>
+            <main class="flex-1 flex flex-col min-w-0 bg-background-dark overflow-hidden">
+                <div class="flex-1 overflow-y-auto p-8">
+                    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+                        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center gap-2 text-sm text-[#92bbc9]">
+                                    <a class="hover:text-primary" href="#">DriftGuard</a>
+                                    <span>/</span>
+                                    <a class="hover:text-primary" href="#">Cost Management</a>
+                                    <span>/</span>
+                                    <span class="text-white">FinOps</span>
                                 </div>
-                                <div class="flex gap-2">
-                                    <button
-                                        class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1.5 rounded-lg border border-transparent hover:border-indigo-500/50 transition-all">7D</button>
-                                    <button
-                                        class="text-slate-500 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all">30D</button>
-                                </div>
+                                <h1 class="text-3xl font-bold text-white tracking-tight mt-1">Cost Optimization</h1>
+                                <p class="text-[#92bbc9] text-sm max-w-2xl">Monitor cloud spend, forecast budgets, and
+                                    optimize resource allocation with AI-driven recommendations.</p>
                             </div>
-                            <!-- CSS Chart -->
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="bg-surface-dark border border-border-dark rounded-lg px-4 py-2 flex items-center gap-3">
+                                    <span class="text-sm font-medium text-[#92bbc9]">Simulation Mode</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input class="sr-only peer" onchange="toggleSimulation(this)" type="checkbox"
+                                            value="" />
+                                        <div
+                                            class="w-11 h-6 bg-border-dark peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                                        </div>
+                                    </label>
+                                </div>
+                                <button
+                                    class="px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-[#111e22] text-sm font-bold shadow-lg shadow-primary/20 transition-all hover:scale-105 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[18px]">download</span>
+                                    Export Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div
-                                class="flex-1 flex items-end justify-between gap-2 px-4 pb-4 border-b border-white/5 relative">
-                                <!-- Bars generated by JS or static visual -->
+                                class="col-span-1 md:col-span-2 bg-surface-dark border border-border-dark rounded-xl p-6">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-lg font-bold text-white">Cost Forecast vs Budget</h3>
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="flex items-center gap-1 text-[#92bbc9]">
+                                            <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                            Actual
+                                        </span>
+                                        <span class="flex items-center gap-1 text-[#92bbc9]">
+                                            <span
+                                                class="w-2 h-2 rounded-full bg-border-dark border border-white/50"></span>
+                                            Projected
+                                        </span>
+                                        <span class="flex items-center gap-1 text-[#92bbc9]">
+                                            <span class="w-2 h-2 rounded-full bg-danger"></span>
+                                            Budget Limit
+                                        </span>
+                                    </div>
+                                </div>
                                 <div
-                                    class="w-full h-[60%] bg-indigo-500/20 rounded-t hover:bg-indigo-500/40 transition-all relative group">
+                                    class="h-64 flex items-end justify-between gap-2 px-2 relative border-b border-border-dark/50 pb-4">
+                                    <div class="absolute top-[20%] w-full border-t border-dashed border-danger/50 z-0">
+                                    </div>
                                     <div
-                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-dark px-2 py-1 rounded border border-border-dark text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                                        $420</div>
+                                        class="absolute top-[20%] right-0 text-xs text-danger font-bold bg-surface-dark px-1">
+                                        Budget $12k</div>
+                                    <div class="w-full bg-primary/20 rounded-t-sm relative group hover:bg-primary/30 transition-colors"
+                                        style="height: 45%;">
+                                        <div
+                                            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded">
+                                            Nov</div>
+                                    </div>
+                                    <div class="w-full bg-primary/30 rounded-t-sm relative group hover:bg-primary/40 transition-colors"
+                                        style="height: 52%;"></div>
+                                    <div class="w-full bg-primary/40 rounded-t-sm relative group hover:bg-primary/50 transition-colors"
+                                        style="height: 60%;"></div>
+                                    <div class="w-full bg-primary/60 rounded-t-sm relative group hover:bg-primary/70 transition-colors"
+                                        style="height: 58%;"></div>
+                                    <div class="w-full bg-primary rounded-t-sm relative group hover:bg-primary-dark transition-colors"
+                                        style="height: 75%;">
+                                        <div
+                                            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded">
+                                            $11.2k</div>
+                                    </div>
+                                    <div class="w-full bg-border-dark relative group border border-dashed border-white/20 rounded-t-sm"
+                                        style="height: 85%;">
+                                        <div
+                                            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded">
+                                            Forecast</div>
+                                    </div>
                                 </div>
-                                <div
-                                    class="w-full h-[45%] bg-indigo-500/20 rounded-t hover:bg-indigo-500/40 transition-all relative group">
-                                </div>
-                                <div
-                                    class="w-full h-[75%] bg-indigo-500/20 rounded-t hover:bg-indigo-500/40 transition-all relative group">
-                                </div>
-                                <div
-                                    class="w-full h-[55%] bg-indigo-500/20 rounded-t hover:bg-indigo-500/40 transition-all relative group">
-                                </div>
-                                <div
-                                    class="w-full h-[80%] bg-indigo-500/20 rounded-t hover:bg-indigo-500/40 transition-all relative group">
-                                </div>
-                                <div
-                                    class="w-full h-[65%] bg-indigo-500/20 rounded-t hover:bg-indigo-500/40 transition-all relative group">
-                                </div>
-                                <div id="spikeBar"
-                                    class="w-full h-[70%] bg-indigo-500 rounded-t shadow-[0_0_15px_rgba(99,102,241,0.5)] transition-all duration-500 relative group">
-                                    <div
-                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
-                                        $850</div>
+                                <div class="flex justify-between mt-2 text-xs text-[#92bbc9] px-2">
+                                    <span>Nov</span>
+                                    <span>Dec</span>
+                                    <span>Jan</span>
+                                    <span>Feb</span>
+                                    <span>Mar</span>
+                                    <span class="text-white font-bold">Apr (Est)</span>
                                 </div>
                             </div>
-                            <div class="flex justify-between text-xs text-slate-500 mt-2 px-1">
-                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Today</span>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div
+                                    class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between relative overflow-hidden">
+                                    <div class="absolute right-0 top-0 p-4 opacity-10">
+                                        <span class="material-symbols-outlined text-5xl text-white">payments</span>
+                                    </div>
+                                    <p class="text-[#92bbc9] text-sm font-medium">Month-to-Date Spend</p>
+                                    <div>
+                                        <p class="text-3xl font-bold text-white tracking-tight">$9,240.50</p>
+                                        <p class="text-danger text-xs font-medium mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[14px]">arrow_outward</span>
+                                            +5.2% over budget pace
+                                        </p>
+                                    </div>
+                                    <div class="w-full bg-background-dark h-1.5 rounded-full mt-4 overflow-hidden">
+                                        <div class="bg-gradient-to-r from-primary to-danger h-full rounded-full"
+                                            style="width: 78%"></div>
+                                    </div>
+                                    <p class="text-[10px] text-[#92bbc9] mt-2 text-right">78% of budget used</p>
+                                </div>
+                                <div
+                                    class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between relative overflow-hidden">
+                                    <div class="absolute right-0 top-0 p-4 opacity-10">
+                                        <span class="material-symbols-outlined text-5xl text-success">savings</span>
+                                    </div>
+                                    <p class="text-[#92bbc9] text-sm font-medium">Potential Savings</p>
+                                    <div>
+                                        <p class="text-3xl font-bold text-white tracking-tight">$1,850.00</p>
+                                        <p class="text-[#92bbc9] text-xs mt-1">Across 3 recommendations</p>
+                                    </div>
+                                    <button
+                                        class="mt-4 w-full py-2 bg-success/10 text-success border border-success/20 rounded-lg text-sm font-bold hover:bg-success/20 transition-colors flex items-center justify-center gap-2">
+                                        Review Savings
+                                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden">
+                            <div class="p-6 border-b border-border-dark flex items-center justify-between">
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-warning">lightbulb</span>
+                                    AI Cost Recommendations
+                                </h3>
+                                <span
+                                    class="px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded border border-primary/20">3
+                                    Actions Available</span>
+                            </div>
+                            <div class="divide-y divide-border-dark">
+                                <div
+                                    class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="size-10 rounded-lg bg-background-dark border border-border-dark flex items-center justify-center text-white shrink-0">
+                                            <span class="material-symbols-outlined">memory</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-white">Right-size EC2 Instances</h4>
+                                            <p class="text-[#92bbc9] text-xs mt-1 max-w-md">Instances in <span
+                                                    class="text-white font-mono">us-east-1</span> average 12% CPU
+                                                utilization. Downsizing from m5.xlarge to m5.large recommended.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
+                                        <span class="text-success font-bold text-sm">Save $450/mo</span>
+                                        <button
+                                            class="px-3 py-1.5 rounded-lg border border-border-dark text-white text-xs font-medium hover:bg-white/10 transition-colors w-full sm:w-auto text-center"
+                                            onclick="alert('Recommendation applied!')">Apply Fix</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="size-10 rounded-lg bg-background-dark border border-border-dark flex items-center justify-center text-white shrink-0">
+                                            <span class="material-symbols-outlined">hard_drive</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-white">Delete Unattached EBS Volumes</h4>
+                                            <p class="text-[#92bbc9] text-xs mt-1 max-w-md">Found 5 unattached EBS
+                                                volumes older than 30 days. Recommend immediate deletion or archival.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
+                                        <span class="text-success font-bold text-sm">Save $120/mo</span>
+                                        <button
+                                            class="px-3 py-1.5 rounded-lg border border-border-dark text-white text-xs font-medium hover:bg-white/10 transition-colors w-full sm:w-auto text-center"
+                                            onclick="alert('Volumes deleted!')">Delete All</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="size-10 rounded-lg bg-background-dark border border-border-dark flex items-center justify-center text-white shrink-0">
+                                            <span class="material-symbols-outlined">schedule</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-white">Schedule Non-Prod Shutdowns</h4>
+                                            <p class="text-[#92bbc9] text-xs mt-1 max-w-md">Dev environments running
+                                                24/7. Schedule auto-shutdown (7PM-7AM) to reduce runtime costs.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
+                                        <span class="text-success font-bold text-sm">Save $1,280/mo</span>
+                                        <button
+                                            class="px-3 py-1.5 rounded-lg border border-border-dark text-white text-xs font-medium hover:bg-white/10 transition-colors w-full sm:w-auto text-center"
+                                            onclick="alert('Schedule created!')">Enable Schedule</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Right: Gauge + Breakdown -->
-                    <div class="xl:col-span-4 flex flex-col gap-6">
-                        <div class="glass rounded-xl p-6 shadow-sm flex flex-col items-center justify-center">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">Monthly Budget
-                            </h3>
-                            <div class="relative w-48 h-24 mb-4">
-                                <svg class="w-full h-full overflow-visible" viewBox="0 0 100 50">
-                                    <path class="burn-bg" d="M10,50 A40,40 0 1,1 90,50" />
-                                    <path id="burnArc" class="burn-val" d="M10,50 A40,40 0 1,1 90,50" />
-                                </svg>
-                                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-2 text-center">
-                                    <p id="burnPercent" class="text-3xl font-bold text-white">72%</p>
-                                    <p class="text-xs text-slate-400">Consumed</p>
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-indigo-400 font-bold">$12,450 <span class="text-slate-500 font-normal">/
-                                        $18k</span></p>
-                            </div>
-                        </div>
-
-                        <!-- Breakdown -->
-                        <div class="glass rounded-xl flex flex-col flex-1">
-                            <div class="p-5 border-b border-border-dark">
-                                <h3 class="text-sm font-bold text-white">Top Spenders</h3>
-                            </div>
-                            <div class="p-4 space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded bg-orange-500/10 flex items-center justify-center text-orange-500 font-bold text-xs">
-                                            EC2</div>
-                                        <div>
-                                            <p class="text-sm text-white font-medium">Compute</p>
-                                            <p class="text-xs text-slate-500">45 instances</p>
-                                        </div>
-                                    </div>
-                                    <span class="text-white font-mono text-sm">$4,210</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center text-blue-500 font-bold text-xs">
-                                            RDS</div>
-                                        <div>
-                                            <p class="text-sm text-white font-medium">Database</p>
-                                            <p class="text-xs text-slate-500">4 clusters</p>
-                                        </div>
-                                    </div>
-                                    <span class="text-white font-mono text-sm">$3,850</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </main>
         </div>
     </div>
-
     <script>
-        function runSimulation() {
-            const bar = document.getElementById('spikeBar');
-            const arc = document.getElementById('burnArc');
-            const pct = document.getElementById('burnPercent');
-
-            // Simulate spike
-            bar.style.height = '95%';
-            bar.classList.add('bg-red-500', 'shadow-red-500/50');
-            bar.classList.remove('bg-indigo-500', 'shadow-indigo-600/50');
-
-            // Update gauge
-            // 220 is full length (approx pi*r)
-            // 85% full = small offset
-            arc.style.strokeDashoffset = '30';
-            arc.style.stroke = '#ef4444';
-            pct.textContent = '92%';
-            pct.classList.add('text-red-400');
-            pct.classList.remove('text-white');
-
-            setTimeout(() => {
-                // Reset
-                bar.style.height = '70%';
-                bar.classList.remove('bg-red-500', 'shadow-red-500/50');
-                bar.classList.add('bg-indigo-500', 'shadow-indigo-600/50');
-
-                arc.style.strokeDashoffset = '60'; // 72%
-                arc.style.stroke = '#6366f1';
-                pct.textContent = '72%';
-                pct.classList.remove('text-red-400');
-                pct.classList.add('text-white');
-            }, 2000);
+        async function toggleSimulation(checkbox) {
+            if (checkbox.checked) {
+                alert("Simulating traffic spike scenario...");
+                // Add visual feedback or fetch call here
+            } else {
+                alert("Simulation ended.");
+            }
         }
-        // Init gauge
-        setTimeout(() => {
-            document.getElementById('burnArc').style.strokeDashoffset = '60';
-        }, 500);
     </script>
 </body>
 

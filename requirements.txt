@@ -7,9 +7,7 @@ python-dateutil
 azure-identity
 azure-mgmt-resource
 azure-storage-blob
-google-cloud-storage
 fastapi
 uvicorn
 jinja2
 python-multipart
-starlette

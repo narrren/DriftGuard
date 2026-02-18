@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DriftGuard - DevOps Governance Platform</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec",
+                        "primary-dark": "#0ea5d7",
+                        "background-dark": "#101d22",
+                        "surface-dark": "#16262c",
+                        "border-dark": "#233f48",
+                        "text-secondary": "#92bbc9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "radial-gradient(circle at 50% 50%, rgba(19, 182, 236, 0.15) 0%, transparent 50%)",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #ffffff, #13b6ec);
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-white overflow-x-hidden">
+    <div class="relative flex flex-col min-h-screen">
+        <header class="fixed top-0 w-full bg-background-dark/80 backdrop-blur-md border-b border-border-dark z-50">
+            <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="size-8 text-primary">
+                        <span class="material-symbols-outlined text-3xl">shield_lock</span>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">DriftGuard</span>
+                </div>
+                <nav class="hidden md:flex gap-8 text-sm font-medium text-[#92bbc9]">
+                    <a class="hover:text-white transition-colors" href="#features">Features</a>
+                    <a class="hover:text-white transition-colors" href="/ai-guard">Solutions</a>
+                    <a class="hover:text-white transition-colors" href="#pricing">Pricing</a>
+                    <a class="hover:text-white transition-colors" href="https://github.com/Start-hack-2025/DriftGuard"
+                        target="_blank">GitHub</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <a class="text-sm font-bold text-white hover:text-primary transition-colors" href="/login">Log
+                        In</a>
+                    <a class="px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-[#111e22] text-sm font-bold transition-all hover:scale-105"
+                        href="/login">Get Started</a>
+                </div>
+            </div>
+        </header>
+        <main class="flex-grow pt-24 pb-16">
+            <section class="relative px-6 py-20 text-center overflow-hidden">
+                <div class="absolute inset-0 bg-hero-pattern z-0 pointer-events-none"></div>
+                <div class="relative z-10 max-w-4xl mx-auto">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-8 animate-fade-in-up">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        v2.0 is now live
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-8 leading-tight">
+                        Governance for the <br />
+                        <span class="gradient-text">Cloud Native Era</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-[#92bbc9] mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                        Automate policy enforcement, detect infrastructure drift, and optimize costs across AWS, Azure,
+                        and GCP in real-time.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                        <a class="px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-[#111e22] text-lg font-bold shadow-[0_0_20px_rgba(19,182,236,0.5)] transition-all hover:scale-105 flex items-center gap-2"
+                            href="/login">
+                            Deploy DriftGuard
+                            <span class="material-symbols-outlined text-xl">rocket_launch</span>
+                        </a>
+                        <a class="px-8 py-4 rounded-xl border border-border-dark bg-surface-dark hover:bg-border-dark text-white text-lg font-bold transition-all flex items-center gap-2"
+                            href="https://github.com/Start-hack-2025/DriftGuard">
+                            <span class="material-symbols-outlined text-xl">code</span>
+                            View Source
+                        </a>
+                    </div>
+                    <div
+                        class="relative mx-auto max-w-5xl rounded-xl border border-border-dark bg-surface-dark/50 backdrop-blur shadow-2xl overflow-hidden aspect-video">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent z-10 pointer-events-none">
+                        </div>
+                        <img alt="DriftGuard Dashboard Preview" class="w-full h-full object-cover opacity-80"
+                            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&amp;w=2070&amp;auto=format&amp;fit=crop" />
+                        <div class="absolute bottom-0 left-0 w-full p-8 z-20 flex justify-between items-end">
+                            <div class="text-left">
+                                <h3 class="text-2xl font-bold text-white mb-2">Real-time Visibility</h3>
+                                <p class="text-sm text-[#92bbc9]">Monitor compliance across all your clusters.</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <span
+                                    class="px-3 py-1 bg-background-dark/80 backdrop-blur rounded border border-border-dark text-xs font-mono text-primary">terraform
+                                    apply</span>
+                                <span
+                                    class="px-3 py-1 bg-background-dark/80 backdrop-blur rounded border border-border-dark text-xs font-mono text-green-400">policy
+                                    check: pass</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-24 bg-surface-dark border-y border-border-dark" id="features">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Architecture That Scales</h2>
+                        <p class="text-[#92bbc9] text-lg max-w-2xl mx-auto">Built on event-driven principles to handle
+                            enterprise-scale infrastructure with zero latency.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div
+                            class="p-8 rounded-2xl bg-background-dark border border-border-dark hover:border-primary/50 transition-all group">
+                            <div
+                                class="size-14 rounded-xl bg-[#233f48] flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">policy</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-white">Policy as Code</h3>
+                            <p class="text-[#92bbc9] leading-relaxed">Define governance rules using OPA/Rego or Python.
+                                Version control your policies alongside your infrastructure.</p>
+                        </div>
+                        <div
+                            class="p-8 rounded-2xl bg-background-dark border border-border-dark hover:border-primary/50 transition-all group">
+                            <div
+                                class="size-14 rounded-xl bg-[#233f48] flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">sync_problem</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-white">Drift Detection</h3>
+                            <p class="text-[#92bbc9] leading-relaxed">Continuously scan cloud state against expected
+                                configuration. Get alerted on unauthorized changes instantly.</p>
+                        </div>
+                        <div
+                            class="p-8 rounded-2xl bg-background-dark border border-border-dark hover:border-primary/50 transition-all group">
+                            <div
+                                class="size-14 rounded-xl bg-[#233f48] flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">auto_fix</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-white">Auto-Remediation</h3>
+                            <p class="text-[#92bbc9] leading-relaxed">Automatically revert drift or terminate
+                                non-compliant resources based on severity and flexible workflows.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="bg-background-dark border-t border-border-dark py-12 px-6">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-2xl text-primary">shield_lock</span>
+                    <span class="font-bold text-lg text-white">DriftGuard</span>
+                </div>
+                <div class="text-[#92bbc9] text-sm text-center md:text-right">
+                    <p>© 2025 DriftGuard Inc. Open Source under MIT License.</p>
+                    <div class="flex justify-center md:justify-end gap-6 mt-4">
+                        <a class="hover:text-white transition-colors" href="#">Privacy</a>
+                        <a class="hover:text-white transition-colors" href="#">Terms</a>
+                        <a class="hover:text-white transition-colors" href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>
