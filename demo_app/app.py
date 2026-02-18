@@ -153,5 +153,62 @@ async def trigger_sentry():
     cross_repo.run(MOCK_CONTEXT, {"downstream_repos": ["narrren/DriftGuard"]})
     return {"status": "Real Dispatch Sent"}
 
+# --- FINOPS DASHBOARD LOGIC (Pitch Mode) ---
+from pydantic import BaseModel
+from typing import List, Dict
+
+class FinOpsStats(BaseModel):
+    credits: Dict[str, float]
+    forecast_dates: List[str]
+    actual_spend: List[float]
+    predicted_without_janitor: List[float]
+    zombies_reaped: List[int]
+    spend_distribution: List[float] # AWS, Azure, GCP
+    alert: Dict[str, str] = None
+
+@app.get("/api/finops/stats", response_model=FinOpsStats)
+async def get_finops_stats(simulate_leak: bool = False):
+    """
+    Returns realistic mock data for the 'Cost of Inaction' pitch.
+    If simulate_leak is True, we show a spike to demonstrate detection.
+    """
+    # 7-Day Window
+    dates = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    
+    # Baseline: Healthy DriftGuard Usage ($15-20/day)
+    base_spend = [12.5, 15.0, 18.2, 14.5, 16.0, 10.5, 11.0]
+    
+    # Prediction: What happens if we turn off the Janitor? (Cumulative zombie cost)
+    # Starts same, then diverges rapidly
+    pred_spend = [12.5, 35.0, 68.0, 95.5, 140.0, 195.5, 260.0]
+    
+    reaped = [5, 12, 8, 3, 15, 2, 4]
+    
+    alert_data = None
+    
+    if simulate_leak:
+        # PITCH SCENARIO: A developer left a massive GPU cluster running
+        base_spend[-1] = 85.0 # Sudden spike
+        base_spend[-2] = 45.0
+        alert_data = {
+            "title": "COST SPIKE DETECTED",
+            "msg": "3 GPU Instances identified as Zombies. Estimated waste: $4.50/hr.",
+            "level": "critical"
+        }
+        
+    return FinOpsStats(
+        credits={
+            "used": sum(base_spend), 
+            "limit": 1000.0, 
+            "remaining": 1000.0 - sum(base_spend)
+        },
+        forecast_dates=dates,
+        actual_spend=base_spend,
+        predicted_without_janitor=pred_spend,
+        zombies_reaped=reaped,
+        spend_distribution=[65.0, 25.0, 10.0], # AWS vs Azure vs GCP
+        alert=alert_data
+    )
+
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

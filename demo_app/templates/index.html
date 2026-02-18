@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- FinOps Charts -->
     <!-- Dark Mode Theme -->
     <script>
         tailwind.config = {
@@ -93,7 +94,45 @@
                 <div class="text-xs text-gray-500 mt-2">AI Confidence Score</div>
             </div>
 
-            <!-- Pipeline Status -->
+            <!-- FinOps Dashboard (Pitch Mode) -->
+            <section class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold flex items-center gap-2">
+                        <i data-lucide="dollar-sign" class="text-emerald-400"></i> FinOps Intelligence
+                    </h2>
+                    <button onclick="simulateLeak()"
+                        class="text-xs bg-rose-600/20 text-rose-400 border border-rose-600 px-3 py-1 rounded hover:bg-rose-600/40 transition">
+                        🚨 Simulate Cost Leak
+                    </button>
+                </div>
+
+                <!-- 4-Grid Chart Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- A. Credit Burn Gauge -->
+                    <div class="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700 relative">
+                        <h3 class="text-xs font-mono text-gray-400 mb-2">CREDIT BURN</h3>
+                        <canvas id="creditChart"></canvas>
+                        <div class="absolute inset-0 flex items-center justify-center pt-8">
+                            <span id="credit-text" class="text-xl font-bold font-mono">$000</span>
+                        </div>
+                    </div>
+
+                    <!-- B. ROI Forecast -->
+                    <div class="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700 col-span-2">
+                        <h3 class="text-xs font-mono text-gray-400 mb-2">7-DAY FORECAST (WITH VS WITHOUT DRIFTGUARD)
+                        </h3>
+                        <canvas id="roiChart" height="120"></canvas>
+                    </div>
+
+                    <!-- C. Daily Reaped -->
+                    <div class="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700">
+                        <h3 class="text-xs font-mono text-gray-400 mb-2">ZOMBIES REAPED</h3>
+                        <canvas id="reapChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pipeline Visualization -->
             <div class="bg-panel p-5 rounded-lg border border-gray-700 flex-1">
                 <h3 class="text-gray-400 text-sm mb-4">Pipeline Status</h3>
                 <div class="space-y-4">
@@ -345,10 +384,102 @@
                         `<button onclick="reapResource('${r.id}')" class="text-red-400 hover:text-white bg-red-900/30 px-2 py-1 rounded text-xs border border-red-900 hover:bg-red-600 transition">NUKE ☢️</button>` :
                         '<span class="text-gray-600 text-xs">-</span>'}
                     </td>
-                `;
-                tbody.appendChild(tr);
             });
         }
+
+        // --- FinOps Chart Logic ---
+        let creditChart, roiChart, reapChart;
+
+        async function loadFinOpsCharts(simulate = false) {
+            const res = await fetch(`/ api / finops / stats ? simulate_leak = ${ simulate } `);
+            const data = await res.json();
+            
+            // A. Credit Gauge
+            const ctxA = document.getElementById('creditChart').getContext('2d');
+            const remaining = data.credits.remaining;
+            document.getElementById('credit-text').innerText = `$${ data.credits.used.toFixed(0) } `;
+            
+            if (creditChart) creditChart.destroy();
+            creditChart = new Chart(ctxA, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Used', 'Remaining'],
+                    datasets: [{
+                        data: [data.credits.used, remaining],
+                        backgroundColor: [
+                            remaining < 100 ? '#ef4444' : '#10b981', // Red if low, Green if good
+                            '#374151'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: { cutout: '70%', plugins: { legend: { display: false } } }
+            });
+
+            // B. ROI Forecast
+            const ctxB = document.getElementById('roiChart').getContext('2d');
+            if (roiChart) roiChart.destroy();
+            roiChart = new Chart(ctxB, {
+                type: 'line',
+                data: {
+                    labels: data.forecast_dates,
+                    datasets: [
+                        {
+                            label: 'With DriftGuard',
+                            data: data.actual_spend,
+                            borderColor: '#10b981', // Emerald
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Without Janitor',
+                            data: data.predicted_without_janitor,
+                            borderColor: '#ef4444', // Red
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    scales: { y: { grid: { color: '#374151' }, ticks: { color: '#9ca3af', callback: (val) => '$' + val } }, x: { grid: { display: false }, ticks: { color: '#9ca3af' } } },
+                    plugins: { legend: { labels: { color: '#fff' } } }
+                }
+            });
+
+            // C. Reaping Stats
+            const ctxC = document.getElementById('reapChart').getContext('2d');
+            if (reapChart) reapChart.destroy();
+            reapChart = new Chart(ctxC, {
+                type: 'bar',
+                data: {
+                    labels: data.forecast_dates,
+                    datasets: [{
+                        label: 'Resources Killed',
+                        data: data.zombies_reaped,
+                        backgroundColor: '#f59e0b', // Amber
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#9ca3af' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+            
+            // Alert logic
+            if (data.alert) {
+                logToTerminal({"event": "FINOPS_ALERT", "msg": data.alert.msg});
+                alert(`⚠️ ${ data.alert.title } \n${ data.alert.msg } `);
+            }
+        }
+        
+        function simulateLeak() {
+            loadFinOpsCharts(true);
+        }
+
+        // Init Charts
+        loadFinOpsCharts();
 
         // --- Demo Actions ---
 
@@ -379,7 +510,7 @@
 
         async function reapResource(id) {
             logToTerminal({ "module": "janitor", "action": "destroying", "target": id });
-            const res = await fetch(`/api/reap_resource/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/ api / reap_resource / ${ id }`, { method: 'DELETE' });
 
             if (res.ok) {
                 logToTerminal({ "module": "janitor", "status": "success", "cost_saved": "calculated..." });
