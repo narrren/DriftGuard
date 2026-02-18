@@ -1,0 +1,58 @@
+version: "1.0"
+description: "DriftGuard Governance Policy"
+severity: "HIGH"
+
+notifications:
+  enabled: true
+  webhook_url_env: "SLACK_WEBHOOK_URL"
+  on_events: ["failure", "critical_drift"]
+  channel: "#ops-alerts"
+
+# The "UniFlow" State Machine
+rules:
+  - name: "Documentation Integrity"
+    type: documentation
+    enabled: true
+    severity: block
+    trigger_on: [opened, synchronize, reopened]
+    config:
+      llm_provider: gemini
+      readme_path: "README.md"
+
+  # Phase 3: The Janitor (Infrastructure)
+  - name: infrastructure_preview
+    type: infrastructure
+    enabled: true
+    severity: block
+    trigger_on: [opened, synchronize, reopened]
+    config:
+      target:
+        - "aws"
+        - "azure" # (Requires AZURE_SUBSCRIPTION_ID)
+        - "gcp"   # (Requires GCP_CREDENTIALS_JSON)
+      ttl_hours: 24
+      enforce: true
+      # SAFETY: Dry Run Mode
+      allow_delete:
+        dry_run: true 
+      terraform_dir: "./terraform"
+
+  # Phase 4: The Guard (Cross-Repo)
+  - name: cross_repo_safety
+    type: integration_test
+    enabled: true
+    severity: warning
+    trigger_on: [opened, synchronize]
+    config:
+      downstream_repos:
+        - "narrren/DriftGuard" # Pointing to self for demonstration
+      wait_for_status: false
+
+cleanup:
+  # Phase 3: Janitor Cleanup Signal
+  - name: janitor_cleanup
+    type: cleanup
+    enabled: true
+    trigger_on: [closed]
+    config:
+      terraform_dir: "./terraform"

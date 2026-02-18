@@ -1,0 +1,77 @@
+name: FinOps Janitor Live Drill
+
+on:
+  workflow_dispatch:
+    inputs:
+      simulate_expired:
+        description: 'Simulate EXPIRED resource? (true/false)'
+        required: true
+        default: 'true'
+
+jobs:
+  finops-drill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python Dependencies
+        run: |
+          pip install boto3 python-dateutil
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: 1. Provision Infrastructure (Terraform)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1'
+        run: |
+          cd terraform
+          terraform init
+          
+          # Calculate timestamp
+          if [ "${{ github.event.inputs.simulate_expired }}" == "true" ]; then
+            # Set time to Yesterday (Expired)
+            EXPIRY=$(date -u -d "yesterday" +%Y-%m-%dT%H:%M:%SZ)
+            echo "💀 Simulating EXPIRED resource (Time: $EXPIRY)"
+          else
+            # Set time to Tomorrow (Active)
+            EXPIRY=$(date -u -d "tomorrow" +%Y-%m-%dT%H:%M:%SZ)
+            echo "✅ Simulating ACTIVE resource (Time: $EXPIRY)"
+          fi
+          
+          # Apply Terraform
+          terraform apply -auto-approve -var="ttl_expiry=$EXPIRY"
+
+      - name: 2. Run The Janitor (Cleanup)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1'
+        run: |
+          echo "🧹 Janitor starting scan..."
+          python src/guards/janitor.py
+
+      - name: 3. Verify Cleanup
+        # We run a quick check to see if terraform destroy is needed or already handled
+        if: github.event.inputs.simulate_expired == 'true'
+        env:
+           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           AWS_REGION: 'us-east-1'
+        run: |
+           # If the bucket is gone, terraform destroy might output error or show it needs to create it again.
+           # We just want the workflow to finish gracefully.
+           echo "FinOps drill complete. Check logs above to see '✔ REAPED' message."

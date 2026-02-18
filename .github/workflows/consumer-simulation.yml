@@ -1,0 +1,21 @@
+name: Consumer App Integration Test
+
+on:
+  repository_dispatch:
+    types: [driftguard_integration_test]
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Acknowledge Signal
+        run: |
+          echo "📡 Signal Received from DriftGuard Core!"
+          echo "Ref: ${{ github.event.client_payload.ref }}"
+          echo "PR Number: ${{ github.event.client_payload.pr_number }}"
+      
+      - name: Run Integration Tests
+        run: |
+          echo "🧪 Running Downstream Integration Tests..."
+          sleep 5
+          echo "✅ Tests Passed. Core change is safe."

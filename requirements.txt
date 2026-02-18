@@ -1,0 +1,14 @@
+PyGithub
+boto3
+google-genai
+pyyaml
+requests
+python-dateutil
+azure-identity
+azure-mgmt-resource
+azure-storage-blob
+google-cloud-storage
+pydantic
+tenacity
+python-json-logger
+pytest

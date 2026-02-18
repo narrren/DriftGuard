@@ -1,0 +1,36 @@
+# Secrets - NEVER commit these
+demo_app/.env
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Logs
+*.log
+*.json.log
+driftguard_*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+terraform/.terraform/
+
+# OS
+.DS_Store
+Thumbs.db
