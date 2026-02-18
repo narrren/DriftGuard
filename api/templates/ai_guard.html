@@ -1,229 +1,336 @@
+<!-- AI Documentation Guard Module -->
 <!DOCTYPE html>
-<html lang="en">
+
+<html class="dark" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DriftGuard — AI Guard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DriftGuard - AI Documentation Guard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101d22",
+                        "surface-dark": "#16262c",
+                        "surface-darker": "#0b1418",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: #0a0f1e;
+        .glass-panel {
+            background: rgba(22, 38, 44, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+        .code-line-added {
+            background-color: rgba(19, 182, 236, 0.15);
+            border-left: 3px solid #13b6ec;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        .code-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        .sidebar-item {
-            transition: all 0.15s ease;
+        .code-scroll::-webkit-scrollbar-track {
+            background: #0b1418;
         }
 
-        .sidebar-item:hover,
-        .sidebar-item.active {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: rgba(99, 102, 241, 0.3);
-            color: white;
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: #233f48;
+            border-radius: 4px;
         }
 
-        .toast {
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateX(0);
+        .code-scroll::-webkit-scrollbar-thumb:hover {
+            background: #375661;
         }
     </style>
 </head>
 
-<body class="text-slate-300 min-h-screen flex">
-
-    <!-- Sidebar -->
-    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
-        <div class="p-6 border-b border-white/5">
-            <a href="/" class="flex items-center gap-3">
+<body
+    class="bg-background-light dark:bg-background-dark min-h-screen text-slate-200 font-display selection:bg-primary selection:text-white overflow-hidden flex flex-col">
+    <header
+        class="flex-none flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#233f48] bg-[#111e22] px-6 py-3 z-20">
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-4 text-white">
+                <div class="size-8 text-primary">
+                    <svg class="h-full w-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd"
+                            d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z"
+                            fill="currentColor" fill-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <nav class="flex gap-6">
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors"
+                        href="/dashboard">Dashboard</a>
+                    <a class="text-white text-sm font-medium border-b-2 border-primary pb-4 -mb-4 transition-colors"
+                        href="/ai-guard">AI Guard</a>
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors"
+                        href="/janitor">Janitor</a>
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors"
+                        href="/policy">Policy</a>
+                </nav>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative hidden sm:block">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                    <span class="material-symbols-outlined text-[20px]">search</span>
+                </span>
+                <input
+                    class="bg-[#16262c] border border-[#233f48] text-sm rounded-lg focus:ring-primary focus:border-primary block w-64 pl-10 p-2 text-white placeholder-slate-500"
+                    placeholder="Search PRs, Policies..." />
+            </div>
+            <div class="h-8 w-[1px] bg-[#233f48] mx-2"></div>
+            <button class="text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div
+                class="bg-gradient-to-br from-primary to-blue-600 rounded-full size-9 border border-[#233f48] flex items-center justify-center text-white font-bold text-sm">
+                DG</div>
+        </div>
+    </header>
+    <main class="flex-1 flex overflow-hidden">
+        <section class="flex-1 flex flex-col min-w-0 border-r border-[#233f48] bg-surface-darker relative">
+            <div class="px-6 py-4 border-b border-[#233f48] bg-[#111e22]">
+                <div class="flex flex-wrap items-center gap-2 text-sm text-slate-400 mb-1">
+                    <a class="hover:text-primary transition-colors" href="/dashboard">Dashboard</a>
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    <a class="hover:text-primary transition-colors" href="#">PR #4029</a>
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    <span class="text-white font-medium">AI Documentation Guard</span>
+                </div>
+                <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">terminal</span>
+                    Code Diff: Environment Variables
+                </h1>
+            </div>
+            <div class="flex items-center bg-[#111e22] border-b border-[#233f48]">
+                <button
+                    class="px-4 py-3 text-sm font-medium text-white border-b-2 border-primary bg-[#16262c] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-primary">data_object</span>
+                    src/config/.env
+                </button>
+                <button
+                    class="px-4 py-3 text-sm font-medium text-slate-400 hover:text-white hover:bg-[#16262c] transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">description</span>
+                    docs/README.md
+                    <span class="ml-1 text-[10px] bg-slate-700 text-slate-300 px-1.5 rounded-full">Unchanged</span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto code-scroll font-mono text-sm relative">
+                <div class="flex min-h-full">
+                    <div
+                        class="flex-none w-12 py-4 text-right pr-3 text-slate-600 bg-[#0e161a] border-r border-[#233f48] select-none">
+                        <div class="leading-6">23</div>
+                        <div class="leading-6">24</div>
+                        <div class="leading-6">25</div>
+                        <div class="leading-6">26</div>
+                        <div class="leading-6 text-primary font-bold">27</div>
+                        <div class="leading-6">28</div>
+                        <div class="leading-6">29</div>
+                        <div class="leading-6">30</div>
+                        <div class="leading-6">31</div>
+                        <div class="leading-6">32</div>
+                    </div>
+                    <div class="flex-1 py-4">
+                        <div class="px-4 leading-6 text-slate-400"># Database Configuration</div>
+                        <div class="px-4 leading-6 text-slate-300"><span class="text-pink-400">DB_HOST</span>=<span
+                                class="text-green-400">"postgres-primary.internal"</span></div>
+                        <div class="px-4 leading-6 text-slate-300"><span class="text-pink-400">DB_PORT</span>=<span
+                                class="text-blue-400">5432</span></div>
+                        <div class="px-4 leading-6 text-slate-300"><span class="text-pink-400">DB_NAME</span>=<span
+                                class="text-green-400">"driftguard_prod"</span></div>
+                        <div class="px-4 leading-6 code-line-added text-white relative group">
+                            <span class="text-pink-400 font-bold">API_TIMEOUT_MS</span>=<span
+                                class="text-blue-400">5000</span>
+                            <span class="ml-4 text-slate-500 italic text-xs"># Added in this PR</span>
+                        </div>
+                        <div class="px-4 leading-6 text-slate-400 mt-2"># Feature Flags</div>
+                        <div class="px-4 leading-6 text-slate-300"><span
+                                class="text-pink-400">FEATURE_NEW_UI</span>=<span class="text-blue-400">true</span>
+                        </div>
+                        <div class="px-4 leading-6 text-slate-300"><span
+                                class="text-pink-400">ENABLE_AUDIT_LOGS</span>=<span class="text-blue-400">true</span>
+                        </div>
+                        <div class="px-4 leading-6 text-slate-300"><span class="text-pink-400">MAX_RETRIES</span>=<span
+                                class="text-blue-400">3</span></div>
+                        <div class="px-4 leading-6 text-slate-300"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute bottom-4 left-4 right-4 pointer-events-none">
                 <div
-                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
-                    D</div>
-                <span class="text-lg font-bold text-white">DriftGuard</span>
-            </a>
-        </div>
-        <div
-            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
-        </div>
-        <nav class="flex-1 px-3 py-4 space-y-1">
-            <a href="/dashboard"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
-                Dashboard</a>
-            <a href="/ai-guard"
-                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>🧠</span>
-                AI Guard</a>
-            <a href="/janitor"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧹</span>
-                Janitor</a>
-            <a href="/sentry"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
-                Sentry</a>
-            <a href="/finops"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>💰</span>
-                FinOps</a>
-            <a href="/policy"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>📋</span>
-                Policy</a>
-        </nav>
-    </aside>
-
-    <!-- Main -->
-    <main class="flex-1 overflow-y-auto">
-        <header class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4">
-            <h1 class="text-xl font-bold text-white">🧠 AI Guard — Doc Synchronizer</h1>
-            <p class="text-xs text-slate-500 font-mono mt-0.5">Powered by Gemini 1.5 Pro</p>
-        </header>
-
-        <div class="p-8 space-y-6">
-
-            <!-- Info Banner -->
-            <div class="glass rounded-xl p-5 border-l-4 border-indigo-500">
-                <h2 class="text-white font-semibold mb-1">How it works</h2>
-                <p class="text-slate-400 text-sm leading-relaxed">The AI Guard reads your GitHub PR diff and compares it
-                    semantically against your README. If you add a new environment variable, API endpoint, or breaking
-                    change without documenting it — the PR is blocked.</p>
+                    class="bg-[#0e161a]/90 backdrop-blur border border-primary/30 text-primary px-3 py-2 rounded-lg text-xs font-mono inline-flex items-center gap-2 shadow-lg">
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    Line 27: New environment variable introduced
+                </div>
             </div>
-
-            <!-- Config -->
-            <div class="glass rounded-xl p-6">
-                <h2 class="text-white font-semibold mb-4">Configuration</h2>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Gemini Model</label>
+        </section>
+        <aside class="w-[450px] flex-none bg-[#111e22] flex flex-col border-l border-[#233f48] shadow-2xl z-10">
+            <div class="p-6 flex-1 overflow-y-auto">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
                         <div
-                            class="font-mono text-sm text-indigo-300 bg-indigo-900/20 px-3 py-2 rounded-lg border border-indigo-500/20">
-                            gemini-1.5-pro</div>
+                            class="size-10 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20">
+                            <span class="material-symbols-outlined text-white">psychology</span>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-white leading-tight">AI Analysis</h2>
+                            <p class="text-xs text-slate-400">Powered by Gemini 1.5 Flash</p>
+                        </div>
                     </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Enforcement
-                            Mode</label>
-                        <div
-                            class="font-mono text-sm text-orange-300 bg-orange-900/20 px-3 py-2 rounded-lg border border-orange-500/20">
-                            BLOCK_PR</div>
+                    <span
+                        class="bg-green-500/10 text-green-400 text-xs font-medium px-2 py-1 rounded border border-green-500/20 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>Active
+                    </span>
+                </div>
+                <div class="glass-panel rounded-xl p-1 mb-6 relative overflow-hidden group">
+                    <div
+                        class="absolute -top-10 -right-10 w-32 h-32 bg-red-500/20 blur-[50px] rounded-full pointer-events-none">
                     </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">README Path</label>
-                        <div
-                            class="font-mono text-sm text-slate-300 bg-slate-800 px-3 py-2 rounded-lg border border-white/10">
-                            README.md</div>
+                    <div class="bg-[#10191d]/80 rounded-lg p-5 border border-white/5 relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-slate-200 font-semibold text-sm uppercase tracking-wider mb-1">Status
+                                </h3>
+                                <div class="flex items-center gap-2 text-red-400 font-bold text-lg">
+                                    <span class="material-symbols-outlined">gpp_bad</span>Drift Detected
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <h3 class="text-slate-200 font-semibold text-sm uppercase tracking-wider mb-1">
+                                    Confidence</h3>
+                                <div class="text-primary font-bold text-2xl" id="ai-confidence">94%</div>
+                            </div>
+                        </div>
+                        <div class="w-full bg-[#1e2e36] h-1.5 rounded-full mb-6 overflow-hidden">
+                            <div class="bg-gradient-to-r from-primary to-cyan-300 h-full rounded-full"
+                                id="confidence-bar" style="width: 94%"></div>
+                        </div>
+                        <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3 flex items-start gap-3 mb-4">
+                            <span class="material-symbols-outlined text-red-500 mt-0.5">block</span>
+                            <div>
+                                <p class="text-red-400 font-bold text-sm">Blocking Severity</p>
+                                <p class="text-red-200/70 text-xs mt-0.5">This PR cannot be merged until resolved.</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="text-slate-300 text-sm font-medium mb-2">Findings</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed" id="ai-findings">A new environment
+                                    variable <code
+                                        class="text-pink-400 bg-pink-500/10 px-1 rounded border border-pink-500/20">API_TIMEOUT_MS</code>
+                                    was detected in <code class="text-slate-300">src/config/.env</code>. No
+                                    corresponding documentation update was found in <code
+                                        class="text-slate-300">docs/README.md</code>.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-slate-300 text-sm font-medium mb-2">Policy Violation</h4>
+                                <div class="bg-[#1e2e36] p-3 rounded border border-[#233f48]">
+                                    <p class="text-xs text-slate-400 font-mono">Policy #402: "All external configuration
+                                        variables must be documented with type, default value, and description."</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Trigger Events</label>
-                        <div
-                            class="font-mono text-sm text-slate-300 bg-slate-800 px-3 py-2 rounded-lg border border-white/10">
-                            opened, synchronize</div>
+                </div>
+                <div class="mb-6">
+                    <h3 class="text-white font-semibold text-sm mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[18px]">lightbulb</span>Suggested
+                        Action
+                    </h3>
+                    <div
+                        class="p-4 rounded-lg bg-[#16262c] border border-[#233f48] hover:border-primary/50 transition-colors cursor-pointer group">
+                        <div class="flex items-start gap-3">
+                            <div class="mt-1">
+                                <div class="size-4 rounded-full border border-slate-500 group-hover:border-primary">
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-slate-200 text-sm font-medium">Generate Documentation Stub</p>
+                                <p class="text-slate-400 text-xs mt-1">AI can draft a description for `API_TIMEOUT_MS`
+                                    and append it to README.md.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-slate-400 font-semibold text-xs uppercase tracking-wider mb-3">Analysis History</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2 text-slate-300"><span
+                                    class="material-symbols-outlined text-[14px]">schedule</span>2 mins ago</div>
+                            <span class="text-red-400">Failed (Drift)</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs opacity-50">
+                            <div class="flex items-center gap-2 text-slate-300"><span
+                                    class="material-symbols-outlined text-[14px]">schedule</span>25 mins ago</div>
+                            <span class="text-green-400">Passed</span>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Run Analysis -->
-            <div class="glass rounded-xl p-6">
-                <h2 class="text-white font-semibold mb-4">Run Analysis</h2>
-                <div class="mb-4">
-                    <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Paste a Git Diff (or use
-                        sample)</label>
-                    <textarea id="diffInput" rows="6"
-                        placeholder="diff --git a/src/main.py b/src/main.py&#10;+ SECRET_KEY = os.getenv('NEW_SECRET_KEY')&#10;+ STRIPE_WEBHOOK = os.getenv('STRIPE_WEBHOOK_SECRET')"
-                        class="w-full bg-[#0d1117] border border-white/10 rounded-lg px-4 py-3 text-sm font-mono text-slate-300 focus:outline-none focus:border-indigo-500/50 resize-none"></textarea>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="runAnalysis()"
-                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg transition">
-                        🧠 Analyze with Gemini
+            <div class="p-6 border-t border-[#233f48] bg-[#0e161a] space-y-3">
+                <button id="run-analysis-btn" onclick="runRealAnalysis()"
+                    class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-cyan-400 text-[#0b1418] font-bold py-3 px-4 rounded-lg transition-all shadow-[0_0_15px_rgba(19,182,236,0.3)] hover:shadow-[0_0_20px_rgba(19,182,236,0.5)]">
+                    <span class="material-symbols-outlined">psychology</span>Run Real Gemini Analysis
+                </button>
+                <div class="grid grid-cols-2 gap-3">
+                    <button
+                        class="flex items-center justify-center gap-2 bg-[#16262c] hover:bg-[#1f363d] text-slate-300 font-medium py-2.5 px-4 rounded-lg border border-[#233f48] transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">refresh</span>Re-run
                     </button>
-                    <button onclick="loadSample()"
-                        class="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-slate-300 text-sm font-medium rounded-lg transition">
-                        Load Sample Diff
+                    <button
+                        class="flex items-center justify-center gap-2 bg-[#16262c] hover:bg-[#1f363d] text-slate-300 font-medium py-2.5 px-4 rounded-lg border border-[#233f48] transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">gavel</span>Override
                     </button>
                 </div>
             </div>
-
-            <!-- Result -->
-            <div id="resultBox" class="hidden glass rounded-xl p-6">
-                <h2 class="text-white font-semibold mb-4">Analysis Result</h2>
-                <div id="resultContent" class="text-sm text-slate-300 leading-relaxed"></div>
-            </div>
-
-        </div>
+        </aside>
     </main>
-
-    <div id="toast"
-        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
-        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
-    </div>
-
     <script>
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-            toast.className = `toast show fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px] ${type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-indigo-600'}`;
-            setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-
-        function loadSample() {
-            document.getElementById('diffInput').value = `diff --git a/src/main.py b/src/main.py
-index abc123..def456 100644
---- a/src/main.py
-+++ b/src/main.py
-@@ -10,6 +10,9 @@ import os
- 
-+SECRET_KEY = os.getenv('NEW_SECRET_KEY')
-+STRIPE_WEBHOOK = os.getenv('STRIPE_WEBHOOK_SECRET')
-+OPENAI_API_KEY = os.getenv('OPENAI_KEY')
- 
- def main():`;
-        }
-
-        async function runAnalysis() {
-            const diff = document.getElementById('diffInput').value.trim();
-            if (!diff) { showToast('Please enter a diff first', 'error'); return; }
-            showToast('Analyzing with Gemini...', 'info');
-            const resultBox = document.getElementById('resultBox');
-            const resultContent = document.getElementById('resultContent');
-            resultContent.innerHTML = '<div class="animate-pulse text-slate-500">Analyzing...</div>';
-            resultBox.classList.remove('hidden');
+        async function runRealAnalysis() {
+            const btn = document.getElementById('run-analysis-btn');
+            const findings = document.getElementById('ai-findings');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Analyzing with Gemini...';
+            btn.disabled = true;
             try {
                 const res = await fetch('/api/analyze_docs', { method: 'POST' });
                 const data = await res.json();
-                if (data.error) {
-                    resultContent.innerHTML = `<div class="text-red-400">⚠️ ${data.error}</div>`;
-                    showToast('Analysis failed', 'error');
-                } else if (data.drift_detected) {
-                    resultContent.innerHTML = `
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-mono rounded">DRIFT DETECTED</span>
-                            <span class="text-xs text-slate-500">Confidence: ${(data.confidence * 100).toFixed(0)}%</span>
-                        </div>
-                        <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4 text-red-200 text-sm">${data.suggestion || 'Documentation is out of sync with code changes.'}</div>`;
-                    showToast('Drift detected!', 'error');
-                } else {
-                    resultContent.innerHTML = `<div class="text-emerald-400">✅ No drift detected. Documentation is in sync.</div>`;
-                    showToast('All clear!', 'success');
+                if (data.suggestion) {
+                    findings.textContent = data.suggestion;
+                    document.getElementById('ai-confidence').textContent = Math.round((data.confidence || 0.94) * 100) + '%';
+                    document.getElementById('confidence-bar').style.width = Math.round((data.confidence || 0.94) * 100) + '%';
                 }
             } catch (e) {
-                resultContent.innerHTML = `<div class="text-red-400">Error: ${e.message}</div>`;
-                showToast('Request failed', 'error');
+                findings.textContent = 'Error: ' + e.message;
             }
+            btn.innerHTML = '<span class="material-symbols-outlined">psychology</span>Run Real Gemini Analysis';
+            btn.disabled = false;
         }
     </script>
 </body>

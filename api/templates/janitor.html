@@ -1,267 +1,495 @@
+<!-- Janitor Cloud Cleanup Module -->
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DriftGuard — Janitor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Janitor Cloud Cleanup - DriftGuard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec", "primary-dark": "#0ea5d7",
+                        "background-dark": "#101d22", "surface-dark": "#16262c",
+                        "border-dark": "#233f48", "danger": "#ef4444", "warning": "#f59e0b", "success": "#10b981",
+                    },
+                    fontFamily: { "display": ["Inter", "sans-serif"], "mono": ["ui-monospace", "monospace"] },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
-            background: #0a0f1e;
+            font-family: 'Inter', sans-serif;
         }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .sidebar-item {
-            transition: all 0.15s ease;
-        }
-
-        .sidebar-item:hover,
-        .sidebar-item.active {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: rgba(99, 102, 241, 0.3);
-            color: white;
-        }
-
-        .toast {
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        @keyframes scan {
-            0% {
-                top: 0;
-            }
-
-            100% {
-                top: 100%;
-            }
-        }
-
-        .scan-line {
-            animation: scan 2s linear infinite;
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 
-<body class="text-slate-300 min-h-screen flex">
-
-    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
-        <div class="p-6 border-b border-white/5">
-            <a href="/" class="flex items-center gap-3">
+<body class="bg-background-dark text-white overflow-x-hidden">
+    <div class="relative flex h-screen w-full flex-col overflow-hidden">
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark px-6 py-3 shrink-0 z-20">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-3 text-white">
+                    <div class="size-8 text-primary">
+                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
+                                d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
+                </div>
+                <label class="flex flex-col min-w-40 !h-10 max-w-64">
+                    <div
+                        class="flex w-full flex-1 items-stretch rounded-lg h-full ring-1 ring-border-dark bg-surface-dark overflow-hidden focus-within:ring-primary transition-all">
+                        <div class="text-[#92bbc9] flex items-center justify-center pl-3"><span
+                                class="material-symbols-outlined text-[20px]">search</span></div>
+                        <input
+                            class="w-full bg-transparent border-none text-white focus:outline-0 focus:ring-0 h-full placeholder:text-[#92bbc9] px-3 text-sm font-normal leading-normal"
+                            placeholder="Search resources..." id="resource-search" oninput="filterTable(this.value)" />
+                    </div>
+                </label>
+            </div>
+            <div class="flex items-center justify-end gap-6">
+                <div class="flex gap-2">
+                    <button
+                        class="flex items-center justify-center rounded-lg size-10 hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors"><span
+                            class="material-symbols-outlined">notifications</span></button>
+                    <button
+                        class="flex items-center justify-center rounded-lg size-10 hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors"><span
+                            class="material-symbols-outlined">settings</span></button>
+                </div>
                 <div
-                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
-                    D</div>
-                <span class="text-lg font-bold text-white">DriftGuard</span>
-            </a>
-        </div>
-        <div
-            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
-        </div>
-        <nav class="flex-1 px-3 py-4 space-y-1">
-            <a href="/dashboard"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
-                Dashboard</a>
-            <a href="/ai-guard"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧠</span>
-                AI Guard</a>
-            <a href="/janitor"
-                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>🧹</span>
-                Janitor</a>
-            <a href="/sentry"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
-                Sentry</a>
-            <a href="/finops"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>💰</span>
-                FinOps</a>
-            <a href="/policy"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>📋</span>
-                Policy</a>
-        </nav>
-    </aside>
-
-    <main class="flex-1 overflow-y-auto">
-        <header class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4">
-            <h1 class="text-xl font-bold text-white">🧹 FinOps Janitor</h1>
-            <p class="text-xs text-slate-500 font-mono mt-0.5">Scan & destroy zombie cloud resources</p>
+                    class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-600 border border-border-dark flex items-center justify-center text-white font-bold text-sm">
+                    DG</div>
+            </div>
         </header>
-
-        <div class="p-8 space-y-6">
-
-            <!-- Stats -->
-            <div class="grid grid-cols-3 gap-4">
-                <div class="glass rounded-xl p-5 text-center">
-                    <p class="text-3xl font-bold text-emerald-400" id="statReaped">0</p>
-                    <p class="text-xs text-slate-500 mt-1">Resources Reaped</p>
+        <div class="flex flex-1 overflow-hidden">
+            <aside
+                class="w-64 bg-background-dark border-r border-border-dark flex flex-col justify-between py-6 px-4 shrink-0 overflow-y-auto">
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <h3 class="text-[#92bbc9] text-xs font-bold uppercase tracking-wider mb-4 px-3">Platform</h3>
+                        <nav class="flex flex-col gap-1">
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/dashboard"><span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span><span
+                                    class="text-sm font-medium">Dashboard</span></a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/ai-guard"><span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">psychology</span><span
+                                    class="text-sm font-medium">AI Guard</span></a>
+                            <a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors"
+                                href="/janitor"><span
+                                    class="material-symbols-outlined text-[20px] fill-1">delete</span><span
+                                    class="text-sm font-medium">Janitor</span></a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/sentry"><span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">radar</span><span
+                                    class="text-sm font-medium">Sentry</span></a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/finops"><span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">monitoring</span><span
+                                    class="text-sm font-medium">FinOps</span></a>
+                        </nav>
+                    </div>
+                    <div>
+                        <h3 class="text-[#92bbc9] text-xs font-bold uppercase tracking-wider mb-4 px-3">Configuration
+                        </h3>
+                        <nav class="flex flex-col gap-1">
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/policy"><span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">rule</span><span
+                                    class="text-sm font-medium">Policies</span></a>
+                        </nav>
+                    </div>
                 </div>
-                <div class="glass rounded-xl p-5 text-center">
-                    <p class="text-3xl font-bold text-white">$<span id="statSaved">0</span></p>
-                    <p class="text-xs text-slate-500 mt-1">Estimated Savings</p>
+                <a href="/login"
+                    class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white cursor-pointer mt-auto"><span
+                        class="material-symbols-outlined text-[20px]">logout</span><span
+                        class="text-sm font-medium">Sign Out</span></a>
+            </aside>
+            <main class="flex-1 flex flex-col min-w-0 bg-background-dark overflow-hidden">
+                <div class="flex-1 overflow-y-auto p-8">
+                    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+                        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center gap-2 text-sm text-[#92bbc9]">
+                                    <a class="hover:text-primary" href="/">DriftGuard</a><span>/</span><a
+                                        class="hover:text-primary" href="/dashboard">Dashboard</a><span>/</span><span
+                                        class="text-white">Janitor Cleanup</span>
+                                </div>
+                                <h1 class="text-3xl font-bold text-white tracking-tight mt-1">Janitor Cloud Cleanup</h1>
+                                <p class="text-[#92bbc9] text-sm max-w-2xl">Automated multi-cloud resource expiry and
+                                    garbage collection engine. Identify and remove orphaned resources to optimize costs.
+                                </p>
+                            </div>
+                            <div class="flex gap-3">
+                                <button onclick="runScan(true)"
+                                    class="px-4 py-2 rounded-lg border border-border-dark text-white hover:bg-border-dark transition-colors text-sm font-medium flex items-center gap-2"><span
+                                        class="material-symbols-outlined text-[18px]">bug_report</span>Dry Run</button>
+                                <button onclick="runScan(false)"
+                                    class="px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary/10 transition-colors text-sm font-medium flex items-center gap-2"><span
+                                        class="material-symbols-outlined text-[18px]">radar</span>Run Scan</button>
+                                <button
+                                    class="px-4 py-2 rounded-lg bg-danger hover:bg-danger/90 text-white transition-colors text-sm font-medium flex items-center gap-2 shadow-lg shadow-danger/20"><span
+                                        class="material-symbols-outlined text-[18px] fill-1">delete_forever</span>Execute
+                                    Cleanup</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div
+                                class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group">
+                                <div
+                                    class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <span class="material-symbols-outlined text-6xl text-white">search</span></div>
+                                <p class="text-[#92bbc9] text-sm font-medium">Resources Scanned</p>
+                                <div>
+                                    <p class="text-3xl font-bold text-white tracking-tight" id="scanned-count">12,405
+                                    </p>
+                                    <p class="text-success text-xs font-medium mt-1 flex items-center gap-1"><span
+                                            class="material-symbols-outlined text-[14px]">trending_up</span>+12% vs last
+                                        week</p>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group">
+                                <div
+                                    class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <span class="material-symbols-outlined text-6xl text-warning">sell</span></div>
+                                <p class="text-[#92bbc9] text-sm font-medium">Expired Tags Found</p>
+                                <div>
+                                    <p class="text-3xl font-bold text-white tracking-tight" id="expired-count">142</p>
+                                    <p class="text-success text-xs font-medium mt-1 flex items-center gap-1"><span
+                                            class="material-symbols-outlined text-[14px]">trending_up</span>+5% vs last
+                                        week</p>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group">
+                                <div
+                                    class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <span class="material-symbols-outlined text-6xl text-danger">delete</span></div>
+                                <p class="text-[#92bbc9] text-sm font-medium">Resources Deleted</p>
+                                <div>
+                                    <p class="text-3xl font-bold text-white tracking-tight" id="deleted-count">89</p>
+                                    <p class="text-success text-xs font-medium mt-1 flex items-center gap-1"><span
+                                            class="material-symbols-outlined text-[14px]">trending_up</span>+8% vs last
+                                        week</p>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-surface-dark border border-primary/30 rounded-xl p-5 flex flex-col justify-between h-32 relative overflow-hidden group shadow-[0_0_15px_rgba(19,182,236,0.1)]">
+                                <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
+                                <div
+                                    class="absolute right-0 top-0 p-4 opacity-20 group-hover:opacity-30 transition-opacity">
+                                    <span class="material-symbols-outlined text-6xl text-primary">savings</span></div>
+                                <p class="text-primary text-sm font-medium z-10">Est. Monthly Savings</p>
+                                <div class="z-10">
+                                    <p class="text-3xl font-bold text-white tracking-tight" id="savings-amount">
+                                        $3,450.00</p>
+                                    <p class="text-success text-xs font-medium mt-1 flex items-center gap-1"><span
+                                            class="material-symbols-outlined text-[14px]">trending_up</span>+2% vs last
+                                        week</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-surface-dark border border-border-dark rounded-xl flex flex-col overflow-hidden">
+                            <div
+                                class="p-4 border-b border-border-dark flex flex-col sm:flex-row gap-4 items-center justify-between">
+                                <div class="flex items-center gap-3 w-full sm:w-auto">
+                                    <div class="relative">
+                                        <select id="provider-filter" onchange="filterTable()"
+                                            class="appearance-none bg-background-dark border border-border-dark text-white text-sm rounded-lg pl-3 pr-10 py-2 focus:ring-primary focus:border-primary cursor-pointer hover:bg-border-dark/50 transition-colors">
+                                            <option>All Providers</option>
+                                            <option>AWS</option>
+                                            <option>Azure</option>
+                                            <option>GCP</option>
+                                        </select>
+                                        <span
+                                            class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[#92bbc9] pointer-events-none text-[18px]">expand_more</span>
+                                    </div>
+                                    <div class="relative">
+                                        <select id="status-filter" onchange="filterTable()"
+                                            class="appearance-none bg-background-dark border border-border-dark text-white text-sm rounded-lg pl-3 pr-10 py-2 focus:ring-primary focus:border-primary cursor-pointer hover:bg-border-dark/50 transition-colors">
+                                            <option>All Statuses</option>
+                                            <option>Pending Nuke</option>
+                                            <option>Protected</option>
+                                            <option>Expired</option>
+                                        </select>
+                                        <span
+                                            class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[#92bbc9] pointer-events-none text-[18px]">expand_more</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead
+                                        class="bg-background-dark/50 text-[#92bbc9] uppercase text-xs font-semibold tracking-wider border-b border-border-dark">
+                                        <tr>
+                                            <th class="px-6 py-3 w-16 text-center">Provider</th>
+                                            <th class="px-6 py-3">Resource Name / ID</th>
+                                            <th class="px-6 py-3">Region</th>
+                                            <th class="px-6 py-3">Expiry Tag</th>
+                                            <th class="px-6 py-3">Status</th>
+                                            <th class="px-6 py-3 text-right">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resource-table" class="divide-y divide-border-dark">
+                                        <tr class="group hover:bg-white/[0.02] transition-colors" data-provider="AWS"
+                                            data-status="Pending Nuke">
+                                            <td class="px-6 py-4 text-center">
+                                                <div
+                                                    class="size-8 rounded-full bg-[#FF9900] flex items-center justify-center mx-auto font-bold text-xs text-black">
+                                                    AWS</div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex flex-col"><span
+                                                        class="text-white font-medium">staging-db-replica-01</span><span
+                                                        class="text-[#92bbc9] font-mono text-xs mt-0.5">i-0f9a8b7c6d5e4f3a2</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-300">us-east-1</td>
+                                            <td class="px-6 py-4"><span
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning border border-warning/20"><span
+                                                        class="material-symbols-outlined text-[14px]">timer</span>TTL:
+                                                    Expired (24h)</span></td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-2"><span
+                                                        class="relative flex h-2.5 w-2.5"><span
+                                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span><span
+                                                            class="relative inline-flex rounded-full h-2.5 w-2.5 bg-danger"></span></span><span
+                                                        class="text-white">Pending Nuke</span></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
+                                                <div
+                                                    class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        class="p-1.5 rounded-md hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">do_not_disturb_on</span></button><button
+                                                        class="p-1.5 rounded-md hover:bg-danger/20 text-danger transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">delete</span></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="group hover:bg-white/[0.02] transition-colors" data-provider="Azure"
+                                            data-status="Flagged">
+                                            <td class="px-6 py-4 text-center">
+                                                <div
+                                                    class="size-8 rounded-full bg-[#0078D4] flex items-center justify-center mx-auto font-bold text-xs text-white">
+                                                    AZ</div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex flex-col"><span
+                                                        class="text-white font-medium">temp-k8s-cluster-dev</span><span
+                                                        class="text-[#92bbc9] font-mono text-xs mt-0.5">vm-scaleset-dev-291</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-300">w-europe</td>
+                                            <td class="px-6 py-4"><span
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20"><span
+                                                        class="material-symbols-outlined text-[14px]">hourglass_bottom</span>TTL:
+                                                    4h Remaining</span></td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-2"><span
+                                                        class="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-500"></span><span
+                                                        class="text-white">Flagged</span></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
+                                                <div
+                                                    class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        class="p-1.5 rounded-md hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">do_not_disturb_on</span></button><button
+                                                        class="p-1.5 rounded-md hover:bg-danger/20 text-danger transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">delete</span></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="group hover:bg-white/[0.02] transition-colors" data-provider="GCP"
+                                            data-status="Pending Nuke">
+                                            <td class="px-6 py-4 text-center">
+                                                <div
+                                                    class="size-8 rounded-full bg-[#4285F4] flex items-center justify-center mx-auto font-bold text-xs text-white">
+                                                    GCP</div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex flex-col"><span
+                                                        class="text-white font-medium">load-test-bucket-temp</span><span
+                                                        class="text-[#92bbc9] font-mono text-xs mt-0.5">gs://load-test-bucket-temp</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-300">asia-south1</td>
+                                            <td class="px-6 py-4"><span
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning border border-warning/20"><span
+                                                        class="material-symbols-outlined text-[14px]">timer</span>TTL:
+                                                    Expired (2h)</span></td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-2"><span
+                                                        class="relative flex h-2.5 w-2.5"><span
+                                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span><span
+                                                            class="relative inline-flex rounded-full h-2.5 w-2.5 bg-danger"></span></span><span
+                                                        class="text-white">Pending Nuke</span></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
+                                                <div
+                                                    class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        class="p-1.5 rounded-md hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">do_not_disturb_on</span></button><button
+                                                        class="p-1.5 rounded-md hover:bg-danger/20 text-danger transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">delete</span></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="group hover:bg-white/[0.02] transition-colors" data-provider="AWS"
+                                            data-status="Protected">
+                                            <td class="px-6 py-4 text-center">
+                                                <div
+                                                    class="size-8 rounded-full bg-[#FF9900] flex items-center justify-center mx-auto font-bold text-xs text-black">
+                                                    AWS</div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex flex-col"><span
+                                                        class="text-white font-medium">ci-runner-spot-fleet</span><span
+                                                        class="text-[#92bbc9] font-mono text-xs mt-0.5">sfr-837482910</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-300">eu-central-1</td>
+                                            <td class="px-6 py-4"><span
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-700/50 text-gray-400 border border-gray-600/30"><span
+                                                        class="material-symbols-outlined text-[14px]">lock</span>Tag:
+                                                    Protected</span></td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-2"><span
+                                                        class="relative inline-flex rounded-full h-2.5 w-2.5 bg-gray-500"></span><span
+                                                        class="text-white">Skipped</span></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
+                                                <div
+                                                    class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        class="p-1.5 rounded-md hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">lock_open</span></button><button
+                                                        class="p-1.5 rounded-md hover:bg-danger/20 text-danger transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">delete</span></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="group hover:bg-white/[0.02] transition-colors" data-provider="AWS"
+                                            data-status="Pending Nuke">
+                                            <td class="px-6 py-4 text-center">
+                                                <div
+                                                    class="size-8 rounded-full bg-[#FF9900] flex items-center justify-center mx-auto font-bold text-xs text-black">
+                                                    AWS</div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex flex-col"><span
+                                                        class="text-white font-medium">dev-ebs-volume-orphan</span><span
+                                                        class="text-[#92bbc9] font-mono text-xs mt-0.5">vol-0d8f7e6c5b4a3921</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-300">us-west-2</td>
+                                            <td class="px-6 py-4"><span
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning border border-warning/20"><span
+                                                        class="material-symbols-outlined text-[14px]">timer</span>TTL:
+                                                    Expired (72h)</span></td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-2"><span
+                                                        class="relative flex h-2.5 w-2.5"><span
+                                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span><span
+                                                            class="relative inline-flex rounded-full h-2.5 w-2.5 bg-danger"></span></span><span
+                                                        class="text-white">Pending Nuke</span></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
+                                                <div
+                                                    class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        class="p-1.5 rounded-md hover:bg-border-dark text-[#92bbc9] hover:text-white transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">do_not_disturb_on</span></button><button
+                                                        class="p-1.5 rounded-md hover:bg-danger/20 text-danger transition-colors"><span
+                                                            class="material-symbols-outlined text-[20px]">delete</span></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div
+                                class="px-6 py-4 border-t border-border-dark flex items-center justify-between bg-background-dark/30">
+                                <span class="text-sm text-[#92bbc9]">Showing <span
+                                        class="text-white font-medium">1-5</span> of <span
+                                        class="text-white font-medium" id="total-count">142</span> expired
+                                    resources</span>
+                                <div class="flex gap-2">
+                                    <button
+                                        class="p-2 rounded-lg border border-border-dark text-[#92bbc9] hover:bg-border-dark hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled><span
+                                            class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+                                    <button
+                                        class="p-2 rounded-lg border border-border-dark text-[#92bbc9] hover:bg-border-dark hover:text-white transition-colors"><span
+                                            class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-10"></div>
                 </div>
-                <div class="glass rounded-xl p-5 text-center">
-                    <p class="text-3xl font-bold text-indigo-400" id="statClouds">0</p>
-                    <p class="text-xs text-slate-500 mt-1">Clouds Scanned</p>
-                </div>
-            </div>
-
-            <!-- Scan Controls -->
-            <div class="glass rounded-xl p-6">
-                <h2 class="text-white font-semibold mb-4">Scan Controls</h2>
-                <div class="flex flex-wrap gap-3 mb-4">
-                    <label class="flex items-center gap-2 text-sm cursor-pointer">
-                        <input type="checkbox" id="chkAws" class="rounded" checked> <span>AWS</span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm cursor-pointer">
-                        <input type="checkbox" id="chkAzure" class="rounded" checked> <span>Azure</span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm cursor-pointer">
-                        <input type="checkbox" id="chkGcp" class="rounded" checked> <span>GCP</span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm cursor-pointer ml-4">
-                        <input type="checkbox" id="chkDryRun" class="rounded" checked> <span class="text-yellow-400">Dry
-                            Run (safe)</span>
-                    </label>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="runScan()" id="btnScan"
-                        class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-lg transition">
-                        🔍 Start Scan
-                    </button>
-                    <button onclick="clearResults()"
-                        class="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-slate-300 text-sm font-medium rounded-lg transition">
-                        Clear
-                    </button>
-                </div>
-            </div>
-
-            <!-- Scan Output -->
-            <div class="glass rounded-xl p-6">
-                <h2 class="text-white font-semibold mb-4 flex items-center gap-2">
-                    Scan Output
-                    <span id="scanBadge"
-                        class="hidden text-xs font-mono px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full">Running...</span>
-                </h2>
-                <div id="scanOutput"
-                    class="font-mono text-xs text-slate-400 space-y-1.5 h-64 overflow-y-auto bg-[#0d1117] rounded-lg p-4">
-                    <div class="text-slate-600">$ janitor --scan --dry-run</div>
-                    <div class="text-slate-600">Waiting for scan...</div>
-                </div>
-            </div>
-
-            <!-- Results Table -->
-            <div id="resultsSection" class="hidden glass rounded-xl p-6">
-                <h2 class="text-white font-semibold mb-4">Scan Results</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="text-xs text-slate-500 uppercase tracking-wider border-b border-white/5">
-                                <th class="text-left py-2 pr-4">Provider</th>
-                                <th class="text-left py-2 pr-4">Resource ID</th>
-                                <th class="text-left py-2 pr-4">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsBody" class="divide-y divide-white/5"></tbody>
-                    </table>
-                </div>
-            </div>
-
+            </main>
         </div>
-    </main>
-
-    <div id="toast"
-        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
-        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
     </div>
-
     <script>
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-            toast.className = `toast show fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px] ${type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-indigo-600'}`;
-            setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-
-        function addLog(msg, type = 'info') {
-            const out = document.getElementById('scanOutput');
-            const colors = { info: 'text-slate-400', success: 'text-emerald-400', error: 'text-red-400', warn: 'text-yellow-400' };
-            const time = new Date().toLocaleTimeString();
-            out.innerHTML += `<div class="${colors[type]}">[${time}] ${msg}</div>`;
-            out.scrollTop = out.scrollHeight;
-        }
-
-        function clearResults() {
-            document.getElementById('scanOutput').innerHTML = '<div class="text-slate-600">$ janitor --scan --dry-run</div><div class="text-slate-600">Waiting for scan...</div>';
-            document.getElementById('resultsSection').classList.add('hidden');
-            document.getElementById('statReaped').textContent = '0';
-            document.getElementById('statSaved').textContent = '0';
-            document.getElementById('statClouds').textContent = '0';
-        }
-
-        async function runScan() {
-            const btn = document.getElementById('btnScan');
-            btn.textContent = '⏳ Scanning...';
-            btn.disabled = true;
-            document.getElementById('scanBadge').classList.remove('hidden');
-            addLog('Initiating cloud resource scan...', 'info');
-            showToast('Scanning resources...', 'info');
-
+        async function runScan(dryRun) {
+            const tbody = document.getElementById('resource-table');
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-[#92bbc9]"><span class="material-symbols-outlined animate-spin text-primary text-3xl">refresh</span><p class="mt-2">' + (dryRun ? 'Running dry scan...' : 'Scanning real cloud resources...') + '</p></td></tr>';
             try {
                 const res = await fetch('/api/scan_resources', { method: 'POST' });
                 const data = await res.json();
-                const resources = data.resources || [];
-                let cloudsScanned = 0;
-
-                resources.forEach(r => {
-                    const isError = r.status.includes('Error') || r.status.includes('error');
-                    addLog(`[${r.type}] ${r.id}: ${r.status}`, isError ? 'error' : 'success');
-                    if (!isError && r.type !== 'Info') cloudsScanned++;
-                });
-
-                document.getElementById('statClouds').textContent = cloudsScanned;
-
-                // Populate table
-                const tbody = document.getElementById('resultsBody');
-                tbody.innerHTML = '';
-                resources.forEach(r => {
-                    const isError = r.status.includes('Error') || r.status.includes('error');
-                    tbody.innerHTML += `
-                        <tr class="text-sm">
-                            <td class="py-3 pr-4 text-slate-300">${r.type}</td>
-                            <td class="py-3 pr-4 font-mono text-xs text-slate-400">${r.id}</td>
-                            <td class="py-3 pr-4"><span class="px-2 py-1 rounded-full text-xs ${isError ? 'bg-red-500/10 text-red-400' : 'bg-emerald-500/10 text-emerald-400'}">${r.status}</span></td>
-                        </tr>`;
-                });
-                document.getElementById('resultsSection').classList.remove('hidden');
-                addLog('Scan complete.', 'success');
-                showToast('Scan complete!', 'success');
+                if (data.resources && data.resources.length > 0) {
+                    tbody.innerHTML = data.resources.map(r => `
+                <tr class="group hover:bg-white/[0.02] transition-colors">
+                    <td class="px-6 py-4 text-center"><div class="size-8 rounded-full bg-primary/20 flex items-center justify-center mx-auto font-bold text-xs text-primary">${r.type.substring(0, 3).toUpperCase()}</div></td>
+                    <td class="px-6 py-4"><div class="flex flex-col"><span class="text-white font-medium">${r.id}</span></div></td>
+                    <td class="px-6 py-4 text-gray-300">${r.type}</td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">Live Scan</span></td>
+                    <td class="px-6 py-4 text-white">${r.status}</td>
+                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button class="p-1.5 rounded-md hover:bg-danger/20 text-danger transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button></div></td>
+                </tr>`).join('');
+                    document.getElementById('total-count').textContent = data.resources.length;
+                }
             } catch (e) {
-                addLog(`Scan failed: ${e.message}`, 'error');
-                showToast('Scan failed', 'error');
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-400">Scan failed: ' + e.message + '</td></tr>';
             }
-
-            btn.textContent = '🔍 Start Scan';
-            btn.disabled = false;
-            document.getElementById('scanBadge').classList.add('hidden');
+        }
+        function filterTable(search) {
+            const rows = document.querySelectorAll('#resource-table tr[data-provider]');
+            const provider = document.getElementById('provider-filter')?.value || 'All Providers';
+            const status = document.getElementById('status-filter')?.value || 'All Statuses';
+            const q = (search || document.getElementById('resource-search')?.value || '').toLowerCase();
+            rows.forEach(row => {
+                const matchProvider = provider === 'All Providers' || row.dataset.provider === provider;
+                const matchStatus = status === 'All Statuses' || row.dataset.status === status;
+                const matchSearch = !q || row.textContent.toLowerCase().includes(q);
+                row.style.display = matchProvider && matchStatus && matchSearch ? '' : 'none';
+            });
         }
     </script>
 </body>

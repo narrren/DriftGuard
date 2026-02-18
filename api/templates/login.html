@@ -1,182 +1,172 @@
+<!-- DriftGuard Secure Login Screen -->
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DriftGuard — Connect Your Cloud</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DriftGuard - Secure Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec",
+                        "background-dark": "#0D1117",
+                        "surface-dark": "#161b22",
+                        "border-dark": "#30363d",
+                    },
+                    fontFamily: { "display": ["Inter", "sans-serif"] },
+                    borderRadius: { "DEFAULT": "0.375rem", "md": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
+        .bg-technical {
+            background-color: #0D1117;
+            background-image:
+                radial-gradient(at 50% 0%, rgba(19, 182, 236, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(19, 182, 236, 0.02) 0px, transparent 50%);
         }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        @keyframes blob {
-
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            33% {
-                transform: translate(30px, -50px) scale(1.1);
-            }
-
-            66% {
-                transform: translate(-20px, 20px) scale(0.9);
-            }
-        }
-
-        .animate-blob {
-            animation: blob 7s infinite;
-        }
-
-        .delay-2000 {
-            animation-delay: 2s;
-        }
-
-        .card-hover {
-            transition: all 0.2s ease;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-2px);
-            border-color: rgba(99, 102, 241, 0.5) !important;
+        .glass-panel {
+            background: rgba(22, 27, 34, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(48, 54, 61, 0.6);
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.4);
         }
     </style>
 </head>
 
-<body class="bg-[#0D1117] text-slate-300 min-h-screen flex items-center justify-center relative overflow-hidden">
-
-    <div
-        class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full filter blur-[128px] animate-blob pointer-events-none">
-    </div>
-    <div
-        class="fixed bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full filter blur-[128px] animate-blob delay-2000 pointer-events-none">
-    </div>
-
-    <div class="relative z-10 w-full max-w-md mx-auto px-4">
-
-        <!-- Logo -->
-        <div class="text-center mb-10">
-            <a href="/" class="inline-flex items-center gap-3 group">
-                <div
-                    class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30 group-hover:scale-110 transition-transform">
-                    D</div>
-                <span class="text-2xl font-bold text-white tracking-tight">DriftGuard</span>
-            </a>
-            <p class="mt-4 text-slate-400 text-sm">Connect your cloud provider to get started</p>
+<body
+    class="bg-background-dark text-slate-200 font-display min-h-screen flex items-center justify-center p-4 bg-technical">
+    <main class="w-full max-w-[440px] glass-panel rounded-lg p-8 sm:p-10 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent">
         </div>
-
-        <!-- Card -->
-        <div class="bg-[#161B22] border border-[#30363d] rounded-2xl p-8 shadow-2xl">
-            <h1 class="text-xl font-bold text-white mb-2 text-center">Sign in via SSO</h1>
-            <p class="text-slate-500 text-sm text-center mb-8">Choose your cloud provider. No API keys required.</p>
-
-            <div class="space-y-3">
-                <!-- GitHub -->
-                <button onclick="handleSSO('github')" type="button"
-                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
-                    <svg class="h-5 w-5 fill-white flex-shrink-0" viewBox="0 0 24 24">
-                        <path clip-rule="evenodd"
-                            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                            fill-rule="evenodd" />
-                    </svg>
-                    <span>Continue with GitHub</span>
-                    <span class="ml-auto text-slate-500 text-xs">→</span>
-                </button>
-
-                <!-- AWS -->
-                <button onclick="handleSSO('aws')" type="button"
-                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
-                    <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.064.056.128.056.184 0 .08-.048.16-.152.24l-.504.336a.383.383 0 01-.208.072c-.08 0-.16-.04-.24-.112a2.47 2.47 0 01-.288-.376 6.18 6.18 0 01-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103-.295.072-.583.16-.862.272a2.287 2.287 0 01-.28.104.488.488 0 01-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 01.224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 011.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 00-.735-.136 6.02 6.02 0 00-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 01-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 01.32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 01.311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 01-.056.2l-1.923 6.17c-.048.16-.104.263-.168.311a.51.51 0 01-.303.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 01-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 00.415-.758.777.777 0 00-.215-.559c-.144-.151-.416-.287-.807-.415l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 01-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415.32-.096.655-.136 1.006-.136.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.144a.69.69 0 01.24.2.43.43 0 01.071.263v.375c0 .168-.064.256-.184.256a.83.83 0 01-.303-.096 3.652 3.652 0 00-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.877.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.336.511-.583.703-.248.2-.543.343-.886.447-.36.111-.743.167-1.15.167z"
-                            fill="#FF9900" />
-                    </svg>
-                    <span>Continue with AWS</span>
-                    <span class="ml-auto text-slate-500 text-xs">→</span>
-                </button>
-
-                <!-- Azure -->
-                <button onclick="handleSSO('azure')" type="button"
-                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
-                    <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24">
-                        <path
-                            d="M13.05 4.24L6.56 18.05l-2.04.03 5.02-8.65-3.06-5.19h6.57zm.95 1.12l3.77 10.63-8.48 2.38 8.48-2.38-3.77-10.63z"
-                            fill="#0078D4" />
-                    </svg>
-                    <span>Continue with Azure</span>
-                    <span class="ml-auto text-slate-500 text-xs">→</span>
-                </button>
-
-                <!-- GCP -->
-                <button onclick="handleSSO('gcp')" type="button"
-                    class="card-hover w-full flex items-center gap-4 py-3.5 px-5 border border-[#30363d] rounded-xl bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d]">
-                    <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24">
-                        <path
-                            d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                            fill="#4285F4" />
-                    </svg>
-                    <span>Continue with Google Cloud</span>
-                    <span class="ml-auto text-slate-500 text-xs">→</span>
-                </button>
+        <div class="flex flex-col items-center mb-8">
+            <div
+                class="h-12 w-12 rounded bg-primary/10 flex items-center justify-center border border-primary/20 mb-4 shadow-[0_0_15px_rgba(19,182,236,0.15)]">
+                <span class="material-symbols-outlined text-primary text-3xl">shield_lock</span>
             </div>
-
-            <div class="mt-6 pt-6 border-t border-[#30363d] text-center">
-                <p class="text-xs text-slate-500">By connecting, you grant DriftGuard read-only access to scan your
-                    cloud resources. You can disconnect at any time.</p>
+            <h1 class="text-white text-2xl font-bold tracking-tight">DriftGuard</h1>
+            <p class="text-slate-400 text-sm mt-1">Enterprise Governance Console</p>
+        </div>
+        <form class="space-y-5" onsubmit="event.preventDefault(); window.location='/dashboard';">
+            <div class="space-y-1.5">
+                <label class="block text-sm font-medium text-slate-300" for="email">Work Email</label>
+                <div class="relative">
+                    <input
+                        class="block w-full rounded-md border-border-dark bg-[#0d1117] text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm h-11 px-3 py-2 transition-colors placeholder:text-slate-600"
+                        id="email" name="email" placeholder="user@company.com" type="email" />
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-600">
+                        <span class="material-symbols-outlined text-[20px]">mail</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <label class="block text-sm font-medium text-slate-300" for="password">Password</label>
+                    <a class="text-xs font-medium text-primary hover:text-primary/80 transition-colors" href="#">Forgot
+                        password?</a>
+                </div>
+                <div class="relative">
+                    <input
+                        class="block w-full rounded-md border-border-dark bg-[#0d1117] text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm h-11 px-3 py-2 transition-colors placeholder:text-slate-600"
+                        id="password" name="password" placeholder="••••••••" type="password" />
+                    <div
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-slate-600 hover:text-slate-400 transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">visibility_off</span>
+                    </div>
+                </div>
+            </div>
+            <button
+                class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-primary hover:bg-[#0ea5d6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-[#0D1117] transition-all duration-200"
+                type="submit">
+                Sign In
+            </button>
+        </form>
+        <div class="relative my-8">
+            <div aria-hidden="true" class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-border-dark"></div>
+            </div>
+            <div class="relative flex justify-center">
+                <span class="px-2 bg-[#161b22] text-xs text-slate-500 uppercase tracking-wider">Or continue with
+                    SSO</span>
             </div>
         </div>
-
-        <p class="text-center text-slate-600 text-xs mt-6">
-            <a href="/" class="hover:text-slate-400 transition">← Back to home</a>
-        </p>
-    </div>
-
-    <script>
-        function handleSSO(provider) {
-            const btn = event.currentTarget;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
-            btn.disabled = true;
-
-            if (provider === 'github') {
-                // GitHub doesn't need OAuth for basic access — go straight to dashboard
-                setTimeout(() => { window.location.href = '/dashboard'; }, 800);
-                return;
-            }
-
-            // Open OAuth popup for cloud providers
-            const width = 500, height = 650;
-            const left = (screen.width / 2) - (width / 2);
-            const top = (screen.height / 2) - (height / 2);
-            const popup = window.open(`/auth/login/${provider}`, `DriftGuard_${provider}_Auth`, `width=${width},height=${height},top=${top},left=${left}`);
-
-            window.addEventListener('message', function handler(event) {
-                if (event.data && event.data.type === 'OAUTH_SUCCESS') {
-                    window.removeEventListener('message', handler);
-                    window.location.href = '/dashboard';
-                }
-            });
-
-            // Fallback: if popup closed without message
-            const timer = setInterval(() => {
-                if (popup && popup.closed) {
-                    clearInterval(timer);
-                    btn.innerHTML = originalHTML;
-                    btn.disabled = false;
-                }
-            }, 500);
-        }
-    </script>
+        <div class="space-y-3">
+            <button onclick="window.location='/auth/login/gcp'"
+                class="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-border-dark rounded-md shadow-sm bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d] hover:border-slate-500 transition-all duration-200 group"
+                type="button">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                        fill="#4285F4" />
+                    <path
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        fill="#34A853" />
+                    <path
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                        fill="#FBBC05" />
+                    <path
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        fill="#EA4335" />
+                </svg>
+                <span>Continue with Google / GCP</span>
+            </button>
+            <button onclick="window.location='/auth/login/azure'"
+                class="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-border-dark rounded-md shadow-sm bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d] hover:border-slate-500 transition-all duration-200 group"
+                type="button">
+                <svg class="h-5 w-5" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#f3f3f3" d="M0 0h23v23H0z" />
+                    <path fill="#f35325" d="M1 1h10v10H1z" />
+                    <path fill="#81bc06" d="M12 1h10v10H12z" />
+                    <path fill="#05a6f0" d="M1 12h10v10H1z" />
+                    <path fill="#ffba08" d="M12 12h10v10H12z" />
+                </svg>
+                <span>Continue with Azure</span>
+            </button>
+            <button onclick="window.location='/auth/login/aws'"
+                class="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-border-dark rounded-md shadow-sm bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d] hover:border-slate-500 transition-all duration-200 group"
+                type="button">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="#FF9900" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.064.056.128.056.184 0 .08-.048.16-.152.24l-.504.336c-.072.048-.144.072-.208.072-.08 0-.16-.04-.24-.112-.112-.12-.208-.248-.288-.376-.08-.136-.16-.288-.248-.472-.624.736-1.408 1.104-2.352 1.104-.672 0-1.208-.192-1.6-.576-.392-.384-.592-.896-.592-1.536 0-.68.24-1.232.728-1.648.488-.416 1.136-.624 1.96-.624.272 0 .552.024.848.064.296.04.6.104.92.176v-.584c0-.608-.128-1.032-.376-1.28-.256-.248-.688-.368-1.304-.368-.28 0-.568.032-.864.104-.296.072-.584.16-.864.272-.128.056-.224.088-.28.104-.056.016-.096.024-.128.024-.112 0-.168-.08-.168-.248v-.392c0-.128.016-.224.056-.28.04-.056.112-.112.224-.168.28-.144.616-.264 1.008-.36.392-.104.808-.152 1.248-.152.952 0 1.648.216 2.096.648.44.432.664 1.088.664 1.968v2.592zm-3.248 1.216c.264 0 .536-.048.824-.144.288-.096.544-.272.76-.512.128-.152.224-.32.272-.512.048-.192.08-.424.08-.696v-.336c-.232-.056-.48-.104-.736-.136-.256-.032-.504-.048-.752-.048-.536 0-.928.104-1.192.32-.264.216-.392.52-.392.92 0 .376.096.656.296.848.192.2.472.296.84.296zm6.44.88c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.312L7.58 5.816c-.048-.16-.072-.264-.072-.32 0-.128.064-.2.192-.2h.784c.152 0 .256.024.312.08.064.048.112.16.16.312l1.336 5.272 1.24-5.272c.04-.16.088-.264.152-.312.064-.048.176-.08.32-.08h.64c.152 0 .256.024.32.08.064.048.12.16.152.312l1.256 5.336 1.376-5.336c.048-.16.104-.264.16-.312.064-.048.168-.08.312-.08h.744c.128 0 .2.064.2.2 0 .04-.008.08-.016.128-.008.048-.024.112-.056.2l-1.928 6.124c-.048.16-.104.264-.168.312-.064.048-.168.08-.304.08h-.688c-.152 0-.256-.024-.32-.08-.064-.056-.12-.16-.152-.32l-1.232-5.168-1.224 5.16c-.04.16-.088.264-.152.32-.064.056-.176.08-.32.08h-.688zm10.248.208c-.416 0-.832-.048-1.232-.144-.4-.096-.712-.2-.92-.32-.128-.072-.216-.152-.248-.224-.032-.072-.048-.152-.048-.224v-.408c0-.168.064-.248.184-.248.048 0 .096.008.144.024.048.016.12.048.2.08.272.12.568.216.888.28.328.064.648.096.976.096.52 0 .92-.088 1.2-.264.28-.176.424-.432.424-.76 0-.224-.072-.408-.216-.56-.144-.152-.416-.288-.808-.416l-1.16-.36c-.584-.184-1.016-.456-1.288-.816-.272-.352-.408-.744-.408-1.168 0-.336.072-.632.216-.888.144-.256.336-.48.576-.664.24-.184.512-.32.832-.416.32-.096.656-.144 1.008-.144.176 0 .36.008.536.032.184.024.352.056.512.096.152.04.296.088.432.144.136.056.24.112.312.168.104.072.176.144.216.224.04.072.056.168.056.28v.376c0 .168-.064.256-.184.256-.064 0-.168-.032-.304-.096-.456-.208-.968-.312-1.536-.312-.472 0-.84.08-1.104.24-.264.16-.4.4-.4.728 0 .224.08.416.24.568.16.152.456.304.88.44l1.136.36c.576.184.992.44 1.248.768.256.328.376.704.376 1.12 0 .344-.072.656-.208.928-.144.272-.336.512-.584.704-.248.2-.544.344-.888.448-.36.112-.744.168-1.16.168z" />
+                </svg>
+                <span>Continue with AWS</span>
+            </button>
+            <button onclick="window.location='/auth/login/github'"
+                class="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-border-dark rounded-md shadow-sm bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d] hover:border-slate-500 transition-all duration-200 group"
+                type="button">
+                <svg aria-hidden="true" class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+                    <path clip-rule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                        fill-rule="evenodd"></path>
+                </svg>
+                <span>GitHub Enterprise</span>
+            </button>
+        </div>
+        <div class="mt-8 text-center space-y-3">
+            <div
+                class="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 uppercase tracking-widest font-semibold">
+                <span class="material-symbols-outlined text-[14px] text-primary/60">lock</span>
+                <span>Protected by DriftGuard v2.4.0</span>
+            </div>
+            <div class="flex items-center justify-center gap-4 text-xs text-slate-500">
+                <a class="hover:text-slate-300 transition-colors" href="#">Request Access</a>
+                <span class="text-slate-700">|</span>
+                <a class="hover:text-slate-300 transition-colors" href="#">Compliance</a>
+            </div>
+        </div>
+    </main>
 </body>
 
 </html>

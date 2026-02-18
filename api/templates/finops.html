@@ -1,238 +1,271 @@
+<!-- DriftGuard FinOps & Developer Experience -->
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DriftGuard — FinOps</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DriftGuard - FinOps Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec", "background-dark": "#101d22",
+                        "surface-dark": "#18282f", "border-dark": "#233f48",
+                    },
+                    fontFamily: { "display": ["Inter", "sans-serif"], "mono": ["JetBrains Mono", "monospace"] },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: #0a0f1e;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111e22;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #233f48;
+            border-radius: 4px;
         }
 
-        .sidebar-item {
-            transition: all 0.15s ease;
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #375a66;
         }
 
-        .sidebar-item:hover,
-        .sidebar-item.active {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: rgba(99, 102, 241, 0.3);
-            color: white;
-        }
-
-        .toast {
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateX(0);
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #13b6ec, #0bda57);
         }
     </style>
 </head>
 
-<body class="text-slate-300 min-h-screen flex">
-
-    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
-        <div class="p-6 border-b border-white/5">
-            <a href="/" class="flex items-center gap-3">
-                <div
-                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
-                    D</div>
-                <span class="text-lg font-bold text-white">DriftGuard</span>
-            </a>
-        </div>
-        <div
-            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
-        </div>
-        <nav class="flex-1 px-3 py-4 space-y-1">
-            <a href="/dashboard"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
-                Dashboard</a>
-            <a href="/ai-guard"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧠</span>
-                AI Guard</a>
-            <a href="/janitor"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧹</span>
-                Janitor</a>
-            <a href="/sentry"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
-                Sentry</a>
-            <a href="/finops"
-                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>💰</span>
-                FinOps</a>
-            <a href="/policy"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>📋</span>
-                Policy</a>
-        </nav>
-    </aside>
-
-    <main class="flex-1 overflow-y-auto">
+<body class="bg-background-dark font-display text-white antialiased selection:bg-primary/30">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
         <header
-            class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4 flex items-center justify-between">
-            <div>
-                <h1 class="text-xl font-bold text-white">💰 FinOps Dashboard</h1>
-                <p class="text-xs text-slate-500 font-mono mt-0.5">Cloud spend analytics & savings tracker</p>
+            class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark/95 backdrop-blur px-6 py-3 lg:px-10">
+            <div class="flex items-center gap-4 text-white">
+                <div class="size-8 text-primary">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd"
+                            d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z"
+                            fill="currentColor" fill-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
             </div>
-            <label class="flex items-center gap-2 text-sm cursor-pointer">
-                <input type="checkbox" id="toggleLeak" onchange="loadStats()" class="rounded">
-                <span class="text-yellow-400">Simulate Cost Spike</span>
-            </label>
+            <div class="hidden flex-1 justify-end gap-8 md:flex">
+                <div class="flex items-center gap-9">
+                    <a class="text-slate-300 hover:text-white transition-colors text-sm font-medium"
+                        href="/dashboard">Dashboard</a>
+                    <a class="text-slate-300 hover:text-white transition-colors text-sm font-medium"
+                        href="/janitor">Janitor</a>
+                    <a class="text-white text-sm font-medium border-b-2 border-primary pb-3 -mb-3"
+                        href="/finops">FinOps</a>
+                    <a class="text-slate-300 hover:text-white transition-colors text-sm font-medium"
+                        href="/policy">Policy</a>
+                </div>
+                <div class="flex gap-3">
+                    <a href="/login"
+                        class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-surface-dark border border-border-dark text-white hover:bg-border-dark transition-colors text-sm font-bold">Login</a>
+                </div>
+            </div>
         </header>
-
-        <div class="p-8 space-y-6">
-
+        <main class="flex-1 flex flex-col items-center">
+            <div class="w-full max-w-7xl px-4 py-12 md:px-10 lg:py-20">
+                <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+                    <div class="flex flex-col gap-6">
+                        <div class="flex flex-col gap-4 text-left">
+                            <div
+                                class="inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                                <span class="material-symbols-outlined text-sm">bolt</span><span>v2.4 Release: Smart
+                                    Policy Engine</span></div>
+                            <h1
+                                class="text-white text-4xl font-black leading-tight tracking-[-0.033em] md:text-5xl lg:text-6xl">
+                                Governance that speaks <span class="text-gradient">Finance &amp; Engineering</span></h1>
+                            <p class="text-slate-400 text-lg font-normal leading-relaxed max-w-xl">Unify your cloud cost
+                                controls with developer workflows. Real-time budget velocity meets policy-as-code,
+                                ensuring you never drift from your bottom line.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button onclick="loadRealStats()"
+                                class="flex h-12 items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-[#111e22] hover:bg-primary/90 transition-all shadow-[0_0_20px_-5px_#13b6ec]">Load
+                                Real Stats</button>
+                            <button onclick="loadRealStats(true)"
+                                class="flex h-12 items-center justify-center rounded-lg border border-border-dark bg-surface-dark px-6 text-base font-bold text-white hover:bg-border-dark transition-all"><span
+                                    class="material-symbols-outlined mr-2 text-lg">warning</span>Simulate Spike</button>
+                        </div>
+                    </div>
+                    <div
+                        class="relative w-full aspect-video rounded-xl bg-surface-dark border border-border-dark shadow-2xl overflow-hidden">
+                        <div
+                            class="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-xl blur opacity-25">
+                        </div>
+                        <div class="relative h-full w-full bg-background-dark/90 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h3 class="text-white font-bold text-lg">Cost Velocity</h3>
+                                    <p class="text-slate-400 text-xs uppercase tracking-wider">Production Cluster</p>
+                                </div>
+                                <span id="efficiency-badge"
+                                    class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs font-bold">+12%
+                                    Efficient</span>
+                            </div>
+                            <div class="flex items-end justify-between gap-2 h-32 w-full" id="bar-chart">
+                                <div
+                                    class="w-full bg-border-dark/30 rounded-t-sm h-[40%] hover:h-[45%] transition-all duration-300">
+                                </div>
+                                <div
+                                    class="w-full bg-border-dark/30 rounded-t-sm h-[60%] hover:h-[65%] transition-all duration-300">
+                                </div>
+                                <div
+                                    class="w-full bg-border-dark/30 rounded-t-sm h-[50%] hover:h-[55%] transition-all duration-300">
+                                </div>
+                                <div
+                                    class="w-full bg-primary/20 rounded-t-sm h-[80%] border-t-2 border-primary shadow-[0_0_15px_-5px_#13b6ec]">
+                                </div>
+                                <div
+                                    class="w-full bg-border-dark/30 rounded-t-sm h-[45%] hover:h-[50%] transition-all duration-300">
+                                </div>
+                                <div
+                                    class="w-full bg-border-dark/30 rounded-t-sm h-[35%] hover:h-[40%] transition-all duration-300">
+                                </div>
+                                <div
+                                    class="w-full bg-border-dark/30 rounded-t-sm h-[30%] hover:h-[35%] transition-all duration-300">
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs text-slate-500 mt-2" id="chart-labels">
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Stats Bar -->
+            <div class="w-full border-y border-border-dark bg-surface-dark/50 mt-12">
+                <div class="mx-auto max-w-7xl px-4 py-8 md:px-10">
+                    <div class="flex flex-wrap gap-4">
+                        <div
+                            class="flex min-w-[200px] flex-1 flex-col gap-1 rounded-xl p-4 hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-primary text-xl">savings</span>
+                                <p class="text-slate-400 text-sm font-medium">Monthly Savings</p>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <p class="text-white text-2xl font-bold tracking-tight" id="stat-savings">$0.00</p>
+                                <p class="text-[#0bda57] text-sm font-bold">+18%</p>
+                            </div>
+                        </div>
+                        <div class="w-px bg-border-dark hidden md:block"></div>
+                        <div
+                            class="flex min-w-[200px] flex-1 flex-col gap-1 rounded-xl p-4 hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-primary text-xl">cloud_off</span>
+                                <p class="text-slate-400 text-sm font-medium">Credits Used</p>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <p class="text-white text-2xl font-bold tracking-tight" id="stat-credits">$0.00</p>
+                                <p class="text-[#0bda57] text-sm font-bold">of $1000</p>
+                            </div>
+                        </div>
+                        <div class="w-px bg-border-dark hidden md:block"></div>
+                        <div
+                            class="flex min-w-[200px] flex-1 flex-col gap-1 rounded-xl p-4 hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-primary text-xl">speed</span>
+                                <p class="text-slate-400 text-sm font-medium">Remaining Budget</p>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <p class="text-white text-2xl font-bold tracking-tight" id="stat-remaining">$1000.00</p>
+                                <p class="text-[#fa5f38] text-sm font-bold" id="stat-pct">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Alert Banner -->
-            <div id="alertBanner" class="hidden glass rounded-xl p-4 border-l-4 border-red-500 bg-red-900/10">
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl">🚨</span>
+            <div id="alert-banner" class="hidden w-full mt-6 px-4">
+                <div
+                    class="max-w-7xl mx-auto bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
+                    <span class="material-symbols-outlined text-red-500 text-2xl mt-0.5">warning</span>
                     <div>
-                        <h3 id="alertTitle" class="text-red-400 font-bold"></h3>
-                        <p id="alertMsg" class="text-red-300 text-sm"></p>
+                        <p class="text-red-400 font-bold" id="alert-title">Alert</p>
+                        <p class="text-red-200/70 text-sm" id="alert-msg"></p>
                     </div>
                 </div>
             </div>
-
-            <!-- Credits -->
-            <div class="grid grid-cols-3 gap-4">
-                <div class="glass rounded-xl p-5">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Credits Used</p>
-                    <p class="text-3xl font-bold text-white">$<span id="credUsed">--</span></p>
-                    <div class="mt-3 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                        <div id="credBar"
-                            class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all"
-                            style="width:0%"></div>
+            <!-- Anomalies -->
+            <div class="w-full max-w-7xl px-4 py-8 md:px-10">
+                <h2 class="text-white text-2xl font-bold mb-6 flex items-center gap-3"><span
+                        class="flex h-8 w-8 items-center justify-center rounded bg-primary/20 text-primary"><span
+                            class="material-symbols-outlined text-lg">monitoring</span></span>Recent Anomalies</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="anomalies-list">
+                    <div class="flex items-start gap-3 rounded-lg bg-red-500/10 p-4 border border-red-500/20"><span
+                            class="material-symbols-outlined text-red-500 text-lg mt-0.5">warning</span>
+                        <div>
+                            <p class="text-sm font-semibold text-red-200">RDS Spike Detected</p>
+                            <p class="text-xs text-red-200/60">+240% cost increase in us-east-1</p>
+                        </div>
                     </div>
-                </div>
-                <div class="glass rounded-xl p-5">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Remaining</p>
-                    <p class="text-3xl font-bold text-emerald-400">$<span id="credRemaining">--</span></p>
-                    <p class="text-xs text-slate-500 mt-3">of $1,000 limit</p>
-                </div>
-                <div class="glass rounded-xl p-5">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Zombies Reaped</p>
-                    <p class="text-3xl font-bold text-purple-400"><span id="totalReaped">--</span></p>
-                    <p class="text-xs text-slate-500 mt-3">this week</p>
-                </div>
-            </div>
-
-            <!-- Charts -->
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass rounded-xl p-6 md:col-span-2">
-                    <h2 class="text-white font-semibold mb-4">Spend: Actual vs Without Janitor</h2>
-                    <canvas id="spendChart" height="120"></canvas>
-                </div>
-                <div class="glass rounded-xl p-6">
-                    <h2 class="text-white font-semibold mb-4">Spend by Provider</h2>
-                    <canvas id="pieChart" height="180"></canvas>
-                    <div class="mt-4 space-y-2 text-xs">
-                        <div class="flex justify-between"><span class="text-slate-400">AWS</span><span
-                                class="text-white font-mono">65%</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">Azure</span><span
-                                class="text-white font-mono">25%</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">GCP</span><span
-                                class="text-white font-mono">10%</span></div>
+                    <div class="flex items-start gap-3 rounded-lg bg-amber-500/10 p-4 border border-amber-500/20"><span
+                            class="material-symbols-outlined text-amber-500 text-lg mt-0.5">info</span>
+                        <div>
+                            <p class="text-sm font-semibold text-amber-200">Unused EIPs</p>
+                            <p class="text-xs text-amber-200/60">5 addresses idle &gt; 48hrs</p>
+                        </div>
                     </div>
                 </div>
             </div>
-
-        </div>
-    </main>
-
-    <div id="toast"
-        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
-        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
     </div>
-
+    </main>
+    <footer class="border-t border-border-dark bg-background-dark py-8 px-10 text-center text-slate-500 text-sm">
+        <p>© 2024 DriftGuard Inc. All rights reserved.</p>
+    </footer>
+    </div>
     <script>
-        let spendChart, pieChart;
-
-        function initCharts(data) {
-            const ctx1 = document.getElementById('spendChart').getContext('2d');
-            const ctx2 = document.getElementById('pieChart').getContext('2d');
-
-            if (spendChart) spendChart.destroy();
-            if (pieChart) pieChart.destroy();
-
-            spendChart = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: data.forecast_dates,
-                    datasets: [
-                        { label: 'Actual Spend', data: data.actual_spend, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.1)', fill: true, tension: 0.4, borderWidth: 2 },
-                        { label: 'Without Janitor', data: data.predicted_without_janitor, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', fill: true, tension: 0.4, borderWidth: 2, borderDash: [5, 5] }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { labels: { color: '#94a3b8', font: { family: 'Outfit' } } } },
-                    scales: {
-                        x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.03)' } },
-                        y: { ticks: { color: '#64748b', callback: v => '$' + v }, grid: { color: 'rgba(255,255,255,0.03)' } }
-                    }
-                }
-            });
-
-            pieChart = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: ['AWS', 'Azure', 'GCP'],
-                    datasets: [{ data: data.spend_distribution, backgroundColor: ['#f97316', '#3b82f6', '#ef4444'], borderWidth: 0 }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    cutout: '70%'
-                }
-            });
-        }
-
-        async function loadStats() {
-            const leak = document.getElementById('toggleLeak').checked;
+        async function loadRealStats(simulateSpike = false) {
             try {
-                const res = await fetch(`/api/finops/stats?simulate_leak=${leak}`);
+                const res = await fetch('/api/finops/stats' + (simulateSpike ? '?simulate_leak=true' : ''));
                 const data = await res.json();
-
-                document.getElementById('credUsed').textContent = data.credits.used.toFixed(2);
-                document.getElementById('credRemaining').textContent = data.credits.remaining.toFixed(2);
-                document.getElementById('totalReaped').textContent = data.zombies_reaped.reduce((a, b) => a + b, 0);
-                const pct = (data.credits.used / data.credits.limit * 100).toFixed(1);
-                document.getElementById('credBar').style.width = pct + '%';
-
+                document.getElementById('stat-savings').textContent = '$' + data.credits.used.toFixed(2);
+                document.getElementById('stat-credits').textContent = '$' + data.credits.used.toFixed(2);
+                document.getElementById('stat-remaining').textContent = '$' + data.credits.remaining.toFixed(2);
+                const pct = Math.round((data.credits.used / data.credits.limit) * 100);
+                document.getElementById('stat-pct').textContent = pct + '% used';
                 if (data.alert) {
-                    document.getElementById('alertBanner').classList.remove('hidden');
-                    document.getElementById('alertTitle').textContent = data.alert.title;
-                    document.getElementById('alertMsg').textContent = data.alert.msg;
-                } else {
-                    document.getElementById('alertBanner').classList.add('hidden');
+                    document.getElementById('alert-banner').classList.remove('hidden');
+                    document.getElementById('alert-title').textContent = data.alert.title;
+                    document.getElementById('alert-msg').textContent = data.alert.msg;
+                    document.getElementById('efficiency-badge').textContent = '🚨 Spike Detected';
+                    document.getElementById('efficiency-badge').className = 'px-2 py-1 rounded bg-red-500/10 text-red-400 text-xs font-bold';
                 }
-
-                initCharts(data);
+                // Update bar chart
+                const bars = document.querySelectorAll('#bar-chart > div');
+                data.actual_spend.forEach((val, i) => {
+                    const maxVal = Math.max(...data.actual_spend);
+                    const pct = Math.round((val / maxVal) * 90);
+                    if (bars[i]) bars[i].style.height = pct + '%';
+                });
             } catch (e) {
-                console.error(e);
+                console.error('Stats load failed:', e);
             }
         }
-
-        loadStats();
+        loadRealStats();
     </script>
 </body>
 
