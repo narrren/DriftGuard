@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DriftGuard - Dashboard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4f46e5",
+                        "background-dark": "#0a0f1e",
+                        "surface-dark": "#0d1117",
+                        "border-dark": "rgba(255,255,255,0.05)",
+                    },
+                    fontFamily: {
+                        "display": ["Outfit", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-active {
+            background: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0a0f1e;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark font-display antialiased min-h-screen text-slate-300">
+    <div class="flex h-screen w-full overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside
+            class="w-64 bg-[#0d1117] border-r border-border-dark flex flex-col justify-between py-6 px-4 shrink-0 overflow-y-auto">
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center gap-3 px-3 mb-2">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
+                        🛡️
+                    </div>
+                    <span class="text-white text-lg font-bold tracking-tight">DriftGuard</span>
+                </div>
+                <div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-4 px-3">Platform</h3>
+                    <nav class="flex flex-col gap-1">
+                        <a href="/dashboard"
+                            class="sidebar-active flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group">
+                            <span>🏠</span><span class="text-sm font-medium">Dashboard</span>
+                        </a>
+                        <a href="/ai-guard"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
+                            <span>🧠</span><span class="text-sm font-medium">AI Guard</span>
+                        </a>
+                        <a href="/janitor"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
+                            <span>🧹</span><span class="text-sm font-medium">Janitor</span>
+                        </a>
+                        <a href="/sentry"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
+                            <span>🛡️</span><span class="text-sm font-medium">Sentry</span>
+                        </a>
+                        <a href="/finops"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
+                            <span>💰</span><span class="text-sm font-medium">FinOps</span>
+                        </a>
+                        <a href="/policy"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors group">
+                            <span>📋</span><span class="text-sm font-medium">Policy</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            <a href="/login" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white cursor-pointer">
+                <span class="material-symbols-outlined text-[20px]">logout</span><span class="text-sm font-medium">Sign
+                    Out</span>
+            </a>
+        </aside>
+
+        <!-- Main -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header
+                class="px-8 py-5 border-b border-border-dark bg-[#0a0f1e]/80 backdrop-blur-xl shrink-0 sticky top-0 z-40">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-sm text-slate-500 mb-1">
+                            <span class="text-white font-medium">Overview</span>
+                        </div>
+                        <h1 class="text-2xl font-bold text-white tracking-tight">Platform Status</h1>
+                        <p class="text-slate-400 text-sm mt-1">Real-time governance and drift monitoring.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="px-3 py-1.5 rounded-lg border border-indigo-500/20 bg-indigo-500/10 text-sm flex items-center gap-2">
+                            <span
+                                class="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                            <span class="text-indigo-300 font-medium">System Optimal</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="flex-1 overflow-y-auto custom-scrollbar p-8">
+                <div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Stats Cards -->
+                    <div class="glass p-5 rounded-xl border-l-4 border-l-emerald-500">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Compliance Score</p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-3xl font-bold text-white">98%</h3>
+                            <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-1 rounded">+2%</span>
+                        </div>
+                    </div>
+                    <div class="glass p-5 rounded-xl border-l-4 border-l-indigo-500">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Active Drifts</p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-3xl font-bold text-white">3</h3>
+                            <span class="bg-indigo-500/10 text-indigo-400 text-xs px-2 py-1 rounded">-5 today</span>
+                        </div>
+                    </div>
+                    <div class="glass p-5 rounded-xl border-l-4 border-l-orange-500">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Monthly Cost</p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-3xl font-bold text-white">$12.4k</h3>
+                            <span class="bg-orange-500/10 text-orange-400 text-xs px-2 py-1 rounded">On Clean</span>
+                        </div>
+                    </div>
+                    <div class="glass p-5 rounded-xl border-l-4 border-l-purple-500">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">PRs Blocked</p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-3xl font-bold text-white">12</h3>
+                            <span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-1 rounded">This Week</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Activity Feed -->
+                    <div class="lg:col-span-2 glass rounded-xl flex flex-col">
+                        <div class="px-6 py-4 border-b border-border-dark flex justify-between items-center">
+                            <h3 class="font-bold text-white">Recent Activity</h3>
+                            <button class="text-xs text-indigo-400 hover:text-indigo-300">View All</button>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div
+                                class="flex items-start gap-4 p-3 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
+                                <div
+                                    class="mt-1 w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs group-hover:bg-emerald-500/30">
+                                    ✓</div>
+                                <div>
+                                    <p class="text-sm text-white font-medium">FinOps Auto-Cleanup</p>
+                                    <p class="text-xs text-slate-400">Removed 12 orphaned EBS volumes ($450/mo savings)
+                                    </p>
+                                </div>
+                                <span class="text-xs text-slate-500 ml-auto">2h ago</span>
+                            </div>
+                            <div
+                                class="flex items-start gap-4 p-3 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
+                                <div
+                                    class="mt-1 w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center font-bold text-xs group-hover:bg-red-500/30">
+                                    !</div>
+                                <div>
+                                    <p class="text-sm text-white font-medium">Sensitive Data Blocked</p>
+                                    <p class="text-xs text-slate-400">Prevented commit of AWS_SECRET_KEY in repo
+                                        'frontend-v2'</p>
+                                </div>
+                                <span class="text-xs text-slate-500 ml-auto">5h ago</span>
+                            </div>
+                            <div
+                                class="flex items-start gap-4 p-3 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
+                                <div
+                                    class="mt-1 w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs group-hover:bg-indigo-500/30">
+                                    i</div>
+                                <div>
+                                    <p class="text-sm text-white font-medium">Policy Update Applied</p>
+                                    <p class="text-xs text-slate-400">New rule: 'Require Tagging' enforced across all
+                                        buckets</p>
+                                </div>
+                                <span class="text-xs text-slate-500 ml-auto">1d ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="glass rounded-xl p-6">
+                        <h3 class="font-bold text-white mb-4">Quick Actions</h3>
+                        <div class="space-y-3">
+                            <button onclick="window.location.href='/janitor'"
+                                class="w-full text-left p-3 rounded-lg border border-border-dark hover:bg-white/5 transition-colors flex items-center gap-3 group">
+                                <span
+                                    class="bg-indigo-500/20 text-indigo-400 p-2 rounded group-hover:bg-indigo-500 group-hover:text-white transition-colors"><span
+                                        class="material-symbols-outlined text-[18px]">search</span></span>
+                                <div>
+                                    <p class="text-sm text-white font-medium">Scan Resources</p>
+                                    <p class="text-xs text-slate-500">Run immediate cloud sweep</p>
+                                </div>
+                            </button>
+                            <button onclick="window.location.href='/policy'"
+                                class="w-full text-left p-3 rounded-lg border border-border-dark hover:bg-white/5 transition-colors flex items-center gap-3 group">
+                                <span
+                                    class="bg-purple-500/20 text-purple-400 p-2 rounded group-hover:bg-purple-500 group-hover:text-white transition-colors"><span
+                                        class="material-symbols-outlined text-[18px]">add_circle</span></span>
+                                <div>
+                                    <p class="text-sm text-white font-medium">Add Policy</p>
+                                    <p class="text-xs text-slate-500">Create new OPA rule</p>
+                                </div>
+                            </button>
+                            <button onclick="window.location.href='/sentry'"
+                                class="w-full text-left p-3 rounded-lg border border-border-dark hover:bg-white/5 transition-colors flex items-center gap-3 group">
+                                <span
+                                    class="bg-emerald-500/20 text-emerald-400 p-2 rounded group-hover:bg-emerald-500 group-hover:text-white transition-colors"><span
+                                        class="material-symbols-outlined text-[18px]">security</span></span>
+                                <div>
+                                    <p class="text-sm text-white font-medium">Check Sentry</p>
+                                    <p class="text-xs text-slate-500">View active signals</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>
