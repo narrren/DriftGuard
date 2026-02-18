@@ -121,10 +121,34 @@ driftguard/
 │   │   ├── ai_sync.py         # Module 1: AI Logic
 │   │   ├── janitor.py         # Module 2: FinOps Logic
 │   │   └── cross_repo.py      # Module 3: Dispatch Logic
+├── demo_app/                  # (NEW) Localhost Pitch Application
+│   ├── app.py                 # FastAPI Backend Simulation
+│   ├── demo_mode.py           # Mock Generator
+│   ├── Dockerfile             # Containerization
+│   ├── .env.example           # Credential Template
+│   └── templates/index.html   # React/Tailwind Frontend
 ├── terraform/                 # Infrastructure Templates for AWS
 ├── policy.yaml                # The Source of Truth for Governance
 └── requirements.txt           # Python Dependencies
 ```
+
+## 🎥 The "High-Stakes" Demo App (Localhost)
+For professional presentations where you cannot rely on live cloud credentials, use the built-in **Simulation App**.
+
+### Setup & Run
+1.  **Install Dependencies:** `pip install -r demo_app/requirements.txt`
+2.  **Configure Keys (Optional):** Copy `demo_app/.env.example` to `demo_app/.env` and fill in your keys (Gemini, AWS, GitHub PAT).
+3.  **Start Server:** `cd demo_app && python app.py`
+4.  **Open Browser:** go to `http://localhost:8000`
+
+### 🗣️ The Pitch Guide (with Toggle Mode)
+*   **The Switch:** Start in **GREEN** (Simulation) mode. Say: *"This is a risk-free simulation to show you the logic."*
+*   **The Flex:** Click the toggle to **RED** (Real Engine) mode. Say: *"Now, let's connect to the ACTUAL AWS Cloud and Gemini API."*
+*   **The Modules:**
+    *   **Dashboard:** "This is the control plane. We treat governance as a pipeline."
+    *   **Module 1 (AI Context):** "The code changed here (left), but the docs didn't (right). Our AI detected this 'Drift'."
+    *   **Module 2 (Janitor):** "These are real cloud costs. Watch me click 'Nuke'—the system safely destroys them."
+    *   **Module 3 (Sentry):** "We test the *connection* between services, preventing backend changes from breaking the frontend."
 
 ## ⚙️ Environment Variables Reference
 | Variable | Description |

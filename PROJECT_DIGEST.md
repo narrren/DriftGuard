@@ -140,6 +140,16 @@ LLMs can occasionally "hallucinate" or flag a false positive (claiming drift whe
     ```
 *   **Manual Override:** Developers can simply type `/driftguard override` in the PR body or comments to bypass the AI check for that specific PR.
 
+### C. The Demo Application (Pitch Tool)
+To bridge the gap between "Terminal Scripts" and "Stakeholder Demos," DriftGuard includes a dedicated **Full-Stack Demo Application**.
+*   **Tech Stack:** FastAPI (Backend), Tailwind CSS (Frontend), Uvicorn (Server).
+*   **Architecture:** Hybrid Mode. It can run in **"Simulation Mode"** (mock data for safe demos) or **"Real Engine Mode"** (executing actual production code).
+*   **Key Features:**
+    *   **Live Dashboard:** Visualizes the entire pipeline state.
+    *   **Interactive Toggles:** Switch between Simulation/Real execution instantly.
+    *   **Terminal Emulator:** A fixed footer showing real-time JSON log streams for auditability proof.
+    *   **Modules:** Visual interfaces for AI Analysis (Diff View), Janitor (Table View), and Sentry (Graph View).
+
 ---
 
 ## 8. Conclusion

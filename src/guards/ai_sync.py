@@ -1,6 +1,6 @@
 import os
 import sys
-from google import genai
+import google.generativeai as genai
 from github import Github
 
 def run(context, config):
@@ -86,18 +86,16 @@ def run(context, config):
     }}
     """
 
-    # 5. Call Gemini (New SDK V1) with Resiliency Fallback
+    # 5. Call Gemini (Standard SDK) with Resiliency Fallback
     print("✨ Using AI Model: gemini-1.5-flash")
-    client = genai.Client(api_key=gemini_key)
+    genai.configure(api_key=gemini_key)
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
     from tenacity import retry, stop_after_attempt, wait_exponential
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
     def call_ai_with_retry():
-        return client.models.generate_content(
-            model='gemini-2.0-flash-exp',
-            contents=prompt
-        )
+        return model.generate_content(prompt)
 
     result = None
     
