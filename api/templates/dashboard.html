@@ -119,13 +119,12 @@
             <div class="h-6 w-px bg-surface-border mx-1"></div>
             <div class="flex items-center gap-3 cursor-pointer group">
                 <div class="text-right hidden xl:block">
-                    <p class="text-xs font-medium text-white group-hover:text-primary transition-colors">DevOps Lead</p>
-                    <p class="text-[10px] text-slate-500">Workspace A</p>
+                    <p class="text-xs font-medium text-white group-hover:text-primary transition-colors">Guest User</p>
+                    <p class="text-[10px] text-slate-500">Not Connected</p>
                 </div>
                 <div
-                    class="size-8 rounded-full bg-slate-700 overflow-hidden ring-2 ring-transparent group-hover:ring-primary transition-all">
-                    <img alt="User Profile" class="w-full h-full object-cover" data-alt="Profile picture of a user"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSsFqj6CW_eSe2pQmNTNtOgj84AJWGK7qEVlRSTL5MjMpflRyRpkmI9Uwq_Dp41t-TvZerlPUjRMPWmGNYlymYf0vKC5z2atete_bQlp0YFMP8erKFyI1WWboOdgh8s_Kfn2kN7-7cZ-qCtAM0V5bPARBZf00UNoS5oJChANWXRuup_QLyLuBxyllVEWY5ncnag3wPgyq0kXRLcjBW9L9BQLetjkeyD917Ir49UltR0R1pKTN-9m5oFneyhL5ODEHecfBrSHbdd9MG" />
+                    class="size-8 rounded-full bg-slate-700 overflow-hidden ring-2 ring-transparent group-hover:ring-primary transition-all flex items-center justify-center">
+                    <span class="material-symbols-outlined text-slate-400">person</span>
                 </div>
             </div>
         </div>
@@ -170,316 +169,120 @@
                     <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">System</p>
                 </div>
                 <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
-                    href="/logs">
-                    <span
-                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">description</span>
-                    <span class="text-sm font-medium">Logs</span>
-                </a>
-                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
-                    href="/policy">
-                    <span
-                        class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">policy</span>
-                    <span class="text-sm font-medium">Policy</span>
-                </a>
-                <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
                     href="/settings">
                     <span
                         class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
                     <span class="text-sm font-medium">Settings</span>
                 </a>
             </div>
-            <div class="px-6">
-                <div class="p-4 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 border border-surface-border">
-                    <div class="flex items-center gap-2 mb-2 text-primary">
-                        <span class="material-symbols-outlined text-lg">bolt</span>
-                        <span class="text-xs font-bold uppercase">Pro Plan</span>
-                    </div>
-                    <p class="text-xs text-slate-400 mb-3 leading-relaxed">Your team has used 85% of monthly drift
-                        credits.</p>
-                    <div class="w-full bg-slate-700 h-1 rounded-full mb-3">
-                        <div class="bg-primary h-1 rounded-full w-[85%]"></div>
-                    </div>
-                    <button class="text-xs text-white font-medium hover:text-primary transition-colors">Upgrade
-                        Plan</button>
-                </div>
-            </div>
+            <!-- Removed Pro Plan Widget as requested -->
         </nav>
         <main class="flex-1 flex flex-col overflow-hidden bg-background-dark relative">
             <div
                 class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none">
             </div>
             <div class="flex-1 overflow-y-auto p-6 lg:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 max-w-[1920px] mx-auto mb-8">
+                    <!-- Module 1: AI Sync -->
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="material-symbols-outlined text-background-dark bg-slate-200 rounded p-1">sync</span>
+                            <span class="text-xs text-slate-500">Module 1</span>
+                        </div>
+                        <div>
+                            <h3 class="text-slate-200 font-semibold mb-1">AI Documentation</h3>
+                            <p class="text-xs text-slate-500">Sync status & PR checks</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-surface-border/50">
+                            <div class="flex items-center gap-2 text-slate-400 text-sm">
+                                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                                Waiting for activity...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Module 2: Janitor -->
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="material-symbols-outlined text-background-dark bg-slate-200 rounded p-1">cleaning_services</span>
+                            <span class="text-xs text-slate-500">Module 2</span>
+                        </div>
+                        <div>
+                            <h3 class="text-slate-200 font-semibold mb-1">Cloud Janitor</h3>
+                            <p class="text-xs text-slate-500">Resource cleanup status</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-surface-border/50">
+                            <div class="flex items-center gap-2 text-slate-400 text-sm">
+                                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                                No active scans
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Module 3: Sentry -->
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="material-symbols-outlined text-background-dark bg-slate-200 rounded p-1">security</span>
+                            <span class="text-xs text-slate-500">Module 3</span>
+                        </div>
+                        <div>
+                            <h3 class="text-slate-200 font-semibold mb-1">Sentry Guard</h3>
+                            <p class="text-xs text-slate-500">Visual Integration Guard</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-surface-border/50">
+                            <div class="flex items-center gap-2 text-slate-400 text-sm">
+                                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                                Connect Repo
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FinOps -->
+                    <div class="bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="material-symbols-outlined text-background-dark bg-primary rounded p-1">payments</span>
+                            <span class="text-xs text-primary">FinOps</span>
+                        </div>
+                        <div>
+                            <h3 class="text-slate-200 font-semibold mb-1">Cost Intelligence</h3>
+                            <p class="text-xs text-slate-500">Budget & Forecast</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-surface-border/50">
+                            <div class="flex items-center gap-2 text-slate-400 text-sm">
+                                <span class="material-symbols-outlined text-sm">link_off</span>
+                                Connect Cloud
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-12 gap-6 max-w-[1920px] mx-auto">
+                    <!-- Real-time Event Feed (Consolidated) -->
                     <div
-                        class="col-span-12 bg-surface-dark border border-surface-border rounded-lg p-6 relative overflow-hidden">
-                        <div class="flex items-center justify-between mb-8">
-                            <div>
-                                <h2 class="text-white text-base font-semibold flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-primary">account_tree</span>
-                                    Pipeline Diagram
-                                </h2>
-                                <p class="text-xs text-slate-500 mt-1">Real-time request flow tracing</p>
-                            </div>
-                            <span class="text-xs text-slate-500 font-mono bg-surface-border/30 px-2 py-1 rounded">Trace
-                                ID: pipe-8f2a-99x</span>
-                        </div>
-                        <div class="relative flex items-center justify-between px-4 lg:px-20 py-10">
-                            <div
-                                class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-800 -z-10 transform -translate-y-1/2">
-                            </div>
-                            <svg class="absolute top-1/2 left-0 w-full h-1 -z-0 transform -translate-y-1/2 pointer-events-none"
-                                preserveAspectRatio="none">
-                                <line class="animate-flow" stroke="#13cbec" stroke-width="2" x1="0" x2="100%" y1="50%"
-                                    y2="50%"></line>
-                            </svg>
-                            <div class="flex flex-col items-center gap-3 relative z-10 group">
-                                <div
-                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
-                                    <span class="material-symbols-outlined">person</span>
-                                </div>
-                                <div
-                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
-                                    <p class="text-xs font-bold text-slate-300 pt-1">User</p>
-                                    <p class="text-[10px] text-slate-500 pb-1">Initiator</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center gap-3 relative z-10 group">
-                                <div
-                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
-                                    <span class="material-symbols-outlined">api</span>
-                                </div>
-                                <div
-                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
-                                    <p class="text-xs font-bold text-slate-300 pt-1">FastAPI</p>
-                                    <p class="text-[10px] text-slate-500 pb-1">Gateway</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center gap-3 relative z-10">
-                                <div
-                                    class="size-16 rounded-full bg-surface-dark border-2 border-primary text-primary flex items-center justify-center pipeline-node-active animate-pulse">
-                                    <span class="material-symbols-outlined text-[32px]">settings_suggest</span>
-                                </div>
-                                <div
-                                    class="text-center bg-surface-dark px-3 py-1 border border-primary/30 rounded shadow-[0_0_10px_rgba(19,203,236,0.2)] -mb-2 z-20">
-                                    <p class="text-xs font-bold text-primary">Engine</p>
-                                    <p class="text-[10px] text-slate-400">Processing</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center gap-3 relative z-10 group">
-                                <div
-                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
-                                    <span class="material-symbols-outlined">shield</span>
-                                </div>
-                                <div
-                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
-                                    <p class="text-xs font-bold text-slate-300 pt-1">Guards</p>
-                                    <p class="text-[10px] text-slate-500 pb-1">Validating</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center gap-3 relative z-10 group">
-                                <div
-                                    class="size-14 rounded-full bg-surface-dark border-2 border-slate-600 group-hover:border-primary transition-colors flex items-center justify-center text-slate-400 group-hover:text-primary">
-                                    <span class="material-symbols-outlined">cloud_sync</span>
-                                </div>
-                                <div
-                                    class="text-center bg-surface-dark px-2 border border-surface-border rounded shadow-lg -mb-2 z-20">
-                                    <p class="text-xs font-bold text-slate-300 pt-1">Ext. APIs</p>
-                                    <p class="text-[10px] text-slate-500 pb-1">Target</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="col-span-12 xl:col-span-4 bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col relative overflow-hidden">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3
-                                class="text-slate-200 text-sm font-semibold uppercase tracking-wider flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary text-lg">dns</span>
-                                System Status
-                            </h3>
-                            <div class="flex h-3 w-3 relative">
-                                <span
-                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="bg-slate-900/50 rounded p-3 border border-surface-border">
-                                <p class="text-xs text-slate-500 mb-1">Engine State</p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-white text-lg font-bold font-mono">Running</span>
-                                    <span
-                                        class="text-[10px] px-2 py-0.5 bg-success/20 text-success rounded border border-success/30">HEALTHY</span>
-                                </div>
-                            </div>
-                            <div class="bg-slate-900/50 rounded p-3 border border-surface-border">
-                                <div class="flex justify-between items-center mb-1">
-                                    <p class="text-xs text-slate-500">Active Guards</p>
-                                    <span class="text-[10px] text-slate-600 font-mono">policy.yaml</span>
-                                </div>
-                                <div class="flex flex-wrap gap-2 mt-2">
-                                    <span
-                                        class="text-[10px] px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded">s3-public-read</span>
-                                    <span
-                                        class="text-[10px] px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded">sg-open-ssh</span>
-                                    <span
-                                        class="text-[10px] px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded">ebs-unencrypted</span>
-                                </div>
-                                <p class="text-[10px] text-slate-500 mt-2 text-right">Loaded 12 policies</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-span-12 md:col-span-6 xl:col-span-4 flex flex-col gap-4">
-                        <div
-                            class="bg-surface-dark border border-surface-border rounded-lg p-5 flex-1 hover:border-primary/50 transition-all">
-                            <p class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Last Execution
-                            </p>
-                            <h3 class="text-white text-2xl font-bold font-mono">2m 45s ago</h3>
-                            <p class="mt-2 text-xs text-slate-500">Trigger: <span
-                                    class="text-primary/80">git-push-main</span></p>
-                        </div>
-                        <div
-                            class="bg-surface-dark border border-surface-border rounded-lg p-5 flex-1 hover:border-primary/50 transition-all">
-                            <div class="flex justify-between items-center mb-2">
-                                <p class="text-slate-400 text-xs font-medium uppercase tracking-wider">Drift Coverage
-                                </p>
-                                <span class="text-white font-mono font-bold">94.2%</span>
-                            </div>
-                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                                <div class="bg-gradient-to-r from-primary-dark to-primary h-full rounded-full"
-                                    style="width: 94.2%"></div>
-                            </div>
-                            <div class="flex justify-between mt-2 text-[10px] text-slate-500">
-                                <span>Infrastructure</span>
-                                <span>Compliance</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="col-span-12 md:col-span-6 xl:col-span-4 bg-surface-dark border border-surface-border rounded-lg p-5 flex flex-col justify-between overflow-hidden">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="h-4 w-24 bg-slate-800 rounded animate-shimmer"></div>
-                            <div class="h-4 w-4 bg-slate-800 rounded animate-shimmer"></div>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="h-8 w-1/2 bg-slate-800 rounded animate-shimmer"></div>
-                            <div class="h-2 w-full bg-slate-800 rounded animate-shimmer"></div>
-                            <div class="h-2 w-3/4 bg-slate-800 rounded animate-shimmer"></div>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between">
-                            <div class="h-3 w-16 bg-slate-800 rounded animate-shimmer"></div>
-                            <div class="h-3 w-12 bg-slate-800 rounded animate-shimmer"></div>
-                        </div>
-                        <p class="text-[10px] text-slate-600 font-mono mt-4 text-center">// Loading Telemetry...</p>
-                    </div>
-                    <div
-                        class="col-span-12 bg-surface-dark border border-surface-border rounded-lg flex flex-col min-h-[400px]">
+                        class="col-span-12 bg-surface-dark border border-surface-border rounded-lg min-h-[400px] flex flex-col">
                         <div class="p-5 border-b border-surface-border flex items-center justify-between">
-                            <h2 class="text-white text-base font-semibold">Recent Events</h2>
+                            <h2 class="text-white text-base font-semibold flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400">history</span>
+                                Activity Log
+                            </h2>
                             <div class="flex gap-2">
-                                <button
-                                    class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors">
-                                    <span class="material-symbols-outlined text-sm">filter_list</span>
-                                </button>
-                                <button
-                                    class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors">
-                                    <span class="material-symbols-outlined text-sm">download</span>
-                                </button>
+                                <button class="text-xs text-primary hover:text-white transition-colors">Refresh</button>
                             </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="border-b border-surface-border bg-slate-900/50">
-                                        <th
-                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-32">
-                                            Timestamp</th>
-                                        <th
-                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-32">
-                                            Module</th>
-                                        <th
-                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-24">
-                                            Severity</th>
-                                        <th class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider">
-                                            Action Description</th>
-                                        <th
-                                            class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider w-32 text-right">
-                                            Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-surface-border text-sm font-mono">
-                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
-                                        <td class="p-4 text-slate-400">10:42:05</td>
-                                        <td class="p-4 text-white font-medium">Janitor</td>
-                                        <td class="p-4">
-                                            <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-danger/10 text-danger border border-danger/20">
-                                                CRITICAL
-                                            </span>
-                                        </td>
-                                        <td class="p-4 text-slate-300">Orphaned EBS Volume (vol-0af32...) deleted</td>
-                                        <td class="p-4 text-right">
-                                            <span class="text-success text-xs">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
-                                        <td class="p-4 text-slate-400">10:41:22</td>
-                                        <td class="p-4 text-white font-medium">Sentry</td>
-                                        <td class="p-4">
-                                            <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-warning/10 text-warning border border-warning/20">
-                                                HIGH
-                                            </span>
-                                        </td>
-                                        <td class="p-4 text-slate-300">Security Group (sg-123) open to 0.0.0.0/0</td>
-                                        <td class="p-4 text-right">
-                                            <span class="text-primary text-xs">Flagged</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
-                                        <td class="p-4 text-slate-400">10:38:15</td>
-                                        <td class="p-4 text-white font-medium">FinOps</td>
-                                        <td class="p-4">
-                                            <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-700 text-slate-300 border border-slate-600">
-                                                LOW
-                                            </span>
-                                        </td>
-                                        <td class="p-4 text-slate-300">Tagging policy applied to 4 new resources</td>
-                                        <td class="p-4 text-right">
-                                            <span class="text-success text-xs">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
-                                        <td class="p-4 text-slate-400">10:35:00</td>
-                                        <td class="p-4 text-white font-medium">Policy</td>
-                                        <td class="p-4">
-                                            <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-700 text-slate-300 border border-slate-600">
-                                                LOW
-                                            </span>
-                                        </td>
-                                        <td class="p-4 text-slate-300">S3 Bucket Encryption compliance check</td>
-                                        <td class="p-4 text-right">
-                                            <span class="text-success text-xs">Pass</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-slate-800/50 transition-colors group cursor-pointer">
-                                        <td class="p-4 text-slate-400">10:32:41</td>
-                                        <td class="p-4 text-white font-medium">Janitor</td>
-                                        <td class="p-4">
-                                            <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
-                                                MEDIUM
-                                            </span>
-                                        </td>
-                                        <td class="p-4 text-slate-300">Unused Elastic IP released</td>
-                                        <td class="p-4 text-right">
-                                            <span class="text-success text-xs">Completed</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="flex-1 flex flex-col items-center justify-center p-10 text-slate-500">
+                            <div class="bg-surface-border/30 p-4 rounded-full mb-3">
+                                <span class="material-symbols-outlined text-2xl opacity-50">inbox</span>
+                            </div>
+                            <p class="text-sm font-medium">No recent activity detected.</p>
+                            <p class="text-xs mt-1">Connect your cloud accounts in Settings to start tracking.</p>
+                            <a href="/settings"
+                                class="mt-4 px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-background-dark rounded text-xs font-bold transition-all">
+                                Go to Settings
+                            </a>
                         </div>
                     </div>
                 </div>

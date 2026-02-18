@@ -101,12 +101,10 @@
         </div>
         <div class="flex items-center gap-4">
             <div class="flex -space-x-2">
-                <img alt="User Avatar"
-                    class="w-8 h-8 rounded-full border-2 border-background-light dark:border-background-dark"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvwAyk5ftPOclE2W55aiyG6MxU6zLs_WsSwjd_o_kEMIcM0YI4siXJ0R0Tyi2KsASy-DlPtyKZiL0Lk68hdmTyrZBO6TMVFPbbZUBQNslzLfgl7H_X93OVpWFtf3wcKyCmdqHAkoHnxZOUI84jF1Jl_Qr4L6KlLlpl74__BN4lwtj1557B0W4SvuRtgF6fBwP8IPScj5TZUuvvJ5sYX2BDrF1egHxju4341YjoHtFTSpTRSL0zgmKNPUMoh3mmkwrs9RRp6HhcR7sZ" />
-                <img alt="User Avatar"
-                    class="w-8 h-8 rounded-full border-2 border-background-light dark:border-background-dark"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjOWoCEtpP57gy7p6rWgzuLuLWs04xFgtl0zbMCbiv3fRZzEI0dcFH9NYZkobBwBb1RKbm0GDx38PgckxgfZ75kzrQSrBO-aWBWEEcgInvdjLxYlL6pzp_pgLHKAINBn2yUrLj_-3GlogYV2CWDghCJMzphU8wSpYGDBq5Ykf-wVDaTaBG3JURI5IkOtjfaUpgojlxygvS29Ll9Ql3IJPS-iARH5wgdCG4GUGyjK9ZGJtoR05WHhDqRWLl4_Ig3p3SD8Qjbsjebvw5" />
+                <div
+                    class="h-8 w-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
+                    <span class="material-icons text-sm">person</span>
+                </div>
             </div>
             <button class="p-2 text-slate-400 hover:text-white transition-colors">
                 <span class="material-icons">settings</span>
@@ -116,215 +114,21 @@
             </button>
         </div>
     </header>
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <div class="flex-1 flex overflow-hidden min-h-0 border-b border-panel-border">
-            <section class="flex-1 flex flex-col border-r border-panel-border min-w-[40%]">
-                <div
-                    class="h-10 bg-white dark:bg-panel-bg flex items-center justify-between px-4 border-b border-panel-border shrink-0">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Source
-                            Changes</span>
-                        <span
-                            class="px-2 py-0.5 text-[10px] bg-slate-700 rounded text-slate-300 font-mono">config.yaml</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-[10px] text-slate-500 font-mono">
-                        <span class="flex items-center gap-1">
-                            <div class="w-1.5 h-1.5 rounded-full bg-primary"></div> +1 Added
-                        </span>
-                        <span class="flex items-center gap-1">
-                            <div class="w-1.5 h-1.5 rounded-full bg-red-500"></div> -0 Removed
-                        </span>
-                    </div>
-                </div>
-                <div class="flex-1 overflow-auto bg-code-bg font-mono text-xs leading-6 relative">
-                    <div class="grid grid-cols-[40px_1fr] min-h-full">
-                        <div
-                            class="bg-panel-bg/30 border-r border-panel-border text-right pr-2 pt-2 text-slate-500 select-none flex flex-col">
-                            <span>45</span><span>46</span><span>47</span><span>48</span><span>49</span><span>50</span><span>51</span><span>52</span><span>53</span><span>54</span>
-                        </div>
-                        <div class="pt-2 text-slate-300">
-                            <div class="px-4"> host: ${DB_HOST}</div>
-                            <div class="px-4"> port: 5432</div>
-                            <div class="px-4"> pool_size: 20</div>
-                            <div class="px-4 diff-added flex justify-between items-center group relative">
-                                <span> stripe_key: ${STRIPE_SECRET_KEY}</span>
-                                <span
-                                    class="absolute right-2 top-0.5 text-[9px] text-primary border border-primary/30 px-1 rounded bg-primary/5 uppercase font-bold tracking-wide">New</span>
-                            </div>
-                            <div class="px-4"> timeout: 30s</div>
-                            <div class="px-4"></div>
-                            <div class="px-4"># Feature Flags</div>
-                            <div class="px-4">features:</div>
-                            <div class="px-4"> enable_new_checkout: true</div>
-                            <div class="px-4"> beta_users_only: false</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="flex-1 flex flex-col min-w-[40%] bg-panel-bg">
-                <div
-                    class="h-10 bg-white dark:bg-panel-bg flex items-center justify-between px-4 border-b border-panel-border shrink-0">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Documentation</span>
-                        <span
-                            class="px-2 py-0.5 text-[10px] bg-slate-700 rounded text-slate-300 font-mono">README.md</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button class="text-slate-400 hover:text-white transition-colors"><span
-                                class="material-icons text-sm">edit</span></button>
-                        <button class="text-slate-400 hover:text-white transition-colors"><span
-                                class="material-icons text-sm">open_in_new</span></button>
-                    </div>
-                </div>
-                <div class="flex-1 overflow-auto bg-[#0d1b1e] p-6 font-display text-sm text-slate-300">
-                    <h1 class="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2">Service Configuration
-                    </h1>
-                    <p class="mb-4 text-slate-400">This service requires several environment variables to be set for
-                        proper operation. Ensure these are defined in your deployment manifest.</p>
-                    <h3 class="text-md font-semibold text-white mb-3">Environment Variables</h3>
-                    <div class="rounded border border-slate-700 overflow-hidden">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-slate-800 text-slate-200">
-                                <tr>
-                                    <th class="p-2 border-r border-slate-700">Variable</th>
-                                    <th class="p-2 border-r border-slate-700">Description</th>
-                                    <th class="p-2">Required</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700 bg-slate-900/50">
-                                <tr>
-                                    <td class="p-2 font-mono text-primary border-r border-slate-700">DB_HOST</td>
-                                    <td class="p-2 border-r border-slate-700">Postgres DB Host address</td>
-                                    <td class="p-2 text-green-400">Yes</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 font-mono text-primary border-r border-slate-700">REDIS_URL</td>
-                                    <td class="p-2 border-r border-slate-700">Redis cache connection string</td>
-                                    <td class="p-2 text-slate-500">No</td>
-                                </tr>
-                                <tr class="bg-red-500/5 relative">
-                                    <td class="p-2 border-r border-red-500/20 font-mono text-red-400" colspan="3">
-                                        <div class="flex items-center justify-center gap-2 py-2 text-red-400/60 italic">
-                                            <span class="material-icons text-sm">warning</span>
-                                            Missing documentation for STRIPE_SECRET_KEY
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+    <main class="flex-1 flex flex-col items-center justify-center p-8 text-center bg-background-dark">
+        <div class="max-w-md flex flex-col items-center gap-4">
+            <div class="p-6 rounded-full bg-panel-bg border border-panel-border shadow-2xl mb-2">
+                <span class="material-icons text-6xl text-slate-600">manage_search</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Ready for Analysis</h2>
+            <p class="text-slate-400">Select a Pull Request or Project to scan for documentation drift.</p>
+            <div class="flex gap-3 mt-4">
+                <button
+                    class="px-5 py-2.5 bg-primary hover:bg-primary/90 text-background-dark font-bold rounded shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+                    <span class="material-icons text-sm">add</span>
+                    Select Project
+                </button>
+            </div>
         </div>
-        <section
-            class="h-[320px] bg-panel-bg border-t border-panel-border shrink-0 flex flex-col shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-20">
-            <div class="h-12 border-b border-panel-border px-6 flex items-center justify-between bg-[#132227]">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary animate-pulse">smart_toy</span>
-                    <span class="font-semibold text-white">AI Guard Analysis</span>
-                    <span class="h-4 w-px bg-slate-600 mx-1"></span>
-                    <div class="flex items-center gap-1.5 text-xs text-slate-400">
-                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                        Gemini Pro 1.5
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400 hidden">
-                        <svg class="animate-spin h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                            </circle>
-                            <path class="opacity-75"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                fill="currentColor"></path>
-                        </svg>
-                        Analyzing with Gemini...
-                    </div>
-                    <div class="flex gap-2">
-                        <button
-                            class="px-4 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 text-xs font-semibold rounded border border-red-500/20 transition-all uppercase tracking-wide">
-                            Override Guard
-                        </button>
-                        <button
-                            class="px-4 py-1.5 bg-primary hover:bg-primary/90 text-background-dark text-xs font-bold rounded shadow-lg shadow-primary/20 transition-all flex items-center gap-2 uppercase tracking-wide">
-                            <span class="material-icons text-sm">play_arrow</span>
-                            Run Analysis
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="flex-1 flex overflow-hidden">
-                <div class="w-64 border-r border-panel-border bg-[#0f1d20] p-4 flex flex-col">
-                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Undocumented
-                        Variables</h4>
-                    <ul class="space-y-2">
-                        <li
-                            class="bg-red-500/10 border border-red-500/20 rounded p-2 flex items-start gap-2 cursor-pointer hover:bg-red-500/15 transition-colors">
-                            <span class="material-icons text-red-500 text-sm mt-0.5">error_outline</span>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-xs font-mono text-red-300 truncate">STRIPE_SECRET_KEY</div>
-                                <div class="text-[10px] text-slate-500 mt-0.5">Found in config.yaml</div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="mt-auto pt-4 border-t border-slate-700/50">
-                        <div class="text-xs text-slate-400 mb-1">Drift Confidence</div>
-                        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                            <div class="h-full bg-gradient-to-r from-orange-500 to-red-500 w-[94%]"></div>
-                        </div>
-                        <div class="flex justify-between text-[10px] text-slate-500 mt-1">
-                            <span>Low</span>
-                            <span class="text-white font-mono">94%</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 p-6 overflow-y-auto bg-[#132227]">
-                    <div class="flex items-start gap-4 mb-4">
-                        <div
-                            class="w-8 h-8 rounded bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shrink-0 shadow-lg">
-                            <span class="material-symbols-outlined text-white text-sm">colors_spark</span>
-                        </div>
-                        <div class="flex-1 space-y-4">
-                            <div>
-                                <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-                                    Drift Detected
-                                    <span
-                                        class="text-xs font-normal px-2 py-0.5 rounded-full bg-red-500 text-white">Severity:
-                                        High</span>
-                                </h3>
-                                <p class="text-slate-400 text-sm mt-1">
-                                    The variable <code class="text-primary font-mono">STRIPE_SECRET_KEY</code> was
-                                    introduced in the codebase but is missing from the <code
-                                        class="text-slate-300 font-mono">README.md</code> documentation table.
-                                </p>
-                            </div>
-                            <div class="bg-code-bg rounded-lg border border-panel-border p-4 relative group">
-                                <div
-                                    class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                                    <button
-                                        class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded transition-colors">Apply
-                                        Fix</button>
-                                    <button
-                                        class="p-1 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors">
-                                        <span class="material-icons text-sm">content_copy</span>
-                                    </button>
-                                </div>
-                                <div class="text-xs font-mono text-slate-500 mb-2 border-b border-slate-800 pb-2">
-                                    SUGGESTED DOCUMENTATION UPDATE</div>
-                                <pre class="font-mono text-sm text-slate-300 overflow-x-auto whitespace-pre-wrap">| STRIPE_SECRET_KEY | API Secret Key for Stripe Payments integration. | Yes      |
-</pre>
-                            </div>
-                            <div class="flex gap-2 mt-2">
-                                <span class="text-[10px] text-slate-500 bg-slate-800 px-2 py-1 rounded">Reasoning:
-                                    Variable follows naming convention for secrets.</span>
-                                <span class="text-[10px] text-slate-500 bg-slate-800 px-2 py-1 rounded">Context: Payment
-                                    service config</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
