@@ -1,208 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DriftGuard — Secure Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DriftGuard - Secure Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec",
+                        "background-dark": "#0D1117",
+                        "surface-dark": "#161b22",
+                        "border-dark": "#30363d",
+                    },
+                    fontFamily: { "display": ["Inter", "sans-serif"] },
+                    borderRadius: { "DEFAULT": "0.375rem", "md": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
-            background: #0a0f1e;
+            font-family: 'Inter', sans-serif;
         }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+        .bg-technical {
+            background-color: #0D1117;
+            background-image:
+                radial-gradient(at 50% 0%, rgba(19, 182, 236, 0.07) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(19, 182, 236, 0.03) 0px, transparent 50%);
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        .glass-panel {
+            background: rgba(22, 27, 34, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(48, 54, 61, 0.6);
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.4);
         }
 
-        .glow-text {
-            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
-        }
-
-        .btn-action {
-            transition: all 0.2s ease;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-action:active {
-            transform: translateY(0);
-        }
-
-        .sso-btn {
-            transition: all 0.2s ease;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .sso-btn:hover {
-            background: rgba(99, 102, 241, 0.08);
-            border-color: rgba(99, 102, 241, 0.3);
-            transform: translateY(-1px);
-        }
-
-        @keyframes pulse-ring {
-            0% {
-                transform: scale(0.8);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
-        .pulse-ring::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 2px solid #10b981;
-            animation: pulse-ring 2s infinite;
-        }
-
-        .status-dot {
-            position: relative;
-            display: inline-block;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: rgba(99, 102, 241, 0.5) !important;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
     </style>
 </head>
 
-<body class="text-slate-300 min-h-screen flex items-center justify-center p-4">
+<body
+    class="bg-background-dark text-slate-200 font-display min-h-screen flex items-center justify-center p-4 bg-technical">
 
-    <div class="w-full max-w-md">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <a href="/" class="inline-flex items-center gap-3 mb-4">
-                <div
-                    class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/20">
-                    D</div>
-                <span class="text-2xl font-bold text-white">DriftGuard</span>
-            </a>
-            <p class="text-slate-500 text-sm font-mono">Enterprise Governance Console</p>
-            <!-- Live badge -->
+    <main class="w-full max-w-[440px] glass-panel rounded-lg p-8 sm:p-10 relative overflow-hidden">
+        <!-- Top accent line -->
+        <div
+            class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent">
+        </div>
+
+        <!-- Brand -->
+        <div class="flex flex-col items-center mb-8">
             <div
-                class="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                <span class="status-dot pulse-ring w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-                <span class="text-xs font-semibold text-emerald-400 font-mono">ENGINE LIVE</span>
+                class="h-12 w-12 rounded bg-primary/10 flex items-center justify-center border border-primary/20 mb-4 shadow-[0_0_15px_rgba(19,182,236,0.15)]">
+                <span class="material-symbols-outlined text-primary text-3xl">shield_lock</span>
+            </div>
+            <h1 class="text-white text-2xl font-bold tracking-tight">DriftGuard</h1>
+            <p class="text-slate-400 text-sm mt-1">Enterprise Governance Console</p>
+        </div>
+
+        <!-- Form -->
+        <form class="space-y-5" method="post" action="/auth/login">
+            <div class="space-y-1.5">
+                <label class="block text-sm font-medium text-slate-300" for="email">Work Email</label>
+                <div class="relative">
+                    <input
+                        class="block w-full rounded-md border border-border-dark bg-[#0d1117] text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm h-11 px-3 py-2 transition-colors placeholder:text-slate-600"
+                        id="email" name="email" placeholder="user@company.com" type="email" />
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-600">
+                        <span class="material-symbols-outlined text-[20px]">mail</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <label class="block text-sm font-medium text-slate-300" for="password">Password</label>
+                    <a class="text-xs font-medium text-primary hover:text-primary/80 transition-colors" href="#">Forgot
+                        password?</a>
+                </div>
+                <div class="relative">
+                    <input
+                        class="block w-full rounded-md border border-border-dark bg-[#0d1117] text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm h-11 px-3 py-2 transition-colors placeholder:text-slate-600"
+                        id="password" name="password" placeholder="••••••••" type="password" />
+                    <div
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-slate-600 hover:text-slate-400 transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">visibility_off</span>
+                    </div>
+                </div>
+            </div>
+            <button
+                class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-primary hover:bg-[#0ea5d6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-[#0D1117] transition-all duration-200 shadow-[0_0_15px_rgba(19,182,236,0.3)]"
+                type="submit">
+                Sign In
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="relative my-8">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-border-dark"></div>
+            </div>
+            <div class="relative flex justify-center">
+                <span class="px-2 bg-[#161b22] text-xs text-slate-500 uppercase tracking-wider">Or continue with</span>
             </div>
         </div>
 
-        <!-- Card -->
-        <div class="glass rounded-2xl p-8">
-            <h1 class="text-xl font-bold text-white mb-1 glow-text">Sign in to your workspace</h1>
-            <p class="text-slate-500 text-sm mb-6">Connect your cloud identity to get started</p>
+        <!-- GitHub SSO -->
+        <a href="/auth/github"
+            class="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-border-dark rounded-md bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d] hover:border-slate-500 transition-all duration-200 group">
+            <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24" aria-hidden="true">
+                <path clip-rule="evenodd"
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                    fill-rule="evenodd"></path>
+            </svg>
+            <span>GitHub Enterprise</span>
+        </a>
 
-            <!-- Email/Password form -->
-            <form onsubmit="event.preventDefault(); window.location='/dashboard';" class="space-y-4 mb-6">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5"
-                        for="email">Work Email</label>
-                    <input id="email" type="email" placeholder="you@company.com"
-                        class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder-slate-600 transition-all">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5"
-                        for="password">Password</label>
-                    <input id="password" type="password" placeholder="••••••••"
-                        class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder-slate-600 transition-all">
-                </div>
-                <button type="submit"
-                    class="btn-action w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-lg shadow-indigo-600/20 transition">
-                    Sign In →
-                </button>
-            </form>
+        <!-- Google SSO -->
+        <a href="/auth/google"
+            class="mt-3 w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-border-dark rounded-md bg-[#21262d] text-sm font-medium text-white hover:bg-[#30363d] hover:border-slate-500 transition-all duration-200">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4" />
+                <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853" />
+                <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05" />
+                <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335" />
+            </svg>
+            <span>Google Workspace</span>
+        </a>
 
-            <!-- Divider -->
-            <div class="flex items-center gap-3 mb-6">
-                <div class="flex-1 h-px bg-white/5"></div>
-                <span class="text-xs text-slate-600 font-mono uppercase tracking-wider">or continue with SSO</span>
-                <div class="flex-1 h-px bg-white/5"></div>
+        <!-- Footer -->
+        <div class="mt-8 text-center space-y-3">
+            <div
+                class="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 uppercase tracking-widest font-semibold">
+                <span class="material-symbols-outlined text-[14px] text-primary/60">lock</span>
+                <span>Protected by DriftGuard v2.4.0</span>
             </div>
-
-            <!-- SSO Buttons -->
-            <div class="space-y-3">
-                <button onclick="window.location='/auth/login/gcp'"
-                    class="sso-btn btn-action w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white">
-                    <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <span>Continue with Google / GCP</span>
-                    <span class="ml-auto text-slate-600 text-xs">→</span>
-                </button>
-
-                <button onclick="window.location='/auth/login/azure'"
-                    class="sso-btn btn-action w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white">
-                    <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 23 23">
-                        <path fill="#f35325" d="M1 1h10v10H1z" />
-                        <path fill="#81bc06" d="M12 1h10v10H12z" />
-                        <path fill="#05a6f0" d="M1 12h10v10H1z" />
-                        <path fill="#ffba08" d="M12 12h10v10H12z" />
-                    </svg>
-                    <span>Continue with Azure AD</span>
-                    <span class="ml-auto text-slate-600 text-xs">→</span>
-                </button>
-
-                <button onclick="window.location='/auth/login/aws'"
-                    class="sso-btn btn-action w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white">
-                    <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="#FF9900">
-                        <path
-                            d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.064.056.128.056.184 0 .08-.048.16-.152.24l-.504.336c-.072.048-.144.072-.208.072-.08 0-.16-.04-.24-.112-.112-.12-.208-.248-.288-.376-.08-.136-.16-.288-.248-.472-.624.736-1.408 1.104-2.352 1.104-.672 0-1.208-.192-1.6-.576-.392-.384-.592-.896-.592-1.536 0-.68.24-1.232.728-1.648.488-.416 1.136-.624 1.96-.624.272 0 .552.024.848.064.296.04.6.104.92.176v-.584c0-.608-.128-1.032-.376-1.28-.256-.248-.688-.368-1.304-.368-.28 0-.568.032-.864.104-.296.072-.584.16-.864.272-.128.056-.224.088-.28.104-.056.016-.096.024-.128.024-.112 0-.168-.08-.168-.248v-.392c0-.128.016-.224.056-.28.04-.056.112-.112.224-.168.28-.144.616-.264 1.008-.36.392-.104.808-.152 1.248-.152.952 0 1.648.216 2.096.648.44.432.664 1.088.664 1.968v2.592zm10.248.88c-.416 0-.832-.048-1.232-.144-.4-.096-.712-.2-.92-.32-.128-.072-.216-.152-.248-.224-.032-.072-.048-.152-.048-.224v-.408c0-.168.064-.248.184-.248.048 0 .096.008.144.024.048.016.12.048.2.08.272.12.568.216.888.28.328.064.648.096.976.096.52 0 .92-.088 1.2-.264.28-.176.424-.432.424-.76 0-.224-.072-.408-.216-.56-.144-.152-.416-.288-.808-.416l-1.16-.36c-.584-.184-1.016-.456-1.288-.816-.272-.352-.408-.744-.408-1.168 0-.336.072-.632.216-.888.144-.256.336-.48.576-.664.24-.184.512-.32.832-.416.32-.096.656-.144 1.008-.144.176 0 .36.008.536.032.184.024.352.056.512.096.152.04.296.088.432.144.136.056.24.112.312.168.104.072.176.144.216.224.04.072.056.168.056.28v.376c0 .168-.064.256-.184.256-.064 0-.168-.032-.304-.096-.456-.208-.968-.312-1.536-.312-.472 0-.84.08-1.104.24-.264.16-.4.4-.4.728 0 .224.08.416.24.568.16.152.456.304.88.44l1.136.36c.576.184.992.44 1.248.768.256.328.376.704.376 1.12 0 .344-.072.656-.208.928-.144.272-.336.512-.584.704-.248.2-.544.344-.888.448-.36.112-.744.168-1.16.168z" />
-                    </svg>
-                    <span>Continue with AWS Cognito</span>
-                    <span class="ml-auto text-slate-600 text-xs">→</span>
-                </button>
-
-                <button onclick="window.location='/auth/login/github'"
-                    class="sso-btn btn-action w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white">
-                    <svg class="w-5 h-5 flex-shrink-0 fill-white" viewBox="0 0 24 24">
-                        <path clip-rule="evenodd"
-                            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                            fill-rule="evenodd" />
-                    </svg>
-                    <span>GitHub Enterprise</span>
-                    <span class="ml-auto text-slate-600 text-xs">→</span>
-                </button>
-            </div>
-
-            <!-- Footer -->
-            <div class="mt-6 pt-5 border-t border-white/5 flex items-center justify-between text-xs text-slate-600">
-                <span class="font-mono">DriftGuard v2.4.0</span>
-                <a href="/" class="hover:text-slate-400 transition">← Back to home</a>
+            <div class="flex items-center justify-center gap-4 text-xs text-slate-500">
+                <a class="hover:text-slate-300 transition-colors" href="#">Request Access</a>
+                <span class="text-slate-700">|</span>
+                <a class="hover:text-slate-300 transition-colors" href="#">Compliance</a>
             </div>
         </div>
-    </div>
-
+    </main>
 </body>
 
 </html>

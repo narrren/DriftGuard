@@ -1,452 +1,530 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DriftGuard — FinOps Intelligence</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DriftGuard - FinOps & Developer Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec",
+                        "background-dark": "#101d22",
+                        "surface-dark": "#18282f",
+                        "border-dark": "#233f48",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
-            background: #0a0f1e;
+            font-family: 'Inter', sans-serif;
         }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        .sidebar-item {
-            transition: all 0.15s ease;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111e22;
         }
 
-        .sidebar-item:hover,
-        .sidebar-item.active {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: rgba(99, 102, 241, 0.3);
-            color: white;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #233f48;
+            border-radius: 4px;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #375a66;
         }
 
-        .glow-text {
-            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #13b6ec, #0bda57);
         }
 
-        @keyframes pulse-ring {
-            0% {
-                transform: scale(0.8);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
-        .pulse-ring::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 2px solid #10b981;
-            animation: pulse-ring 2s infinite;
+        .sidebar-active {
+            background: rgba(19, 182, 236, 0.12);
+            color: #13b6ec;
         }
 
-        .status-dot {
-            position: relative;
-            display: inline-block;
-        }
-
-        .btn-action {
-            transition: all 0.2s ease;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-action:active {
-            transform: translateY(0);
-        }
-
-        .toast {
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .bar {
-            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes count-up {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .count-up {
-            animation: count-up 0.5s ease forwards;
+        .bar-animate {
+            transition: height 0.6s ease;
         }
     </style>
 </head>
 
-<body class="text-slate-300 min-h-screen flex">
+<body class="bg-background-dark font-display text-white antialiased">
+    <div class="relative flex h-screen w-full flex-col overflow-hidden">
 
-    <!-- Sidebar -->
-    <aside class="w-64 flex-shrink-0 border-r border-white/5 bg-[#0d1117] flex flex-col h-screen sticky top-0">
-        <div class="p-6 border-b border-white/5">
-            <a href="/" class="flex items-center gap-3">
-                <div
-                    class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/20">
-                    D</div>
-                <span class="text-lg font-bold text-white">DriftGuard</span>
-            </a>
-        </div>
-        <div
-            class="px-4 py-3 mx-4 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
-            <span class="status-dot pulse-ring w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-            <span class="text-xs font-semibold text-emerald-400 font-mono">LIVE MODE</span>
-        </div>
-        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            <a href="/dashboard"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🏠</span>
-                Dashboard</a>
-            <a href="/ai-guard"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧠</span>
-                AI Guard</a>
-            <a href="/janitor"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🧹</span>
-                Janitor</a>
-            <a href="/sentry"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>🛡️</span>
-                Sentry</a>
-            <a href="/finops"
-                class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium"><span>💰</span>
-                FinOps</a>
-            <a href="/policy"
-                class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg border border-transparent text-sm font-medium text-slate-400"><span>📋</span>
-                Policy</a>
-        </nav>
-        <div class="p-4 border-t border-white/5">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Cloud Connections</p>
-            <div class="space-y-2">
-                <div class="flex items-center justify-between text-xs"><span class="text-slate-400">AWS</span><span
-                        id="sb-aws" class="text-slate-600 font-mono">—</span></div>
-                <div class="flex items-center justify-between text-xs"><span class="text-slate-400">Azure</span><span
-                        id="sb-azure" class="text-slate-600 font-mono">—</span></div>
-                <div class="flex items-center justify-between text-xs"><span class="text-slate-400">GCP</span><span
-                        id="sb-gcp" class="text-slate-600 font-mono">—</span></div>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main -->
-    <main class="flex-1 overflow-y-auto">
+        <!-- Header -->
         <header
-            class="sticky top-0 z-40 border-b border-white/5 bg-[#0a0f1e]/80 backdrop-blur-xl px-8 py-4 flex items-center justify-between">
-            <div>
-                <h1 class="text-xl font-bold text-white glow-text">💰 FinOps Intelligence</h1>
-                <p class="text-xs text-slate-500 font-mono mt-0.5">Real-time cost velocity tracking & budget burn rate
-                    analysis</p>
+            class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark bg-background-dark/95 backdrop-blur px-6 py-3 shrink-0">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-3 text-white">
+                    <div class="size-8 text-primary">
+                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
+                                d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DriftGuard</h2>
+                </div>
+                <nav class="hidden md:flex gap-6">
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors"
+                        href="/dashboard">Dashboard</a>
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="/ai-guard">AI
+                        Guard</a>
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors"
+                        href="/janitor">Janitor</a>
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors"
+                        href="/sentry">Sentry</a>
+                    <a class="text-white text-sm font-medium border-b-2 border-primary pb-4 -mb-4"
+                        href="/finops">FinOps</a>
+                    <a class="text-slate-400 hover:text-white text-sm font-medium transition-colors"
+                        href="/policy">Policy</a>
+                </nav>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="loadStats(false)" id="btnLoad"
-                    class="btn-action px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg shadow-lg shadow-indigo-600/20">↻
-                    Load Stats</button>
-                <button onclick="loadStats(true)"
-                    class="btn-action px-4 py-2 border border-red-500/30 hover:bg-red-500/10 text-red-400 text-sm font-medium rounded-lg transition">⚡
-                    Simulate Spike</button>
+            <div class="flex items-center gap-4">
+                <button class="text-slate-400 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <div
+                    class="w-9 h-9 rounded-full bg-primary/20 border border-border-dark flex items-center justify-center text-primary font-bold text-sm">
+                    A</div>
             </div>
         </header>
 
-        <div class="p-8 space-y-8">
-            <!-- Alert Banner (hidden by default) -->
-            <div id="alertBanner"
-                class="hidden rounded-xl border border-red-500/30 bg-red-500/5 p-4 flex items-start gap-3">
-                <span class="text-2xl">🚨</span>
-                <div>
-                    <p class="text-red-400 font-semibold" id="alertTitle">Alert</p>
-                    <p class="text-red-300/70 text-sm" id="alertMsg"></p>
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <aside
+                class="w-64 bg-background-dark border-r border-border-dark flex flex-col justify-between py-6 px-4 shrink-0 overflow-y-auto">
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <h3 class="text-[#92bbc9] text-xs font-bold uppercase tracking-wider mb-4 px-3">Platform</h3>
+                        <nav class="flex flex-col gap-1">
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/dashboard">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary">dashboard</span><span
+                                    class="text-sm font-medium">Dashboard</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/ai-guard">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary">psychology</span><span
+                                    class="text-sm font-medium">AI Guard</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/janitor">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary">delete</span><span
+                                    class="text-sm font-medium">Janitor</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/sentry">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary">radar</span><span
+                                    class="text-sm font-medium">Sentry</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 sidebar-active rounded-lg" href="/finops">
+                                <span class="material-symbols-outlined text-[20px]">savings</span><span
+                                    class="text-sm font-medium">FinOps</span>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white hover:bg-border-dark rounded-lg transition-colors group"
+                                href="/policy">
+                                <span
+                                    class="material-symbols-outlined text-[20px] group-hover:text-primary">rule</span><span
+                                    class="text-sm font-medium">Policy</span>
+                            </a>
+                        </nav>
+                    </div>
                 </div>
-                <button onclick="document.getElementById('alertBanner').classList.add('hidden')"
-                    class="ml-auto text-slate-500 hover:text-white">✕</button>
-            </div>
+                <a href="/login"
+                    class="flex items-center gap-3 px-3 py-2 text-[#92bbc9] hover:text-white cursor-pointer">
+                    <span class="material-symbols-outlined text-[20px]">logout</span><span
+                        class="text-sm font-medium">Sign Out</span>
+                </a>
+            </aside>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="glass rounded-xl p-5">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Credits Used</p>
-                    <p class="text-3xl font-bold text-white">$<span id="statUsed">0.00</span></p>
-                    <p class="text-xs text-slate-500 mt-1">of $1,000 budget</p>
-                </div>
-                <div class="glass rounded-xl p-5">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Remaining</p>
-                    <p class="text-3xl font-bold text-white">$<span id="statRemaining">1000.00</span></p>
-                    <p class="text-xs text-emerald-400 mt-1" id="statPct">0% used</p>
-                </div>
-                <div class="glass rounded-xl p-5">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Zombies Reaped</p>
-                    <p class="text-3xl font-bold text-white" id="statZombies">0</p>
-                    <p class="text-xs text-emerald-400 mt-1">↑ this week</p>
-                </div>
-                <div class="glass rounded-xl p-5">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Burn Rate</p>
-                    <p class="text-3xl font-bold text-white" id="statBurnRate">$0</p>
-                    <p class="text-xs text-slate-500 mt-1">per day avg</p>
-                </div>
-            </div>
+            <!-- Main -->
+            <main class="flex-1 overflow-y-auto custom-scrollbar p-8">
+                <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
 
-            <!-- Chart + Breakdown -->
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Bar Chart -->
-                <div class="glass rounded-xl p-6 md:col-span-2">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-sm font-semibold text-white flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-                            Cost Velocity — Last 7 Days
-                        </h2>
-                        <span id="chartBadge"
-                            class="text-xs font-mono px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Normal</span>
+                    <!-- Page Header -->
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-2 text-sm text-[#92bbc9]">
+                            <a class="hover:text-primary" href="/dashboard">DriftGuard</a><span>/</span><span
+                                class="text-white">FinOps</span>
+                        </div>
+                        <h1 class="text-3xl font-bold text-white tracking-tight mt-1">FinOps Intelligence</h1>
+                        <p class="text-[#92bbc9] text-sm">Real-time cloud cost controls unified with developer
+                            workflows.</p>
                     </div>
-                    <div class="flex items-end justify-between gap-2 h-40" id="barChart">
-                        <!-- Bars rendered by JS -->
-                        <div class="flex flex-col items-center gap-1 flex-1">
-                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
-                                class="text-xs text-slate-600 font-mono">Mon</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 flex-1">
-                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
-                                class="text-xs text-slate-600 font-mono">Tue</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 flex-1">
-                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
-                                class="text-xs text-slate-600 font-mono">Wed</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 flex-1">
-                            <div class="bar w-full bg-indigo-500/30 rounded-t border-t-2 border-indigo-400"
-                                style="height:40%"></div><span class="text-xs text-slate-600 font-mono">Thu</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 flex-1">
-                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
-                                class="text-xs text-slate-600 font-mono">Fri</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 flex-1">
-                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
-                                class="text-xs text-slate-600 font-mono">Sat</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 flex-1">
-                            <div class="bar w-full bg-indigo-500/20 rounded-t" style="height:40%"></div><span
-                                class="text-xs text-slate-600 font-mono">Sun</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Spend Breakdown -->
-                <div class="glass rounded-xl p-6">
-                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                        Spend Breakdown
-                    </h2>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between text-xs mb-1.5"><span
-                                    class="text-slate-400">Compute</span><span class="text-white font-mono"
-                                    id="computePct">65%</span></div>
-                            <div class="h-2 rounded-full bg-white/5 overflow-hidden">
-                                <div id="computeBar"
-                                    class="h-full rounded-full bg-indigo-500 transition-all duration-700"
-                                    style="width:65%"></div>
+                    <!-- Stats Bar -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div
+                            class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col gap-1 hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-xl">savings</span>
+                                <p class="text-[#92bbc9] text-sm font-medium">Monthly Savings</p>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <p id="statSavings" class="text-white text-2xl font-bold tracking-tight">$12,450</p>
+                                <p class="text-emerald-400 text-sm font-bold">+18%</p>
                             </div>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-xs mb-1.5"><span
-                                    class="text-slate-400">Storage</span><span class="text-white font-mono"
-                                    id="storagePct">25%</span></div>
-                            <div class="h-2 rounded-full bg-white/5 overflow-hidden">
-                                <div id="storageBar"
-                                    class="h-full rounded-full bg-purple-500 transition-all duration-700"
-                                    style="width:25%"></div>
+                        <div
+                            class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col gap-1 hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-xl">cloud_off</span>
+                                <p class="text-[#92bbc9] text-sm font-medium">Idle Resources</p>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <p id="statIdle" class="text-white text-2xl font-bold tracking-tight">42 Instances</p>
+                                <p class="text-emerald-400 text-sm font-bold">+5%</p>
                             </div>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-xs mb-1.5"><span
-                                    class="text-slate-400">Network</span><span class="text-white font-mono"
-                                    id="networkPct">10%</span></div>
-                            <div class="h-2 rounded-full bg-white/5 overflow-hidden">
-                                <div id="networkBar"
-                                    class="h-full rounded-full bg-emerald-500 transition-all duration-700"
-                                    style="width:10%"></div>
+                        <div
+                            class="bg-surface-dark border border-border-dark rounded-xl p-5 flex flex-col gap-1 hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-xl">speed</span>
+                                <p class="text-[#92bbc9] text-sm font-medium">Cluster Efficiency</p>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <p id="statEfficiency" class="text-white text-2xl font-bold tracking-tight">94%</p>
+                                <p class="text-red-400 text-sm font-bold">-2%</p>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-6 pt-4 border-t border-white/5 space-y-2">
-                        <div class="flex justify-between text-xs"><span class="text-slate-500">Budget Limit</span><span
-                                class="text-white font-mono">$1,000.00</span></div>
-                        <div class="flex justify-between text-xs"><span class="text-slate-500">Forecast
-                                (30d)</span><span class="text-white font-mono" id="forecast30d">$0.00</span></div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Anomalies + Log -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="glass rounded-xl p-6">
-                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-red-400"></span>
-                        Recent Anomalies
-                    </h2>
-                    <div class="space-y-3">
-                        <div class="flex items-start gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/10">
-                            <span class="text-lg">⚠️</span>
-                            <div>
-                                <p class="text-sm font-semibold text-red-300">RDS Spike Detected</p>
-                                <p class="text-xs text-slate-500">+240% cost increase in us-east-1</p>
+                    <!-- Main Content Grid -->
+                    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+                        <!-- Left: FinOps Chart -->
+                        <div class="flex flex-col gap-6 lg:col-span-7">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-white text-xl font-bold flex items-center gap-3">
+                                    <span
+                                        class="flex h-8 w-8 items-center justify-center rounded bg-primary/20 text-primary">
+                                        <span class="material-symbols-outlined text-lg">monitoring</span>
+                                    </span>
+                                    Cost Velocity
+                                </h2>
+                                <label class="inline-flex cursor-pointer items-center gap-3">
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-[#92bbc9]">Simulate
+                                        Spike</span>
+                                    <input id="spikeToggle" onchange="toggleSpike(this.checked)" class="peer sr-only"
+                                        type="checkbox" />
+                                    <div
+                                        class="peer relative h-6 w-11 rounded-full bg-border-dark after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none">
+                                    </div>
+                                </label>
                             </div>
-                        </div>
-                        <div class="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/10">
-                            <span class="text-lg">💡</span>
-                            <div>
-                                <p class="text-sm font-semibold text-yellow-300">Unused EIPs</p>
-                                <p class="text-xs text-slate-500">5 addresses idle > 48hrs</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
-                            <span class="text-lg">✅</span>
-                            <div>
-                                <p class="text-sm font-semibold text-emerald-300">Janitor Saved $89</p>
-                                <p class="text-xs text-slate-500">12 zombie resources reaped</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="glass rounded-xl p-6">
-                    <h2 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
-                        FinOps Event Log
-                    </h2>
-                    <div id="finopsLog" class="font-mono text-xs text-slate-400 space-y-1.5 h-40 overflow-y-auto">
-                        <div class="text-slate-600">Click "Load Stats" to fetch real cost data...</div>
+                            <!-- Chart Card -->
+                            <div
+                                class="flex flex-col rounded-xl border border-border-dark bg-surface-dark p-6 shadow-lg">
+                                <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+                                    <div>
+                                        <p class="text-sm font-medium text-[#92bbc9]">ROI Forecast vs Actual Cost</p>
+                                        <div class="mt-1 flex items-baseline gap-2">
+                                            <h3 id="totalCredits" class="text-3xl font-bold text-white">$15,000</h3>
+                                            <span class="text-sm font-medium text-slate-500">Credits Used</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-4">
+                                        <div class="flex items-center gap-2">
+                                            <div class="h-3 w-3 rounded-full bg-primary"></div><span
+                                                class="text-xs text-slate-300">Actual</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="h-3 w-3 rounded-full bg-slate-600 border border-slate-400 border-dashed">
+                                            </div><span class="text-xs text-slate-300">Forecast</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="relative h-64 w-full">
+                                    <svg class="h-full w-full" preserveAspectRatio="none" viewBox="0 0 478 150"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <line stroke="#233f48" stroke-dasharray="4 4" x1="0" x2="478" y1="30" y2="30">
+                                        </line>
+                                        <line stroke="#233f48" stroke-dasharray="4 4" x1="0" x2="478" y1="70" y2="70">
+                                        </line>
+                                        <line stroke="#233f48" stroke-dasharray="4 4" x1="0" x2="478" y1="110" y2="110">
+                                        </line>
+                                        <defs>
+                                            <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                                                <stop offset="0%" stop-color="#13b6ec" stop-opacity="0.2"></stop>
+                                                <stop offset="100%" stop-color="#13b6ec" stop-opacity="0"></stop>
+                                            </linearGradient>
+                                        </defs>
+                                        <path id="actualPath"
+                                            d="M0 109C18.15 109 18.15 80 36.3 80C54.46 80 54.46 95 72.61 95C90.76 95 90.76 60 108.9 60C127.0 60 127.0 85 145.2 85C163.3 85 163.3 40 181.5 40C199.6 40 199.6 65 217.8 65C236 65 236 30 254.1 30C272.3 30 272.3 50 290.4 50C308.6 50 308.6 20 326.7 20"
+                                            fill="none" stroke="#13b6ec" stroke-linecap="round" stroke-width="3"
+                                            style="transition: d 0.5s ease"></path>
+                                        <path id="fillPath"
+                                            d="M0 109C18.15 109 18.15 80 36.3 80C54.46 80 54.46 95 72.61 95C90.76 95 90.76 60 108.9 60C127.0 60 127.0 85 145.2 85C163.3 85 163.3 40 181.5 40C199.6 40 199.6 65 217.8 65C236 65 236 30 254.1 30C272.3 30 272.3 50 290.4 50C308.6 50 308.6 20 326.7 20V150H0V109Z"
+                                            fill="url(#chartGradient)"></path>
+                                        <path
+                                            d="M326.7 20C344.9 20 344.9 10 363.0 10C381.2 10 381.2 40 399.3 40C417.5 40 417.5 15 435.6 15C453.8 15 453.8 30 472 30"
+                                            fill="none" stroke="#64748b" stroke-dasharray="5 5" stroke-width="2"></path>
+                                        <circle cx="326.7" cy="20" fill="#13b6ec" r="4" stroke="white" stroke-width="2">
+                                        </circle>
+                                    </svg>
+                                </div>
+                                <div class="mt-2 flex justify-between text-xs font-semibold text-slate-500">
+                                    <span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week
+                                        4</span><span>Projected</span>
+                                </div>
+                            </div>
+
+                            <!-- Secondary Metrics -->
+                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <!-- Burn Gauge -->
+                                <div class="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-lg">
+                                    <div class="mb-4 flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-white">Budget Burn Rate</h3>
+                                        <span class="material-symbols-outlined text-slate-500 text-lg">timelapse</span>
+                                    </div>
+                                    <div class="relative flex items-center justify-center py-4">
+                                        <svg class="h-32 w-48 overflow-visible" viewBox="0 0 100 50">
+                                            <path d="M10,50 A40,40 0 1,1 90,50" fill="none" stroke="#233f48"
+                                                stroke-linecap="round" stroke-width="8"></path>
+                                            <path id="burnArc" d="M10,50 A40,40 0 1,1 70,20" fill="none"
+                                                stroke="#13b6ec" stroke-dasharray="125" stroke-dashoffset="0"
+                                                stroke-linecap="round" stroke-width="8"
+                                                style="transition: stroke-dashoffset 1s ease"></path>
+                                        </svg>
+                                        <div class="absolute bottom-4 flex flex-col items-center text-center">
+                                            <span id="burnPct" class="text-3xl font-black text-white">72%</span>
+                                            <span class="text-xs font-medium text-[#92bbc9]">Consumed</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-sm text-[#92bbc9]">12 days remaining in cycle</p>
+                                    </div>
+                                </div>
+
+                                <!-- Anomalies -->
+                                <div
+                                    class="flex flex-col rounded-xl border border-border-dark bg-surface-dark p-6 shadow-lg">
+                                    <h3 class="mb-4 text-sm font-medium text-white">Recent Anomalies</h3>
+                                    <div id="anomalyList" class="flex flex-col gap-3">
+                                        <div class="flex items-start gap-3 rounded-lg bg-red-500/10 p-3">
+                                            <span
+                                                class="material-symbols-outlined text-red-500 text-lg mt-0.5">warning</span>
+                                            <div>
+                                                <p class="text-sm font-semibold text-red-200">RDS Spike Detected</p>
+                                                <p class="text-xs text-red-200/60">+240% cost increase in us-east-1</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3 rounded-lg bg-amber-500/10 p-3">
+                                            <span
+                                                class="material-symbols-outlined text-amber-500 text-lg mt-0.5">info</span>
+                                            <div>
+                                                <p class="text-sm font-semibold text-amber-200">Unused EIPs</p>
+                                                <p class="text-xs text-amber-200/60">5 addresses idle &gt; 48hrs</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Developer Experience -->
+                        <div class="flex flex-col gap-6 lg:col-span-5">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-white text-xl font-bold flex items-center gap-3">
+                                    <span
+                                        class="flex h-8 w-8 items-center justify-center rounded bg-purple-500/20 text-purple-400">
+                                        <span class="material-symbols-outlined text-lg">code</span>
+                                    </span>
+                                    Developer Experience
+                                </h2>
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-wider text-green-400 flex items-center gap-1">
+                                    <span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    Active
+                                </span>
+                            </div>
+
+                            <!-- GitHub PR Card -->
+                            <div class="rounded-xl border border-border-dark bg-[#0d1117] p-4 shadow-lg">
+                                <div class="mb-3 flex items-center gap-3 border-b border-border-dark pb-3">
+                                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
+                                        <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                                fill-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-semibold text-white">feature/optimize-clusters #429</h4>
+                                        <p class="text-xs text-slate-400">Merged 2 hours ago by @devops_lead</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between rounded bg-[#161b22] px-3 py-2">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="material-symbols-outlined text-green-400 text-sm">check_circle</span>
+                                        <span class="text-sm font-semibold text-white">DriftGuard / Policy Check</span>
+                                    </div>
+                                    <a class="text-xs font-medium text-primary hover:underline"
+                                        href="/ai-guard">Details</a>
+                                </div>
+                            </div>
+
+                            <!-- Policy YAML -->
+                            <div
+                                class="flex flex-col overflow-hidden rounded-xl border border-border-dark bg-[#0f1419] shadow-lg">
+                                <div
+                                    class="flex items-center justify-between border-b border-border-dark bg-[#1e272e] px-4 py-2">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="material-symbols-outlined text-slate-400 text-sm">description</span>
+                                        <span class="font-mono text-xs text-slate-300">policy.yaml</span>
+                                    </div>
+                                    <div class="flex gap-1.5">
+                                        <div class="h-2.5 w-2.5 rounded-full bg-red-500/50"></div>
+                                        <div class="h-2.5 w-2.5 rounded-full bg-amber-500/50"></div>
+                                        <div class="h-2.5 w-2.5 rounded-full bg-green-500/50"></div>
+                                    </div>
+                                </div>
+                                <div class="custom-scrollbar overflow-x-auto p-4">
+                                    <pre class="font-mono text-xs leading-relaxed text-slate-300"><span class="text-purple-400">apiVersion:</span> driftguard.io/v1alpha1
+<span class="text-purple-400">kind:</span> CostPolicy
+<span class="text-purple-400">metadata:</span>
+  <span class="text-primary">name:</span> restrict-expensive-instances
+<span class="text-purple-400">spec:</span>
+  <span class="text-primary">enforcement:</span> blocking
+  <span class="text-primary">budget_threshold:</span> <span class="text-amber-300">"5000 USD"</span>
+  <span class="text-primary">rules:</span>
+    - <span class="text-primary">resource:</span> aws_instance
+      <span class="text-primary">condition:</span>
+        <span class="text-primary">instance_type:</span> [ <span class="text-green-300">"t3.*"</span>, <span class="text-green-300">"m5.*"</span> ]
+        <span class="text-primary">max_monthly_cost:</span> <span class="text-amber-300">&lt; 200</span></pre>
+                                </div>
+                            </div>
+
+                            <!-- Audit Log -->
+                            <div
+                                class="flex flex-col overflow-hidden rounded-xl border border-border-dark bg-[#0f1419] shadow-lg">
+                                <div class="flex items-center border-b border-border-dark bg-[#1e272e] px-4 py-2">
+                                    <span class="font-mono text-xs text-slate-300">Audit Logs</span>
+                                </div>
+                                <div id="auditLog"
+                                    class="custom-scrollbar overflow-x-auto p-4 font-mono text-xs max-h-48">
+                                    <div class="mb-2 flex items-start gap-2 text-slate-500">
+                                        <span>timestamp:</span><span class="text-slate-300">2024-01-27T14:22:01Z</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500">{</span>
+                                        <div class="pl-4 border-l border-slate-700/50 ml-1">
+                                            <div class="flex gap-2"><span class="text-primary">"event_id"</span>: <span
+                                                    class="text-green-300">"ev_892341"</span>,</div>
+                                            <div class="flex gap-2"><span class="text-primary">"type"</span>: <span
+                                                    class="text-green-300">"resource_provisioned"</span>,</div>
+                                            <div class="flex gap-2"><span class="text-primary">"compliant"</span>: <span
+                                                    class="text-blue-400">true</span>,</div>
+                                            <div class="flex gap-2"><span class="text-primary">"cost_impact"</span>:
+                                                <span class="text-slate-300">{ "estimated": <span
+                                                        class="text-amber-300">45.20</span>, "currency": <span
+                                                        class="text-green-300">"USD"</span> }</span></div>
+                                        </div>
+                                        <span class="text-slate-500">}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Simulate Button -->
+                            <button onclick="runSimulation()"
+                                class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary hover:bg-[#0ea5d6] text-[#101d22] font-bold transition-all shadow-[0_0_15px_rgba(19,182,236,0.3)]">
+                                <span class="material-symbols-outlined">bolt</span>
+                                Run Cost Simulation
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
-    </main>
-
-    <!-- Toast -->
-    <div id="toast"
-        class="toast fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px]">
-        <span id="toastIcon">✓</span><span id="toastMsg">Done</span>
     </div>
 
     <script>
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-            toast.className = `toast show fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium text-white shadow-2xl flex items-center gap-3 min-w-[280px] ${type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-indigo-600'}`;
-            setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-        function addLog(msg, type = 'info') {
-            const log = document.getElementById('finopsLog');
-            const colors = { info: 'text-slate-400', success: 'text-emerald-400', error: 'text-red-400', warn: 'text-yellow-400' };
-            const time = new Date().toLocaleTimeString();
-            if (log.querySelector('.text-slate-600')) log.innerHTML = '';
-            log.innerHTML += `<div class="${colors[type] || 'text-slate-400'}">[${time}] ${msg}</div>`;
-            log.scrollTop = log.scrollHeight;
-        }
-        async function loadStats(simulateSpike = false) {
-            const btn = document.getElementById('btnLoad');
-            btn.textContent = '⏳ Loading...'; btn.disabled = true;
-            addLog(simulateSpike ? 'Simulating cost spike...' : 'Fetching real cost data...', 'info');
-            showToast(simulateSpike ? 'Simulating spike...' : 'Loading stats...', 'info');
-            try {
-                const url = '/api/finops/stats' + (simulateSpike ? '?simulate_leak=true' : '');
-                const res = await fetch(url);
-                const data = await res.json();
-                // Update stats
-                document.getElementById('statUsed').textContent = data.credits.used.toFixed(2);
-                document.getElementById('statRemaining').textContent = data.credits.remaining.toFixed(2);
-                const pct = Math.round((data.credits.used / data.credits.limit) * 100);
-                const pctEl = document.getElementById('statPct');
-                pctEl.textContent = pct + '% used';
-                pctEl.className = `text-xs mt-1 ${pct > 70 ? 'text-red-400' : pct > 40 ? 'text-yellow-400' : 'text-emerald-400'}`;
-                // Zombies
-                const totalZombies = data.zombies_reaped?.reduce((a, b) => a + b, 0) || 0;
-                document.getElementById('statZombies').textContent = totalZombies;
-                // Burn rate
-                const avgDaily = data.credits.used / 7;
-                document.getElementById('statBurnRate').textContent = '$' + avgDaily.toFixed(2);
-                // Forecast
-                document.getElementById('forecast30d').textContent = '$' + (avgDaily * 30).toFixed(2);
-                // Update bars
-                const bars = document.querySelectorAll('#barChart .bar');
-                const maxVal = Math.max(...data.actual_spend);
-                data.actual_spend.forEach((val, i) => {
-                    if (bars[i]) {
-                        const h = Math.round((val / maxVal) * 90) + 10;
-                        bars[i].style.height = h + '%';
-                        if (simulateSpike && i >= 5) {
-                            bars[i].className = 'bar w-full bg-red-500/40 rounded-t border-t-2 border-red-400';
-                        } else {
-                            bars[i].className = i === 3 ? 'bar w-full bg-indigo-500/30 rounded-t border-t-2 border-indigo-400' : 'bar w-full bg-indigo-500/20 rounded-t';
-                        }
-                    }
-                });
-                // Alert
-                if (data.alert) {
-                    document.getElementById('alertBanner').classList.remove('hidden');
-                    document.getElementById('alertTitle').textContent = data.alert.title;
-                    document.getElementById('alertMsg').textContent = data.alert.msg;
-                    document.getElementById('chartBadge').textContent = '🚨 Spike';
-                    document.getElementById('chartBadge').className = 'text-xs font-mono px-2 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20';
-                    addLog(`ALERT: ${data.alert.msg}`, 'error');
-                    showToast('Cost spike detected!', 'error');
-                } else {
-                    document.getElementById('chartBadge').textContent = 'Normal';
-                    document.getElementById('chartBadge').className = 'text-xs font-mono px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-                    addLog(`Stats loaded — $${data.credits.used.toFixed(2)} used of $${data.credits.limit}`, 'success');
-                    showToast('Stats loaded!', 'success');
-                }
-            } catch (e) {
-                addLog(`Error: ${e.message}`, 'error');
-                showToast('Failed to load stats', 'error');
+        function toggleSpike(on) {
+            const path = document.getElementById('actualPath');
+            const fill = document.getElementById('fillPath');
+            if (on) {
+                path.setAttribute('d', 'M0 109C18 109 18 80 36 80C54 80 54 95 72 95C90 95 90 60 108 60C127 60 127 85 145 85C163 85 163 40 181 40C199 40 199 65 217 65C236 65 236 5 254 5C272 5 272 15 290 15C308 15 308 8 326 8');
+                fill.setAttribute('d', 'M0 109C18 109 18 80 36 80C54 80 54 95 72 95C90 95 90 60 108 60C127 60 127 85 145 85C163 85 163 40 181 40C199 40 199 65 217 65C236 65 236 5 254 5C272 5 272 15 290 15C308 15 308 8 326 8V150H0V109Z');
+                document.getElementById('totalCredits').textContent = '$22,800';
+                document.getElementById('statSavings').textContent = '$8,200';
+                addAuditEntry('SPIKE: Unusual cost increase detected in us-east-1', 'warn');
+            } else {
+                path.setAttribute('d', 'M0 109C18.15 109 18.15 80 36.3 80C54.46 80 54.46 95 72.61 95C90.76 95 90.76 60 108.9 60C127.0 60 127.0 85 145.2 85C163.3 85 163.3 40 181.5 40C199.6 40 199.6 65 217.8 65C236 65 236 30 254.1 30C272.3 30 272.3 50 290.4 50C308.6 50 308.6 20 326.7 20');
+                fill.setAttribute('d', 'M0 109C18.15 109 18.15 80 36.3 80C54.46 80 54.46 95 72.61 95C90.76 95 90.76 60 108.9 60C127.0 60 127.0 85 145.2 85C163.3 85 163.3 40 181.5 40C199.6 40 199.6 65 217.8 65C236 65 236 30 254.1 30C272.3 30 272.3 50 290.4 50C308.6 50 308.6 20 326.7 20V150H0V109Z');
+                document.getElementById('totalCredits').textContent = '$15,000';
+                document.getElementById('statSavings').textContent = '$12,450';
             }
-            btn.textContent = '↻ Load Stats'; btn.disabled = false;
         }
-        async function loadSidebarStatus() {
+
+        function addAuditEntry(msg, type = 'info') {
+            const log = document.getElementById('auditLog');
+            const colors = { info: 'text-primary', warn: 'text-amber-400', error: 'text-red-400', success: 'text-green-400' };
+            const time = new Date().toISOString();
+            log.innerHTML = `<div class="mb-2 flex items-start gap-2 text-slate-500"><span>timestamp:</span><span class="text-slate-300">${time}</span></div>
+    <div class="${colors[type] || 'text-primary'} font-mono text-xs">${msg}</div>` + log.innerHTML;
+        }
+
+        async function runSimulation() {
+            addAuditEntry('Running cost simulation...', 'info');
             try {
-                const res = await fetch('/auth/status');
-                const status = await res.json();
-                ['aws', 'azure', 'gcp'].forEach(k => {
-                    const el = document.getElementById(`sb-${k}`);
-                    if (el) el.innerHTML = status[k]?.connected
-                        ? '<span class="text-emerald-400">● on</span>'
-                        : '<span class="text-slate-600">○ off</span>';
-                });
+                const res = await fetch('/api/finops/simulate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ spike: document.getElementById('spikeToggle').checked }) });
+                const data = await res.json();
+                document.getElementById('statSavings').textContent = data.savings || '$12,450';
+                document.getElementById('statIdle').textContent = (data.idle_instances || 42) + ' Instances';
+                document.getElementById('statEfficiency').textContent = (data.efficiency || 94) + '%';
+                addAuditEntry(`Simulation complete: ${data.status || 'success'}`, 'success');
+            } catch (e) {
+                addAuditEntry('Simulation complete (demo mode)', 'success');
+            }
+        }
+
+        // Load real stats on page load
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/finops/stats');
+                const data = await res.json();
+                if (data.savings) document.getElementById('statSavings').textContent = data.savings;
+                if (data.idle_instances) document.getElementById('statIdle').textContent = data.idle_instances + ' Instances';
+                if (data.efficiency) document.getElementById('statEfficiency').textContent = data.efficiency + '%';
             } catch (e) { }
         }
-        loadSidebarStatus();
-        loadStats(false);
+        loadStats();
     </script>
 </body>
 
